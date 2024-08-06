@@ -21,8 +21,6 @@ class RNComscoreModule: RCTEventEmitter {
     
     RCTLog("+++ [ComScore] moduleInit");
 
-    //let asset:Asset = Asset(name:src.value(forKey: "title") as! String, url:(URL(string: src.value(forKey: "uri") as! String) ?? URL(string: "https://"))!)
-
     let myPublisherConfig = SCORPublisherConfiguration(builderBlock: { builder in builder?.publisherId = config.value(forKey: "publisherId") as! String })
     SCORAnalytics.configuration().addClient(with:myPublisherConfig)
     

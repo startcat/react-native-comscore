@@ -14,12 +14,12 @@ Pod::Spec.new do |s|
   s.source         = { :git => "https://github.com/startcat/react-native-comscore", :tag => "v#{s.version}" }
   s.platforms      = { :ios => "13.0", :tvos => "13.0", :visionos => "1.0" }
 
-  s.subspec "RNComscore" do |ss|
+  s.subspec "RNComscoreModule" do |ss|
     ss.source_files = "ios/Video/**/*.{h,m,swift}"
     ss.dependency 'PromisesSwift', '2.4.0'
     ss.dependency 'ComScore', '~> 6.0'
 
   end
   
-  s.default_subspec = "RNComscore"
+  s.default_subspec = "RNComscoreModule"
 end
