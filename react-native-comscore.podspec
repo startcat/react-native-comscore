@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.subspec "RNComscore" do |ss|
     ss.source_files = "ios/Video/**/*.{h,m,swift}"
     ss.dependency 'PromisesSwift', '2.4.0'
-    ss.dependency 'Comscore', '~> 6.0'
+    ss.dependency 'ComScore', '~> 6.0'
 
   end
   
