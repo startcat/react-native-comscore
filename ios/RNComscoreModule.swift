@@ -11,7 +11,7 @@ class RNComscoreModule: RCTEventEmitter {
   
   override init() {
       super.init()
-      DownloadsModule.emitter = self
+      RNComscoreModule.emitter = self
   }
   
   @objc override static func requiresMainQueueSetup() -> Bool { return true }

@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.platforms      = { :ios => "13.0", :tvos => "13.0", :visionos => "1.0" }
 
   s.subspec "RNComscoreModule" do |ss|
-    ss.source_files = "ios/Video/**/*.{h,m,swift}"
+    ss.source_files = "ios/**/*.{h,m,swift}"
     ss.dependency 'PromisesSwift', '2.4.0'
     ss.dependency 'ComScore', '~> 6.0'
 
