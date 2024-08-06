@@ -3,7 +3,7 @@
   "name": "react-native-comscore",
   "version": "1.0.0",
   "description": "Wrapper for the Comscore native library",
-  "main": "lib/index",
+  "main": "src/index",
   "source": "src/index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -20,7 +20,7 @@ class Singleton {
 
     static #instance: Singleton;
 
-    private log_key: string = `[Downloads]`;
+    private log_key: string = `[ComScore]`;
     private initialized: boolean = false;
 
     private constructor() { }
