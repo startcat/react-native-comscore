@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.homepage       = 'https://github.com/startcat/react-native-comscore'
   s.source         = { :git => "https://github.com/startcat/react-native-comscore", :tag => "v#{s.version}" }
   s.platforms      = { :ios => "13.0" }
-  s.source_files  = "ios/**/*.{h,m,swift}"
+  s.source_files   = "ios/**/*.{h,m,mm,swift}"
 
   s.dependency "React-Core"
   s.dependency 'PromisesSwift', '2.4.0'
