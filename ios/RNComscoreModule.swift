@@ -5,16 +5,12 @@ import React
 import Promises
 
 @objc(RNComscoreModule)
-class RNComscoreModule: RCTEventEmitter {
-  
-  public static var emitter: RCTEventEmitter!
+class RNComscoreModule: NSObject {
   
   override init() {
       super.init()
-      RNComscoreModule.emitter = self
+
   }
-  
-  @objc override static func requiresMainQueueSetup() -> Bool { return true }
   
   @objc(moduleInit:)
   func moduleInit(_ config:NSDictionary) -> Void {
