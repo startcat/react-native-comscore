@@ -39,14 +39,10 @@ class Singleton {
         console.log(`${this.log_key} ${message}`);
     }
 
-    public init (config:Config): Promise<void> {
+    public init (config:Config): void {
 
-        return new Promise((resolve, reject) => {
-
-            this.log(`Config Settings: ${JSON.stringify(config)}`);
-            return resolve();
-
-        });
+        this.log(`Config Settings: ${JSON.stringify(config)}`);
+        RNComscoreModule.moduleInit(config);
 
     }
 
