@@ -30,11 +30,17 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.comscore.Analytics;
+import com.comscore.PublisherConfiguration;
+
 public class RNComscoreModule extends ReactContextBaseJavaModule {
 
     ReactApplicationContext reactContext;
 
     private static final String TAG = "RNComscore";
+	private static final String PROP_PUBLISHER_ID = "publisherId";
+    private static final String PROP_APPLICATION_NAME = "applicationName";
+
 	private String appName;
 
 	public RNComscoreModule(ReactApplicationContext reactContext) {
@@ -53,11 +59,23 @@ public class RNComscoreModule extends ReactContextBaseJavaModule {
      */
 
     @ReactMethod
-    public void moduleInit(final Promise promise) {
+    public void moduleInit(ReadableMap config) {
         //Log.d(TAG, "+++ [Comscore] init");
 
+		String publisherId = config.hasKey(PROP_PUBLISHER_ID) ? config.getString(PROP_PUBLISHER_ID) : null;
+        String applicationName = config.hasKey(PROP_APPLICATION_NAME) ? config.getString(PROP_APPLICATION_NAME) : null;
 
-        promise.resolve(null);
+		if (publisherId != null){
+
+			PublisherConfiguration publisher = new PublisherConfiguration.Builder()
+				.publisherId("1000001")
+				.build();
+
+			Analytics.getConfiguration().addClient(publisher);
+			Analytics.getConfiguration().enableImplementationValidationMode();
+			Analytics.start(this.reactContext);
+
+		}
 
     }
 
