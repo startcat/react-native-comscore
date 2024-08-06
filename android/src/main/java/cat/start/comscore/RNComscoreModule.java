@@ -60,11 +60,14 @@ public class RNComscoreModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void moduleInit(ReadableMap config) {
-        //Log.d(TAG, "+++ [Comscore] init");
+        Log.d(TAG, "+++ [ComScore] moduleInit");
 
 		String publisherId = config.hasKey(PROP_PUBLISHER_ID) ? config.getString(PROP_PUBLISHER_ID) : null;
         String applicationName = config.hasKey(PROP_APPLICATION_NAME) ? config.getString(PROP_APPLICATION_NAME) : null;
 
+		Log.d(TAG, "+++ [ComScore] moduleInit publisherId ", publisherId);
+		Log.d(TAG, "+++ [ComScore] moduleInit applicationName ", applicationName);
+		
 		if (publisherId != null){
 
 			PublisherConfiguration publisher = new PublisherConfiguration.Builder()
@@ -73,6 +76,11 @@ public class RNComscoreModule extends ReactContextBaseJavaModule {
 
 			Analytics.getConfiguration().addClient(publisher);
 			Analytics.getConfiguration().enableImplementationValidationMode();
+
+			if (applicationName != null) {
+				Analytics.getConfiguration().setApplicationName(applicationName);
+			}
+
 			Analytics.start(this.reactContext);
 
 		}
