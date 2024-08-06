@@ -1,3 +1,7 @@
+import com.android.Version
+
+apply plugin: 'com.android.library'
+
 buildscript {
     repositories {
         google()
@@ -7,8 +11,6 @@ buildscript {
     dependencies {
     }
 }
-
-apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 34
@@ -26,10 +28,16 @@ android {
 }
 
 repositories {
+    google()
+    maven {
+        // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+        url "$rootDir/../node_modules/react-native/android"
+    }
     mavenCentral()
 }
 
 dependencies {
+    implementation "com.facebook.react:react-native:+"
     implementation 'com.google.android.gms:play-services-appset:16.+'
     implementation 'com.comscore:android-analytics:6.+'
 }
