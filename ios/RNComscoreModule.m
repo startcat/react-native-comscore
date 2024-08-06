@@ -4,8 +4,7 @@
 
 @interface RCT_EXTERN_MODULE(RNComscoreModule, RCTEventEmitter)
 
-RCT_EXTERN_METHOD(moduleInit:(RCTPromiseResolveBlock)resolve
-        rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(moduleInit:(nullable NSDictionary *) config)
 
 RCT_EXPORT_METHOD(trackView:(NSString *) view)
 

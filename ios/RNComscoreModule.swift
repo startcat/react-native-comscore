@@ -16,11 +16,15 @@ class RNComscoreModule: RCTEventEmitter {
   
   @objc override static func requiresMainQueueSetup() -> Bool { return true }
   
-  @objc(moduleInit:rejecter:)
-  func moduleInit(_ resolve: @escaping RCTPromiseResolveBlock,reject: @escaping RCTPromiseRejectBlock) -> Void {
+  @objc(moduleInit:)
+  func moduleInit(_ config:NSDictionary) -> Void {
     
-    addObservers()
-    resolve(nil)
+    RCTLog("+++ [ComScore] moduleInit");
+
+    //let asset:Asset = Asset(name:src.value(forKey: "title") as! String, url:(URL(string: src.value(forKey: "uri") as! String) ?? URL(string: "https://"))!)
+
+    let myPublisherConfig = SCORPublisherConfiguration(builderBlock: { builder in builder?.publisherId = config.value(forKey: "publisherId") as! String })
+    SCORAnalytics.configuration().addClient(with:myPublisherConfig)
     
   }
   

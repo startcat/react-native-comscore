@@ -50,7 +50,7 @@ public class RNComscoreModule extends ReactContextBaseJavaModule {
 
 	@Override
 	public String getName() {
-		return "RNComscore";
+		return "RNComscoreModule";
 	}
 
     /*
@@ -71,7 +71,7 @@ public class RNComscoreModule extends ReactContextBaseJavaModule {
 		if (publisherId != null){
 
 			PublisherConfiguration publisher = new PublisherConfiguration.Builder()
-				.publisherId("1000001")
+				.publisherId(publisherId)
 				.build();
 
 			Analytics.getConfiguration().addClient(publisher);
