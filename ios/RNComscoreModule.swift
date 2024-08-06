@@ -7,18 +7,13 @@ import Promises
 @objc(RNComscoreModule)
 class RNComscoreModule: NSObject {
   
-  override init() {
-      super.init()
-
-  }
-  
   @objc(moduleInit:)
   func moduleInit(_ config:NSDictionary) -> Void {
     
     RCTLog("+++ [ComScore] moduleInit");
 
-    let myPublisherConfig = SCORPublisherConfiguration(builderBlock: { builder in builder?.publisherId = config.value(forKey: "publisherId") as! String })
-    SCORAnalytics.configuration().addClient(with:myPublisherConfig)
+    //let myPublisherConfig = SCORPublisherConfiguration(builderBlock: { builder in builder?.publisherId = config.value(forKey: "publisherId") as! String })
+    //SCORAnalytics.configuration().addClient(with:myPublisherConfig)
     
   }
   

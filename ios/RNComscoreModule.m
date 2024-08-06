@@ -2,7 +2,7 @@
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
 
-@interface RCT_EXTERN_MODULE(RNComscoreModule, NSObject)
+@interface RCT_EXTERN_REMAP_MODULE("RNComscoreModule", RNComscoreModule, NSObject)
 
 RCT_EXTERN_METHOD(moduleInit:(NSDictionary *) config)
 
