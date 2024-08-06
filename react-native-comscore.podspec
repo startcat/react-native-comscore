@@ -14,6 +14,7 @@ Pod::Spec.new do |s|
   s.source         = { :git => "https://github.com/startcat/react-native-comscore", :tag => "v#{s.version}" }
   s.platforms      = { :ios => "13.0" }
   s.source_files   = "ios/**/*.{h,m,mm,swift}"
+  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64 x86_64' }
 
   s.dependency "React-Core"
   s.dependency 'PromisesSwift', '2.4.0'

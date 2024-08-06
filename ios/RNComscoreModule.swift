@@ -1,8 +1,5 @@
 import Foundation
-import AVFoundation
-import AVKit
 import React
-import Promises
 
 @objc(RNComscoreModule)
 class RNComscoreModule: NSObject {
