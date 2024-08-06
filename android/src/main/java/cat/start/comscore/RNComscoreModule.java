@@ -65,9 +65,9 @@ public class RNComscoreModule extends ReactContextBaseJavaModule {
 		String publisherId = config.hasKey(PROP_PUBLISHER_ID) ? config.getString(PROP_PUBLISHER_ID) : null;
         String applicationName = config.hasKey(PROP_APPLICATION_NAME) ? config.getString(PROP_APPLICATION_NAME) : null;
 
-		Log.d(TAG, "+++ [ComScore] moduleInit publisherId ", publisherId);
-		Log.d(TAG, "+++ [ComScore] moduleInit applicationName ", applicationName);
-		
+		Log.d(TAG, "+++ [ComScore] moduleInit publisherId " + publisherId);
+		Log.d(TAG, "+++ [ComScore] moduleInit applicationName " + applicationName);
+
 		if (publisherId != null){
 
 			PublisherConfiguration publisher = new PublisherConfiguration.Builder()
