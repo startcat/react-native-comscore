@@ -10,14 +10,15 @@ class Comscore: NSObject {
   }
 
   @objc(trackView:)
-  func trackView(_ view:String) -> Void {
-    RCTLog("+++ [ComScore] trackView");
+  func trackView(name:String) {
+      print("+++ [ComScore] trackView");
     
   }
 
-  @objc(trackEvent:category:)
-  func trackEvent(_ action:String, category:String) -> Void {
-    RCTLog("+++ [ComScore] trackEvent");
+    @objc(trackEvent:withCategory:)
+  func trackEvent(action:String, category:String) {
+      print("+++ [ComScore] trackEvent");
     
   }
+  
 }
