@@ -1,17 +1,31 @@
 package cat.start.comscore
 
+import android.app.Activity
+import com.comscore.Analytics
+import com.comscore.PublisherConfiguration
+import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.Promise
 
-import android.app.Activity
-import java.util.List
-import java.util.Map
-import java.util.HashMap
+public fun init(activity:Activity, publisherId: String, applicationName: String){
 
-import com.comscore.Analytics
-import com.comscore.PublisherConfiguration
+  if (publisherId != null) {
+    val publisher = PublisherConfiguration.Builder()
+      .publisherId(publisherId)
+      .build()
+
+    Analytics.getConfiguration().addClient(publisher)
+    Analytics.getConfiguration().enableImplementationValidationMode()
+
+    if (applicationName != null) {
+      Analytics.getConfiguration().setApplicationName(applicationName)
+    }
+
+    Analytics.start(activity)
+  }
+
+}
 
 class ComscoreModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
@@ -28,27 +42,7 @@ class ComscoreModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  public fun init(activity:Activity, publisherId: String, applicationName: String){
-    
-    if (publisherId != null) {
-      val publisher: PublisherConfiguration = Builder()
-        .publisherId(publisherId)
-        .build()
-
-      Analytics.getConfiguration().addClient(publisher)
-      Analytics.getConfiguration().enableImplementationValidationMode()
-
-      if (applicationName != null) {
-        Analytics.getConfiguration().setApplicationName(applicationName)
-      }
-
-      Analytics.start(activity)
-    }
-
-  }
-
-  @ReactMethod
-	public fun trackView(view: String) {
+	fun trackView(view: String) {
 
     val labels = HashMap<String, String>()
     labels.put("name", view.replace("/", "."));
@@ -57,8 +51,8 @@ class ComscoreModule(reactContext: ReactApplicationContext) :
 	}
 
 	@ReactMethod
-	public fun trackEvent(action: String, category: String) {
-    
+	fun trackEvent(action: String, category: String) {
+
     val comScoreEventName = "$category.$action";
     val labels = HashMap<String, String>()
     labels.put("event", comScoreEventName)
