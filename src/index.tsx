@@ -20,3 +20,11 @@ const Comscore = NativeModules.Comscore
 export function multiply(a: number, b: number): Promise<number> {
   return Comscore.multiply(a, b);
 }
+
+export function trackView(view: string): void {
+  Comscore.trackView(view);
+}
+
+export function trackEvent(action: string, category: string): void {
+  Comscore.trackEvent(action, category);
+}
