@@ -11,8 +11,13 @@ import com.facebook.react.bridge.ReactMethod
 public fun init(activity:Activity, publisherId: String, applicationName: String){
 
   if (publisherId != null) {
+
+    val labels = HashMap<String, String>()
+    labels.put("cs_ucfr", "1");
+
     val publisher = PublisherConfiguration.Builder()
       .publisherId(publisherId)
+      .persistentLabels(labels)
       .build()
 
     Analytics.getConfiguration().addClient(publisher)
