@@ -18,7 +18,7 @@ class Comscore: NSObject {
   func trackEvent(action:String, category:String) {
       print("+++ [ComScore] trackEvent");
       SCORAnalytics.notifyViewEvent(withLabels: [
-        category: name
+        action: category
       ]);
   }
 
