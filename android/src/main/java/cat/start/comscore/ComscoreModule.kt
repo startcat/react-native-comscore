@@ -22,7 +22,7 @@ public fun init(activity:Activity, publisherId: String, applicationName: String)
       Analytics.getConfiguration().setApplicationName(applicationName)
     }
 
-    Analytics.getConfiguration().enableImplementationValidationMode();
+    //Analytics.getConfiguration().enableImplementationValidationMode();
     Analytics.start(activity)
   }
 
@@ -33,13 +33,6 @@ class ComscoreModule(reactContext: ReactApplicationContext) :
 
   override fun getName(): String {
     return NAME
-  }
-
-  // Example method
-  // See https://reactnative.dev/docs/native-modules-android
-  @ReactMethod
-  fun multiply(a: Double, b: Double, promise: Promise) {
-    promise.resolve(a * b)
   }
 
   @ReactMethod
