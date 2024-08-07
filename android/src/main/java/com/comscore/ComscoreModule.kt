@@ -27,20 +27,22 @@ class ComscoreModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-	public void trackView(String view) {
+	public fun trackView(view: String) {
 
-		HashMap<String,String> labels = new HashMap<String,String>();
-		labels.put("name", view.replace("/", "."));
-		Analytics.notifyViewEvent(labels);
+    val labels = HashMap<String, String>()
+    labels.put("name", view.replace("/", "."));
+    Analytics.notifyViewEvent(labels)
 
 	}
 
 	@ReactMethod
-	public void trackEvent(String action, String category) {
-		String comScoreEventName = category + "." + action;
-		HashMap<String,String> labels = new HashMap<String,String>();
-		labels.put("event", comScoreEventName);
-		Analytics.notifyViewEvent(labels);
+	public fun trackEvent(action: String, category: String) {
+    
+    val comScoreEventName = "$category.$action";
+    val labels = HashMap<String, String>()
+    labels.put("event", comScoreEventName)
+    Analytics.notifyViewEvent(labels)
+
 	}
 
   companion object {
