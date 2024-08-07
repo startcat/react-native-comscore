@@ -5,6 +5,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
 
+import android.app.Activity
 import java.util.List
 import java.util.Map
 import java.util.HashMap
@@ -24,6 +25,26 @@ class ComscoreModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun multiply(a: Double, b: Double, promise: Promise) {
     promise.resolve(a * b)
+  }
+
+  @ReactMethod
+  public fun init(activity:Activity, publisherId: String, applicationName: String){
+    
+    if (publisherId != null) {
+      val publisher: PublisherConfiguration = Builder()
+        .publisherId(publisherId)
+        .build()
+
+      Analytics.getConfiguration().addClient(publisher)
+      Analytics.getConfiguration().enableImplementationValidationMode()
+
+      if (applicationName != null) {
+        Analytics.getConfiguration().setApplicationName(applicationName)
+      }
+
+      Analytics.start(activity)
+    }
+
   }
 
   @ReactMethod
