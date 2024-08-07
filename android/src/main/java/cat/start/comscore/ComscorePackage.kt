@@ -1,4 +1,4 @@
-package com.start.comscore
+package cat.start.comscore
 
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule
