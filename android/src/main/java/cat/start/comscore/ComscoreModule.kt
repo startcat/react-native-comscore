@@ -59,6 +59,17 @@ class ComscoreModule(reactContext: ReactApplicationContext) :
 
 	}
 
+  @ReactMethod
+  fun updatePersistentLabels(publisherId: String, fpid: String, fpit: String, fpdm: String, fpdt: String) {
+
+    Analytics.getConfiguration().getPublisherConfiguration(publisherId).setPersistentLabel("cs_fpid", fpid);
+    Analytics.getConfiguration().getPublisherConfiguration(publisherId).setPersistentLabel("cs_fpit", fpit);
+    Analytics.getConfiguration().getPublisherConfiguration(publisherId).setPersistentLabel("cs_fpdm", fpdm);
+    Analytics.getConfiguration().getPublisherConfiguration(publisherId).setPersistentLabel("cs_fpdt", fpdt);
+    Analytics.notifyHiddenEvent();
+
+  }
+
   companion object {
     const val NAME = "Comscore"
   }

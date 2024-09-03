@@ -28,3 +28,13 @@ export function trackView(view: string): void {
 export function trackEvent(action: string, category: string): void {
   Comscore.trackEvent(action, category);
 }
+
+export function updatePersistentLabels(
+  publisherId: String,
+  fpid: String,
+  fpit: String,
+  fpdm: String,
+  fpdt: String
+) {
+  Comscore.updatePersistentLabels(publisherId, fpid, fpit, fpdm, fpdt);
+}

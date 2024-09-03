@@ -10,7 +10,6 @@ npm install react-native-comscore
 
 ## Usage
 
-
 ```js
 import { multiply } from 'react-native-comscore';
 
@@ -18,7 +17,6 @@ import { multiply } from 'react-native-comscore';
 
 const result = await multiply(3, 7);
 ```
-
 
 ## Contributing
 

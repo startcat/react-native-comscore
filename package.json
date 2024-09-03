@@ -1,6 +1,6 @@
 {
   "name": "react-native-comscore",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "ComScore Analytics Module",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
