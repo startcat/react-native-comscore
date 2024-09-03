@@ -26,11 +26,10 @@ class Comscore: NSObject {
   func updatePersistentLabels(publisherId:String, fpid:String, fpit: String, fpdm: String, fpdt: String) {
 
       print("+++ [ComScore] updatePersistentLabels");
-      SCORAnalytics.configuration().publisherConfiguration(withPublisherId:publisherId)
-        .setPersistentLabelWithName("cs_fpid", value:fpid)
-        .setPersistentLabelWithName("cs_fpit", value:fpit)
-        .setPersistentLabelWithName("cs_fpdm", value:fpdm)
-        .setPersistentLabelWithName("cs_fpdt", value:fpdt)
+      SCORAnalytics.configuration().publisherConfiguration(withPublisherId:publisherId).setPersistentLabelWithName("cs_fpid", value:fpid)
+      SCORAnalytics.configuration().publisherConfiguration(withPublisherId:publisherId).setPersistentLabelWithName("cs_fpit", value:fpit)
+      SCORAnalytics.configuration().publisherConfiguration(withPublisherId:publisherId).setPersistentLabelWithName("cs_fpdm", value:fpdm)
+      SCORAnalytics.configuration().publisherConfiguration(withPublisherId:publisherId).setPersistentLabelWithName("cs_fpdt", value:fpdt)
 
       SCORAnalytics.notifyHiddenEvent()
   }
