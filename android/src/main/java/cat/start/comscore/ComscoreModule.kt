@@ -10,67 +10,90 @@ import com.facebook.react.bridge.ReactMethod
 
 public fun init(activity:Activity, publisherId: String, applicationName: String){
 
-  if (publisherId != null) {
+    if (publisherId != null) {
 
-    val labels = HashMap<String, String>()
-    labels.put("cs_ucfr", "1");
+        val labels = HashMap<String, String>()
+        labels.put("cs_ucfr", "1");
 
-    val publisher = PublisherConfiguration.Builder()
-      .publisherId(publisherId)
-      .persistentLabels(labels)
-      .build()
+        val publisher = PublisherConfiguration.Builder()
+            .publisherId(publisherId)
+            .persistentLabels(labels)
+            .build()
 
-    Analytics.getConfiguration().addClient(publisher)
-    Analytics.getConfiguration().enableImplementationValidationMode()
+        Analytics.getConfiguration().addClient(publisher)
+        Analytics.getConfiguration().enableImplementationValidationMode()
 
-    if (applicationName != null) {
-      Analytics.getConfiguration().setApplicationName(applicationName)
+        if (applicationName != null) {
+            Analytics.getConfiguration().setApplicationName(applicationName)
+        }
+
+        //Analytics.getConfiguration().enableImplementationValidationMode();
+        Analytics.start(activity)
     }
-
-    //Analytics.getConfiguration().enableImplementationValidationMode();
-    Analytics.start(activity)
-  }
 
 }
 
 class ComscoreModule(reactContext: ReactApplicationContext) :
-  ReactContextBaseJavaModule(reactContext) {
+ReactContextBaseJavaModule(reactContext) {
 
-  override fun getName(): String {
-    return NAME
-  }
+    override fun getName(): String {
+        return NAME
+    }
 
-  @ReactMethod
-	fun trackView(view: String) {
+    @ReactMethod
+    fun trackView(view: String) {
 
-    val labels = HashMap<String, String>()
-    labels.put("name", view.replace("/", "."));
-    Analytics.notifyViewEvent(labels)
+        val labels = HashMap<String, String>()
+        labels.put("ns_category", view.replace("/", "."));
+        Analytics.notifyViewEvent(labels)
 
 	}
 
 	@ReactMethod
 	fun trackEvent(action: String, category: String) {
 
-    val comScoreEventName = "$category.$action";
-    val labels = HashMap<String, String>()
-    labels.put("event", comScoreEventName)
-    Analytics.notifyViewEvent(labels)
+        val comScoreEventName = "$category.$action";
+        val labels = HashMap<String, String>()
+        labels.put("event", comScoreEventName)
+        Analytics.notifyViewEvent(labels)
 
 	}
 
-  @ReactMethod
-  fun updatePersistentLabels(publisherId: String, fpid: String, fpit: String, fpdm: String, fpdt: String) {
+    @ReactMethod
+    fun updatePersistentLabels(publisherId: String, fpid: String, fpit: String, fpdm: String, fpdt: String) {
 
-    Analytics.getConfiguration().getPublisherConfiguration(publisherId).setPersistentLabel("cs_fpid", fpid);
-    Analytics.getConfiguration().getPublisherConfiguration(publisherId).setPersistentLabel("cs_fpit", fpit);
-    Analytics.getConfiguration().getPublisherConfiguration(publisherId).setPersistentLabel("cs_fpdm", fpdm);
-    Analytics.getConfiguration().getPublisherConfiguration(publisherId).setPersistentLabel("cs_fpdt", fpdt);
-    Analytics.notifyHiddenEvent();
+        Analytics.getConfiguration().getPublisherConfiguration(publisherId).setPersistentLabel("cs_fpid", fpid);
+        Analytics.getConfiguration().getPublisherConfiguration(publisherId).setPersistentLabel("cs_fpit", fpit);
+        Analytics.getConfiguration().getPublisherConfiguration(publisherId).setPersistentLabel("cs_fpdm", fpdm);
+        Analytics.getConfiguration().getPublisherConfiguration(publisherId).setPersistentLabel("cs_fpdt", fpdt);
+        Analytics.notifyHiddenEvent();
 
-  }
+    }
 
-  companion object {
-    const val NAME = "Comscore"
-  }
+    @ReactMethod
+    fun setPersistentLabel(publisherId: String, labelName: String, labelValue: String) {
+
+        Analytics.getConfiguration().getPublisherConfiguration(publisherId).setPersistentLabel(labelName, labelValue);
+        Analytics.notifyHiddenEvent();
+
+    }
+
+    @ReactMethod
+	fun notifyUxActive() {
+
+        Analytics.notifyUxActive()
+
+	}
+
+    @ReactMethod
+	fun notifyUxInactive() {
+
+        Analytics.notifyUxInactive()
+
+	}
+
+    companion object {
+        const val NAME = "Comscore"
+    }
+
 }

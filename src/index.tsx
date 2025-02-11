@@ -17,10 +17,6 @@ const Comscore = NativeModules.Comscore
       }
     );
 
-export function multiply(a: number, b: number): Promise<number> {
-  return Comscore.multiply(a, b);
-}
-
 export function trackView(view: string): void {
   Comscore.trackView(view);
 }
@@ -37,4 +33,20 @@ export function updatePersistentLabels(
   fpdt: String
 ) {
   Comscore.updatePersistentLabels(publisherId, fpid, fpit, fpdm, fpdt);
+}
+
+export function setPersistentLabel(
+  publisherId: String,
+  labelName: String,
+  labelValue: String
+) {
+  Comscore.setPersistentLabel(publisherId, labelName, labelValue);
+}
+
+export function notifyUxActive() {
+  Comscore.notifyUxActive();
+}
+
+export function notifyUxInactive() {
+  Comscore.notifyUxInactive();
 }
