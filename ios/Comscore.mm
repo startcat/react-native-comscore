@@ -10,9 +10,9 @@ RCT_EXTERN_METHOD(updatePersistentLabels:(NSString *)publisherId withFpid:(NSStr
 
 RCT_EXTERN_METHOD(setPersistentLabel:(NSString *)publisherId withLabelName:(NSString *)labelName withLabelValue:(NSString *)labelValue)
 
-RCT_EXTERN_METHOD(notifyUxActive:)
+RCT_EXTERN_METHOD(notifyUxActive)
 
-RCT_EXTERN_METHOD(notifyUxInactive:)
+RCT_EXTERN_METHOD(notifyUxInactive)
 
 + (BOOL)requiresMainQueueSetup
 {

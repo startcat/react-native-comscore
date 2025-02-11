@@ -44,14 +44,14 @@ class Comscore: NSObject {
 
     }
 
-    @objc(notifyUxActive:)
+    @objc(notifyUxActive)
 	func notifyUxActive() {
 
         SCORAnalytics.notifyUxActive()
 
 	}
 
-    @objc(notifyUxInactive:)
+    @objc(notifyUxInactive)
 	func notifyUxInactive() {
 
         SCORAnalytics.notifyUxInactive()
