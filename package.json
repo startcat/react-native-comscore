@@ -3,7 +3,7 @@
   "version": "0.1.4",
   "description": "ComScore Analytics Module",
   "source": "./src/index.tsx",
-  "main": "./lib/commonjs/index.js",
+  "main": "index.js",
   "module": "./lib/module/index.js",
   "types": "./lib/typescript/commonjs/src/index.d.ts",
   "exports": {
