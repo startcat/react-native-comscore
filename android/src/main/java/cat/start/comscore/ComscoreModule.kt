@@ -1,8 +1,10 @@
 package cat.start.comscore
 
 import android.app.Activity
+import com.facebook.react.bridge.*
 import com.comscore.Analytics
 import com.comscore.PublisherConfiguration
+import com.comscore.UsagePropertiesAutoUpdateMode
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -36,6 +38,8 @@ public fun init(activity:Activity, publisherId: String, applicationName: String)
 class ComscoreModule(reactContext: ReactApplicationContext) :
 ReactContextBaseJavaModule(reactContext) {
 
+    private var comscoreConnectors: HashMap<Int, ComscoreConnector> = HashMap()
+
     override fun getName(): String {
         return NAME
     }
@@ -47,17 +51,17 @@ ReactContextBaseJavaModule(reactContext) {
         labels.put("ns_category", view.replace("/", "."));
         Analytics.notifyViewEvent(labels)
 
-	}
+	  }
 
-	@ReactMethod
-	fun trackEvent(action: String, category: String) {
+	  @ReactMethod
+	  fun trackEvent(action: String, category: String) {
 
         val comScoreEventName = "$category.$action";
         val labels = HashMap<String, String>()
         labels.put("event", comScoreEventName)
         Analytics.notifyViewEvent(labels)
 
-	}
+	  }
 
     @ReactMethod
     fun updatePersistentLabels(publisherId: String, fpid: String, fpit: String, fpdm: String, fpdt: String) {
@@ -79,18 +83,23 @@ ReactContextBaseJavaModule(reactContext) {
     }
 
     @ReactMethod
-	fun notifyUxActive() {
+	  fun notifyUxActive() {
 
         Analytics.notifyUxActive()
 
-	}
+	  }
 
     @ReactMethod
-	fun notifyUxInactive() {
+	  fun notifyUxInactive() {
 
         Analytics.notifyUxInactive()
 
-	}
+	  }
+
+    @ReactMethod
+    fun update(tag: Int, comscoreMetadata: ReadableMap) {
+        comscoreConnectors[tag]?.update(mapMetadata(comscoreMetadata))
+    }
 
     companion object {
         const val NAME = "Comscore"

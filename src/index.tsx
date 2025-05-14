@@ -1,4 +1,9 @@
 import { NativeModules, Platform } from 'react-native';
+import { type ComscoreMetadata } from './api/ComscoreMetadata';
+
+export { ComscoreConnector } from './api/ComscoreConnector';
+export * from './api/ComscoreConfiguration';
+export * from './api/ComscoreMetadata';
 
 const LINKING_ERROR =
   `The package 'react-native-comscore' doesn't seem to be linked. Make sure: \n\n` +
@@ -31,7 +36,7 @@ export function updatePersistentLabels(
   fpit: String,
   fpdm: String,
   fpdt: String
-) {
+): void {
   Comscore.updatePersistentLabels(publisherId, fpid, fpit, fpdm, fpdt);
 }
 
@@ -39,14 +44,18 @@ export function setPersistentLabel(
   publisherId: String,
   labelName: String,
   labelValue: String
-) {
+): void {
   Comscore.setPersistentLabel(publisherId, labelName, labelValue);
 }
 
-export function notifyUxActive() {
+export function notifyUxActive(): void {
   Comscore.notifyUxActive();
 }
 
-export function notifyUxInactive() {
+export function notifyUxInactive(): void {
   Comscore.notifyUxInactive();
+}
+
+export function update(metadata: ComscoreMetadata): void {
+  Comscore.update(metadata);
 }
