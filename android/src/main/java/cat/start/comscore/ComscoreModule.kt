@@ -38,7 +38,7 @@ public fun init(activity:Activity, publisherId: String, applicationName: String)
 class ComscoreModule(reactContext: ReactApplicationContext) :
 ReactContextBaseJavaModule(reactContext) {
 
-    private var comscoreConnectors: HashMap<Int, ComscoreConnector> = HashMap()
+    // private var comscoreConnectors: HashMap<Int, ComscoreConnector> = HashMap()
 
     override fun getName(): String {
         return NAME
@@ -98,7 +98,7 @@ ReactContextBaseJavaModule(reactContext) {
 
     @ReactMethod
     fun update(tag: Int, comscoreMetadata: ReadableMap) {
-        comscoreConnectors[tag]?.update(mapMetadata(comscoreMetadata))
+        // comscoreConnectors[tag]?.update(mapMetadata(comscoreMetadata))
     }
 
     companion object {

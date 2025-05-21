@@ -9,7 +9,7 @@ import com.comscore.UsagePropertiesAutoUpdateMode
 private const val TAG = "ComscoreConnector"
 
 class ComscoreAnalytics {
-  private var adapter: ComscoreAdapter? = null
+  // private var adapter: ComscoreAdapter? = null
   private var startedTracking = false
 
   fun initialize(
@@ -22,9 +22,9 @@ class ComscoreAnalytics {
     }
     startedTracking = true
 
-    if (BuildConfig.DEBUG) {
-      Log.i(TAG, "initialize")
-    }
+    // if (BuildConfig.DEBUG) {
+      // Log.i(TAG, "initialize")
+    // }
 
     Analytics.getConfiguration().apply {
       addClient(PublisherConfiguration.Builder()
@@ -48,22 +48,22 @@ class ComscoreAnalytics {
 
     Analytics.start(context)
 
-    adapter = ComscoreAdapter(configuration, metadata)
+    // adapter = ComscoreAdapter(configuration, metadata)
   }
 
   fun destroy() {
-    adapter?.destroy()
+    // adapter?.destroy()
   }
 
   fun setPersistentLabel(label: String, value: String) {
-    adapter?.setPersistentLabel(label, value)
+    // adapter?.setPersistentLabel(label, value)
   }
 
   fun setPersistentLabels(labels: Map<String, String>) {
-    adapter?.setPersistentLabels(labels)
+    // adapter?.setPersistentLabels(labels)
   }
 
   fun update(metadata: ComscoreMetaData) {
-    adapter?.setMedatata(metadata)
+    // adapter?.setMedatata(metadata)
   }
 }

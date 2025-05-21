@@ -1,7 +1,6 @@
 package cat.start.comscore.integration
 
 import android.content.Context
-import com.theoplayer.android.api.player.Player
 
 class ComscoreConnector(
   appContext: Context,
