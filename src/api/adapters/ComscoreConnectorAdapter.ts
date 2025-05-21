@@ -1,5 +1,5 @@
-import type { ComscoreConfiguration } from '../ComscoreConfiguration';
-import type { ComscoreMetadata } from '../ComscoreMetadata';
+import type { ComscoreConfiguration } from '../types/ComscoreConfiguration';
+import type { ComscoreMetadata } from '../types/ComscoreMetadata';
 import { NativeModules } from 'react-native';
 
 export class ComscoreConnectorAdapter {

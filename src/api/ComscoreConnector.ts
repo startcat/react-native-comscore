@@ -1,6 +1,6 @@
 import { ComscoreConnectorAdapter } from './adapters/ComscoreConnectorAdapter';
-import type { ComscoreConfiguration } from './ComscoreConfiguration';
-import type { ComscoreMetadata } from './ComscoreMetadata';
+import type { ComscoreConfiguration } from './types/ComscoreConfiguration';
+import type { ComscoreMetadata } from './types/ComscoreMetadata';
 
 export class ComscoreConnector {
   private connectorAdapter: ComscoreConnectorAdapter;
