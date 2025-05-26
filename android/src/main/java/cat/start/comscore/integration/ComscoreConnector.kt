@@ -1,12 +1,14 @@
 package cat.start.comscore.integration
 
 import android.content.Context
+import com.facebook.react.bridge.ReactApplicationContext
 
 class ComscoreConnector(
-  appContext: Context,
+  appContext: ReactApplicationContext,
   configuration: ComscoreConfiguration,
   metadata: ComscoreMetaData
 ) {
+
   private val streamingAnalytics = ComscoreAnalytics()
 
   init {

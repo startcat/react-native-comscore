@@ -16,11 +16,11 @@ export class ComscoreConnectorAdapter {
   }
 
   update(metadata: ComscoreMetadata): void {
-    NativeModules.ComscoreModule.update(this.instanceId, metadata);
+    NativeModules.ComscoreModule.updateStreaming(this.instanceId, metadata);
   }
 
   setPersistentLabel(label: string, value: string): void {
-    NativeModules.ComscoreModule.setPersistentLabel(
+    NativeModules.ComscoreModule.setPersistentLabelStreaming(
       this.instanceId,
       label,
       value
@@ -28,10 +28,13 @@ export class ComscoreConnectorAdapter {
   }
 
   setPersistentLabels(labels: { [key: string]: string }): void {
-    NativeModules.ComscoreModule.setPersistentLabels(this.instanceId, labels);
+    NativeModules.ComscoreModule.setPersistentLabelsStreaming(
+      this.instanceId,
+      labels
+    );
   }
 
   destroy(): void {
-    NativeModules.ComscoreModule.destroy(this.instanceId || -1);
+    NativeModules.ComscoreModule.destroyStreaming(this.instanceId || -1);
   }
 }
