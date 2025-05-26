@@ -12,6 +12,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import cat.start.comscore.integration.*
 
+private const val NAME = "Comscore"
 private const val TAG = "ComscoreModule"
 private const val PUBLISHER_ID = "publisherId"
 
@@ -46,7 +47,7 @@ ReactContextBaseJavaModule(reactContext) {
     private var comscoreConnectors: HashMap<Int, ComscoreConnector> = HashMap()
 
     override fun getName(): String {
-        return TAG
+        return NAME
     }
 
     @ReactMethod
