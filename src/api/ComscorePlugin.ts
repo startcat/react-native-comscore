@@ -11,12 +11,12 @@ export class ComscorePlugin {
     ComscoreMetadata: ComscoreMetadata,
     ComscoreConfig: ComscoreConfiguration
   ) {
+    console.log('ComscorePlugin constructor', instanceId);
     this.connectorConnector = new ComscoreConnector(
       instanceId,
       ComscoreMetadata,
       ComscoreConfig
     );
-    console.log('ComscorePlugin constructor', instanceId);
   }
 
   update(metadata: ComscoreMetadata): void {

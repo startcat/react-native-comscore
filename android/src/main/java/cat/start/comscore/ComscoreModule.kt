@@ -108,6 +108,8 @@ ReactContextBaseJavaModule(reactContext) {
 
         val customerKey = comscoreConfig.getString(PUBLISHER_ID) ?: ""
 
+        Log.i(TAG, "initializeStreaming")
+
         if (customerKey.isEmpty()) {
             Log.e(TAG, "Invalid $PUBLISHER_ID")
         } else {
@@ -122,21 +124,25 @@ ReactContextBaseJavaModule(reactContext) {
 
     @ReactMethod
     fun updateStreaming(tag: Int, comscoreMetadata: ReadableMap) {
+        Log.i(TAG, "updateStreaming")
         comscoreConnectors[tag]?.update(mapMetadata(comscoreMetadata))
     }
 
     @ReactMethod
     fun setPersistentLabelsStreaming(tag: Int, labels: ReadableMap) {
+        Log.i(TAG, "setPersistentLabelsStreaming")
         comscoreConnectors[tag]?.setPersistentLabels(mapLabels(labels))
     }
 
     @ReactMethod
     fun setPersistentLabelStreaming(tag: Int, label: String, value: String) {
+        Log.i(TAG, "setPersistentLabelStreaming")
         comscoreConnectors[tag]?.setPersistentLabel(label, value)
     }
 
     @ReactMethod
     fun destroyStreaming(tag: Int) {
+        Log.i(TAG, "destroyStreaming")
         comscoreConnectors[tag]?.destroy()
         comscoreConnectors.remove(tag)
     }

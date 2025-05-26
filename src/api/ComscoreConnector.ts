@@ -10,6 +10,7 @@ export class ComscoreConnector {
     ComscoreMetadata: ComscoreMetadata,
     ComscoreConfig: ComscoreConfiguration
   ) {
+    console.log('ComscoreConnector constructor', instanceId);
     this.connectorAdapter = new ComscoreConnectorAdapter(
       instanceId,
       ComscoreMetadata,
