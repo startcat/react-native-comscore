@@ -8,7 +8,7 @@ export class ComscoreConnectorAdapter {
     comscoreMetadata: ComscoreMetadata,
     comscoreConfig: ComscoreConfiguration
   ) {
-    NativeModules.ComscoreModule.initialize(
+    NativeModules.Comscore.initializeStreaming(
       this.instanceId,
       comscoreMetadata,
       comscoreConfig
@@ -16,11 +16,11 @@ export class ComscoreConnectorAdapter {
   }
 
   update(metadata: ComscoreMetadata): void {
-    NativeModules.ComscoreModule.updateStreaming(this.instanceId, metadata);
+    NativeModules.Comscore.updateStreaming(this.instanceId, metadata);
   }
 
   setPersistentLabel(label: string, value: string): void {
-    NativeModules.ComscoreModule.setPersistentLabelStreaming(
+    NativeModules.Comscore.setPersistentLabelStreaming(
       this.instanceId,
       label,
       value
@@ -28,13 +28,13 @@ export class ComscoreConnectorAdapter {
   }
 
   setPersistentLabels(labels: { [key: string]: string }): void {
-    NativeModules.ComscoreModule.setPersistentLabelsStreaming(
+    NativeModules.Comscore.setPersistentLabelsStreaming(
       this.instanceId,
       labels
     );
   }
 
   destroy(): void {
-    NativeModules.ComscoreModule.destroyStreaming(this.instanceId || -1);
+    NativeModules.Comscore.destroyStreaming(this.instanceId || -1);
   }
 }

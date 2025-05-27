@@ -1,21 +1,32 @@
-import { ComscoreConnectorAdapter } from './adapters/ComscoreConnectorAdapter';
 import type { ComscoreConfiguration } from './types/ComscoreConfiguration';
 import type { ComscoreMetadata } from './types/ComscoreMetadata';
+import { NativeModules } from 'react-native';
 
 export class ComscoreConnector {
-  private connectorAdapter: ComscoreConnectorAdapter;
+  private instanceId: number;
 
   constructor(
     instanceId: number,
-    ComscoreMetadata: ComscoreMetadata,
-    ComscoreConfig: ComscoreConfiguration
+    comscoreMetadata: ComscoreMetadata,
+    comscoreConfig: ComscoreConfiguration
   ) {
     console.log('ComscoreConnector constructor', instanceId);
-    this.connectorAdapter = new ComscoreConnectorAdapter(
-      instanceId,
-      ComscoreMetadata,
-      ComscoreConfig
-    );
+    this.instanceId = instanceId;
+
+    if (!NativeModules.Comscore) {
+      console.error('Comscore native module is not available');
+      return;
+    }
+
+    try {
+      NativeModules.Comscore.initializeStreaming(
+        this.instanceId,
+        comscoreMetadata,
+        comscoreConfig
+      );
+    } catch (error) {
+      console.error('Error initializing Comscore:', error);
+    }
   }
 
   /**
@@ -23,14 +34,20 @@ export class ComscoreConnector {
    * @param metadata object of key value pairs
    */
   update(metadata: ComscoreMetadata): void {
-    this.connectorAdapter.update(metadata);
+    if (!NativeModules.Comscore) return;
+    NativeModules.Comscore.updateStreaming(this.instanceId, metadata);
   }
 
   /**
    * Set a persistent label on the ComScore PublisherConfiguration
    */
   setPersistentLabel(label: string, value: string): void {
-    this.connectorAdapter.setPersistentLabel(label, value);
+    if (!NativeModules.Comscore) return;
+    NativeModules.Comscore.setPersistentLabelStreaming(
+      this.instanceId,
+      label,
+      value
+    );
   }
 
   /**
@@ -38,13 +55,18 @@ export class ComscoreConnector {
    * @param labels object of key value pairs
    */
   setPersistentLabels(labels: { [key: string]: string }): void {
-    this.connectorAdapter.setPersistentLabels(labels);
+    if (!NativeModules.Comscore) return;
+    NativeModules.Comscore.setPersistentLabelsStreaming(
+      this.instanceId,
+      labels
+    );
   }
 
   /**
    * Destroy ComScoreStreamingAnalytics and unregister it from player
    */
   destroy(): void {
-    this.connectorAdapter.destroy();
+    if (!NativeModules.Comscore) return;
+    NativeModules.Comscore.destroyStreaming(this.instanceId || -1);
   }
 }
