@@ -2,6 +2,7 @@ import { NativeModules, Platform } from 'react-native';
 import { type ComscoreMetadata } from './api/types/ComscoreMetadata';
 
 export { ComscoreConnector } from './api/ComscoreConnector';
+export { ComscorePlugin } from './api/ComscorePlugin';
 export * from './api/types/ComscoreConfiguration';
 export * from './api/types/ComscoreMetadata';
 

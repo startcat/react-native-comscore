@@ -7,10 +7,10 @@ export class ComscorePlugin {
   private connectorConnector: ComscoreConnector;
 
   constructor(
-    instanceId: number,
     ComscoreMetadata: ComscoreMetadata,
     ComscoreConfig: ComscoreConfiguration
   ) {
+    const instanceId = Math.floor(Math.random() * 10000);
     console.log('ComscorePlugin constructor', instanceId);
     this.connectorConnector = new ComscoreConnector(
       instanceId,
