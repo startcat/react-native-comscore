@@ -89,14 +89,14 @@ ReactContextBaseJavaModule(reactContext) {
     }
 
     @ReactMethod
-	  fun notifyUxActive() {
+    fun notifyUxActive() {
         Analytics.notifyUxActive()
-	  }
+    }
 
     @ReactMethod
-	  fun notifyUxInactive() {
+    fun notifyUxInactive() {
         Analytics.notifyUxInactive()
-	  }
+    }
 
     /*
      *  Streaming Tag por instancias según player

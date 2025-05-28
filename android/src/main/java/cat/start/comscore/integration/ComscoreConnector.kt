@@ -2,6 +2,13 @@ package cat.start.comscore.integration
 
 import android.content.Context
 import com.facebook.react.bridge.ReactApplicationContext
+import com.comscore.Analytics
+import com.comscore.PublisherConfiguration
+import com.comscore.UsagePropertiesAutoUpdateMode
+import com.comscore.streaming.AdvertisementMetadata
+import com.comscore.streaming.AdvertisementType
+import com.comscore.streaming.ContentMetadata
+import com.comscore.streaming.StreamingAnalytics
 
 class ComscoreConnector(
   appContext: ReactApplicationContext,
@@ -9,10 +16,36 @@ class ComscoreConnector(
   metadata: ComscoreMetaData
 ) {
 
-  private val streamingAnalytics = ComscoreAnalytics()
+  private var startedTracking = false
+  private val streamingAnalytics: StreamingAnalytics = StreamingAnalytics()
 
   init {
-    streamingAnalytics.initialize(appContext, configuration, metadata)
+    if (startedTracking) {
+      return
+    }
+    startedTracking = true
+
+    Analytics.getConfiguration().apply {
+      addClient(PublisherConfiguration.Builder()
+        .publisherId(configuration.publisherId)
+        .secureTransmission(configuration.secureTransmission).apply {
+          if (configuration.userConsent == "1" || configuration.userConsent == "0") {
+            persistentLabels(hashMapOf("cs_ucfr" to configuration.userConsent))
+          }
+        }
+        .build()
+      )
+      setUsagePropertiesAutoUpdateMode(configuration.usagePropertiesAutoUpdateMode)
+      setApplicationName(configuration.applicationName)
+      if (configuration.childDirected) {
+        enableChildDirectedApplicationMode()
+      }
+      if (configuration.debug) {
+        enableImplementationValidationMode()
+      }
+    }
+
+    Analytics.start(appContext)
   }
 
   fun update(metadata: ComscoreMetaData) {
