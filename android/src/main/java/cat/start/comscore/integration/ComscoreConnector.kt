@@ -131,6 +131,6 @@ class ComscoreConnector(
   }
 
   fun destroy() {
-    streamingAnalytics.destroy()
+    // TODO: Limpiar eventos si los hay
   }
 }
