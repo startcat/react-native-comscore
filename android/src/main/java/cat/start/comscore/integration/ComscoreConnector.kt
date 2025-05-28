@@ -1,6 +1,7 @@
 package cat.start.comscore.integration
 
 import android.content.Context
+import android.util.Log
 import com.facebook.react.bridge.ReactApplicationContext
 import com.comscore.Analytics
 import com.comscore.PublisherConfiguration
@@ -9,6 +10,9 @@ import com.comscore.streaming.AdvertisementMetadata
 import com.comscore.streaming.AdvertisementType
 import com.comscore.streaming.ContentMetadata
 import com.comscore.streaming.StreamingAnalytics
+import cat.start.comscore.BuildConfig
+
+private const val TAG = "ComscoreConnector"
 
 class ComscoreConnector(
   appContext: ReactApplicationContext,
@@ -20,10 +24,22 @@ class ComscoreConnector(
   private val streamingAnalytics: StreamingAnalytics = StreamingAnalytics()
 
   init {
+    initialize(appContext, configuration, metadata)
+  }
+
+  fun initialize(
+    context: Context,
+    configuration: ComscoreConfiguration,
+    metadata: ComscoreMetaData
+  ) {
     if (startedTracking) {
       return
     }
     startedTracking = true
+
+    if (BuildConfig.DEBUG) {
+      Log.i(TAG, "initialize")
+    }
 
     Analytics.getConfiguration().apply {
       addClient(PublisherConfiguration.Builder()
@@ -45,23 +61,29 @@ class ComscoreConnector(
       }
     }
 
-    Analytics.start(appContext)
+    Analytics.start(context)
   }
 
   fun update(metadata: ComscoreMetaData) {
-    streamingAnalytics.update(metadata)
+    // Utilizar la configuración para actualizar los metadatos
+    streamingAnalytics.getConfiguration().addAssetMetadata(metadata.toAssetMetadata())
   }
 
   fun setPersistentLabels(labels: Map<String, String>) {
-    streamingAnalytics.setPersistentLabels(labels)
+    // Configurar etiquetas persistentes una por una
+    labels.forEach { (key, value) ->
+      streamingAnalytics.getConfiguration().setPersistentLabel(key, value)
+    }
   }
 
   fun setPersistentLabel(label: String, value: String) {
-    streamingAnalytics.setPersistentLabel(label, value)
+    // Configurar una etiqueta persistente
+    streamingAnalytics.getConfiguration().setPersistentLabel(label, value)
   }
 
   fun setMetadata(metadata: ComscoreMetaData) {
-    streamingAnalytics.setMetadata(metadata)
+    // Convertir ComscoreMetaData a AssetMetadata y agregarlo a la configuración
+    streamingAnalytics.getConfiguration().addAssetMetadata(metadata.toAssetMetadata())
   }
 
   fun notifyEnd() {
