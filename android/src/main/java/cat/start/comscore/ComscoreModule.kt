@@ -141,6 +141,78 @@ ReactContextBaseJavaModule(reactContext) {
     }
 
     @ReactMethod
+    fun setMetadata(tag: Int, metadata: ReadableMap) {
+        Log.i(TAG, "setMetadata")
+        comscoreConnectors[tag]?.setMetadata(mapMetadata(metadata))
+    }
+
+    @ReactMethod
+    fun notifyEnd(tag: Int) {
+        Log.i(TAG, "notifyEnd")
+        comscoreConnectors[tag]?.notifyEnd()
+    }
+
+    @ReactMethod
+    fun notifyPause(tag: Int) {
+        Log.i(TAG, "notifyPause")
+        comscoreConnectors[tag]?.notifyPause()
+    }
+
+    @ReactMethod
+    fun notifyPlay(tag: Int) {
+        Log.i(TAG, "notifyPlay")
+        comscoreConnectors[tag]?.notifyPlay()
+    }
+
+    @ReactMethod
+    fun createPlaybackSession(tag: Int) {
+        Log.i(TAG, "createPlaybackSession")
+        comscoreConnectors[tag]?.createPlaybackSession()
+    }
+
+    @ReactMethod
+    fun setDvrWindowLength(tag: Int, length: Long) {
+        Log.i(TAG, "setDvrWindowLength")
+        comscoreConnectors[tag]?.setDvrWindowLength(length)
+    }
+
+    @ReactMethod
+    fun notifyBufferStop(tag: Int) {
+        Log.i(TAG, "notifyBufferStop")
+        comscoreConnectors[tag]?.notifyBufferStop()
+    }
+
+    @ReactMethod
+    fun notifySeekStart(tag: Int) {
+        Log.i(TAG, "notifySeekStart")
+        comscoreConnectors[tag]?.notifySeekStart()
+    }
+
+    @ReactMethod
+    fun startFromDvrWindowOffset(tag: Int, offset: Long) {
+        Log.i(TAG, "startFromDvrWindowOffset")
+        comscoreConnectors[tag]?.startFromDvrWindowOffset(offset)
+    }
+
+    @ReactMethod
+    fun startFromPosition(tag: Int, position: Long) {
+        Log.i(TAG, "startFromPosition")
+        comscoreConnectors[tag]?.startFromPosition(position)
+    }
+
+    @ReactMethod
+    fun notifyBufferStart(tag: Int) {
+        Log.i(TAG, "notifyBufferStart")
+        comscoreConnectors[tag]?.notifyBufferStart()
+    }
+
+    @ReactMethod
+    fun notifyChangePlaybackRate(tag: Int, rate: Float) {
+        Log.i(TAG, "notifyChangePlaybackRate")
+        comscoreConnectors[tag]?.notifyChangePlaybackRate(rate)
+    }
+
+    @ReactMethod
     fun destroyStreaming(tag: Int) {
         Log.i(TAG, "destroyStreaming")
         comscoreConnectors[tag]?.destroy()

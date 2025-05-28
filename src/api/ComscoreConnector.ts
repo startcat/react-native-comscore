@@ -2,6 +2,8 @@ import type { ComscoreConfiguration } from './types/ComscoreConfiguration';
 import type { ComscoreMetadata } from './types/ComscoreMetadata';
 import { NativeModules } from 'react-native';
 
+const TAG = '[ComscoreConnector]';
+
 export class ComscoreConnector {
   private instanceId: number;
 
@@ -10,7 +12,7 @@ export class ComscoreConnector {
     comscoreMetadata: ComscoreMetadata,
     comscoreConfig: ComscoreConfiguration
   ) {
-    console.log('ComscoreConnector constructor', instanceId);
+    console.log(`${TAG} constructor`, instanceId);
     this.instanceId = instanceId;
 
     if (!NativeModules.Comscore) {
@@ -24,25 +26,27 @@ export class ComscoreConnector {
         comscoreMetadata,
         comscoreConfig
       );
+      if (__DEV__) {
+        console.log(`${TAG} initialized ✅`, this.instanceId);
+      }
     } catch (error) {
-      console.error('Error initializing Comscore:', error);
+      console.error(`${TAG} Error initializing Comscore:`, error);
     }
   }
 
-  /**
-   * Sets/updates Comscore metadata on the Comscore video analytics.
-   * @param metadata object of key value pairs
-   */
   update(metadata: ComscoreMetadata): void {
     if (!NativeModules.Comscore) return;
+    if (__DEV__) {
+      console.log(`${TAG} update`, this.instanceId);
+    }
     NativeModules.Comscore.updateStreaming(this.instanceId, metadata);
   }
 
-  /**
-   * Set a persistent label on the ComScore PublisherConfiguration
-   */
   setPersistentLabel(label: string, value: string): void {
     if (!NativeModules.Comscore) return;
+    if (__DEV__) {
+      console.log(`${TAG} setPersistentLabel`, this.instanceId);
+    }
     NativeModules.Comscore.setPersistentLabelStreaming(
       this.instanceId,
       label,
@@ -50,23 +54,118 @@ export class ComscoreConnector {
     );
   }
 
-  /**
-   * Set persistent labels on the ComScore PublisherConfiguration
-   * @param labels object of key value pairs
-   */
   setPersistentLabels(labels: { [key: string]: string }): void {
     if (!NativeModules.Comscore) return;
+    if (__DEV__) {
+      console.log(`${TAG} setPersistentLabels`, this.instanceId);
+    }
     NativeModules.Comscore.setPersistentLabelsStreaming(
       this.instanceId,
       labels
     );
   }
 
-  /**
-   * Destroy ComScoreStreamingAnalytics and unregister it from player
-   */
+  setMetadata(metadata: ComscoreMetadata) {
+    if (!NativeModules.Comscore) return;
+    if (__DEV__) {
+      console.log(`${TAG} setMetadata`, this.instanceId);
+    }
+    NativeModules.Comscore.setMetadata(this.instanceId, metadata);
+  }
+
+  notifyEnd() {
+    if (!NativeModules.Comscore) return;
+    if (__DEV__) {
+      console.log(`${TAG} notifyEnd`, this.instanceId);
+    }
+    NativeModules.Comscore.notifyEnd(this.instanceId);
+  }
+
+  notifyPause() {
+    if (!NativeModules.Comscore) return;
+    if (__DEV__) {
+      console.log(`${TAG} notifyPause`, this.instanceId);
+    }
+    NativeModules.Comscore.notifyPause(this.instanceId);
+  }
+
+  notifyPlay() {
+    if (!NativeModules.Comscore) return;
+    if (__DEV__) {
+      console.log(`${TAG} notifyPlay`, this.instanceId);
+    }
+    NativeModules.Comscore.notifyPlay(this.instanceId);
+  }
+
+  createPlaybackSession() {
+    if (!NativeModules.Comscore) return;
+    if (__DEV__) {
+      console.log(`${TAG} createPlaybackSession`, this.instanceId);
+    }
+    NativeModules.Comscore.createPlaybackSession(this.instanceId);
+  }
+
+  setDvrWindowLength(length: number) {
+    if (!NativeModules.Comscore) return;
+    if (__DEV__) {
+      console.log(`${TAG} setPersistentLabels`, this.instanceId);
+    }
+    NativeModules.Comscore.setDvrWindowLength(this.instanceId, length);
+  }
+
+  notifyBufferStop() {
+    if (!NativeModules.Comscore) return;
+    if (__DEV__) {
+      console.log(`${TAG} setPersistentLabels`, this.instanceId);
+    }
+    NativeModules.Comscore.notifyBufferStop(this.instanceId);
+  }
+
+  notifySeekStart() {
+    if (!NativeModules.Comscore) return;
+    if (__DEV__) {
+      console.log(`${TAG} setPersistentLabels`, this.instanceId);
+    }
+    NativeModules.Comscore.notifySeekStart(this.instanceId);
+  }
+
+  startFromDvrWindowOffset(offset: number) {
+    if (!NativeModules.Comscore) return;
+    if (__DEV__) {
+      console.log(`${TAG} setPersistentLabels`, this.instanceId);
+    }
+    NativeModules.Comscore.startFromDvrWindowOffset(this.instanceId, offset);
+  }
+
+  startFromPosition(position: number) {
+    if (!NativeModules.Comscore) return;
+    if (__DEV__) {
+      console.log(`${TAG} setPersistentLabels`, this.instanceId);
+    }
+    NativeModules.Comscore.startFromPosition(this.instanceId, position);
+  }
+
+  notifyBufferStart() {
+    if (!NativeModules.Comscore) return;
+    if (__DEV__) {
+      console.log(`${TAG} setPersistentLabels`, this.instanceId);
+    }
+    NativeModules.Comscore.notifyBufferStart(this.instanceId);
+  }
+
+  notifyChangePlaybackRate(rate: number) {
+    if (!NativeModules.Comscore) return;
+    if (__DEV__) {
+      console.log(`${TAG} setPersistentLabels`, this.instanceId);
+    }
+    NativeModules.Comscore.notifyChangePlaybackRate(this.instanceId, rate);
+  }
+
   destroy(): void {
     if (!NativeModules.Comscore) return;
+    if (__DEV__) {
+      console.log(`${TAG} destroy`, this.instanceId);
+    }
     NativeModules.Comscore.destroyStreaming(this.instanceId || -1);
   }
 }
