@@ -17,21 +17,24 @@ export enum ComscoreState {
 /*
  *  Events List
  *
- *    onSourceChange
- *    onLoadedMetadata
- *    onDurationChange
- *    onPlay
- *    onPlaying
- *    onPause
- *    onSeeking
- *    onSeeked
- *    onWaiting
- *    onRateChange
- *    onError
- *    onContentProtectionError
- *    onEnded
- *    onAdStarted
- *    onContentResume
+ *    handleSourceChange
+ *    handleMetadataLoaded
+ *    handleDurationChange
+ *    handleBuffering
+ *
+ *    handlePlay
+ *    handlePause
+ *    handleSeeking
+ *    handleSeeked
+ *    handleRateChange
+ *    handleEnded
+ *
+ *    handleAdBegin
+ *    handleAdBreakBegin
+ *    handleContentResume -> Volvemos de un anuncio
+ *
+ *    handleError
+ *    handleContentProtectionError -> Por hacer
  *
  */
 
@@ -73,6 +76,11 @@ export class ComscorePlugin {
     // this.currentAdBreak = null;
   }
 
+  /*
+   * Common ComScore methods
+   *
+   */
+
   update(metadata: ComscoreMetadata): void {
     this.connectorConnector?.update(metadata);
   }
@@ -89,7 +97,10 @@ export class ComscorePlugin {
     this.connectorConnector?.destroy();
   }
 
-  // Funciones internas del plugin
+  /*
+   * Metadata methods
+   *
+   */
 
   setMedatata(metadata: ComscoreMetadata): void {
     if (__DEV__) {
@@ -112,6 +123,11 @@ export class ComscorePlugin {
 
     this.connectorConnector?.setMetadata(this.currentContentMetadata!);
   }
+
+  /*
+   * State methods
+   *
+   */
 
   transitionToStopped(): void {
     if (this.comScoreState !== ComscoreState.STOPPED) {
@@ -175,6 +191,11 @@ export class ComscorePlugin {
     }
   }
 
+  /*
+   * Metadata & Source events
+   *
+   */
+
   handleSourceChange(): void {
     if (__DEV__) {
       console.log(`${TAG} 🎯 handleSourceChange`);
@@ -223,6 +244,31 @@ export class ComscorePlugin {
     // TODO check if durationchange gives content duration when there's a preroll
   }
 
+  handleBuffering(isBuffering: boolean): void {
+    if (__DEV__) {
+      console.log(`${TAG} 🎯 handleBuffering ${isBuffering}`);
+    }
+    if (isBuffering !== this.buffering) {
+      if (isBuffering) {
+        if (
+          (this.comScoreState === ComscoreState.ADVERTISEMENT && this.inAd) ||
+          (this.comScoreState === ComscoreState.VIDEO && !this.inAd)
+        ) {
+          this.buffering = true;
+          this.connectorConnector?.notifyBufferStart();
+        }
+      } else {
+        this.buffering = false;
+        this.connectorConnector?.notifyBufferStop();
+      }
+    }
+  }
+
+  /*
+   * Playback events
+   *
+   */
+
   handlePlay(): void {
     if (__DEV__) {
       console.log(`${TAG} 🎯 handlePlay`);
@@ -256,26 +302,6 @@ export class ComscorePlugin {
       return; // last played ad was a post-roll so there's no real content coming, return and report nothing
     } else {
       this.transitionToVideo(); // will set content metadata and notify play if not done already
-    }
-  }
-
-  handleBuffering(isBuffering: boolean): void {
-    if (__DEV__) {
-      console.log(`${TAG} 🎯 handleBuffering ${isBuffering}`);
-    }
-    if (isBuffering !== this.buffering) {
-      if (isBuffering) {
-        if (
-          (this.comScoreState === ComscoreState.ADVERTISEMENT && this.inAd) ||
-          (this.comScoreState === ComscoreState.VIDEO && !this.inAd)
-        ) {
-          this.buffering = true;
-          this.connectorConnector?.notifyBufferStart();
-        }
-      } else {
-        this.buffering = false;
-        this.connectorConnector?.notifyBufferStop();
-      }
     }
   }
 
@@ -327,19 +353,31 @@ export class ComscorePlugin {
     this.connectorConnector?.notifyChangePlaybackRate(rate);
   }
 
-  handleError(): void {
-    if (__DEV__) {
-      console.log(`${TAG} 🎯 handleError`);
-    }
-    this.transitionToStopped();
-  }
-
   handleEnded(): void {
     if (__DEV__) {
       console.log(`${TAG} 🎯 handleEnded`);
     }
     this.transitionToStopped();
     this.ended = true;
+  }
+
+  /*
+   * Ad events
+   *
+   */
+
+  handleAdBegin(): void {
+    if (__DEV__) {
+      console.log(`${TAG} 🎯 handleAdBegin`);
+    }
+    // if (currentAdBreak == null && ad?.imaAd != null) {
+    //   handleAdBreakBegin(ad.adBreak)
+    // }
+    // if (BuildConfig.DEBUG) {
+    //   Log.i(TAG, "DEBUG: AD_BEGIN event")
+    // }
+    // currentAdDuration = (ad?.imaAd?.duration ?: 0.0) * 1000
+    // setAdMetadata(currentAdDuration, currentAdOffset, ad?.id ?: "");
   }
 
   handleAdBreakBegin(): void {
@@ -356,26 +394,24 @@ export class ComscorePlugin {
     this.transitionToAdvertisement();
   }
 
-  handleAdBegin(): void {
-    if (__DEV__) {
-      console.log(`${TAG} 🎯 handleAdBegin`);
-    }
-    // if (currentAdBreak == null && ad?.imaAd != null) {
-    //   handleAdBreakBegin(ad.adBreak)
-    // }
-    // if (BuildConfig.DEBUG) {
-    //   Log.i(TAG, "DEBUG: AD_BEGIN event")
-    // }
-    // currentAdDuration = (ad?.imaAd?.duration ?: 0.0) * 1000
-    // setAdMetadata(currentAdDuration, currentAdOffset, ad?.id ?: "");
-  }
-
   handleContentResume(): void {
     if (__DEV__) {
       console.log(`${TAG} 🎯 handleContentResume`);
     }
     this.inAd = false;
     this.transitionToVideo();
+  }
+
+  /*
+   * Errors
+   *
+   */
+
+  handleError(): void {
+    if (__DEV__) {
+      console.log(`${TAG} 🎯 handleError`);
+    }
+    this.transitionToStopped();
   }
 
   handleContentProtectionError(): void {
