@@ -66,24 +66,24 @@ class ComscoreConnector(
 
   fun update(metadata: ComscoreMetaData) {
     // Utilizar la configuración para actualizar los metadatos
-    streamingAnalytics.getConfiguration().addAssetMetadata(metadata.toAssetMetadata())
+    streamingAnalytics.setMetadata(metadata.toComscoreContentMetadata())
   }
 
   fun setPersistentLabels(labels: Map<String, String>) {
     // Configurar etiquetas persistentes una por una
     labels.forEach { (key, value) ->
-      streamingAnalytics.getConfiguration().setPersistentLabel(key, value)
+      Analytics.getConfiguration().setPersistentLabel(key, value)
     }
   }
 
   fun setPersistentLabel(label: String, value: String) {
     // Configurar una etiqueta persistente
-    streamingAnalytics.getConfiguration().setPersistentLabel(label, value)
+    Analytics.getConfiguration().setPersistentLabel(label, value)
   }
 
   fun setMetadata(metadata: ComscoreMetaData) {
-    // Convertir ComscoreMetaData a AssetMetadata y agregarlo a la configuración
-    streamingAnalytics.getConfiguration().addAssetMetadata(metadata.toAssetMetadata())
+    // Configurar los metadatos del contenido
+    streamingAnalytics.setMetadata(metadata.toComscoreContentMetadata())
   }
 
   fun notifyEnd() {
