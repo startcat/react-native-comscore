@@ -127,6 +127,9 @@ class ComscoreConnector(
   }
 
   fun notifyChangePlaybackRate(rate: Float) {
+    // streamingAnalytics.notifyChangePlaybackRate(
+    //   java.lang.Double.valueOf(rateChangeEvent.playbackRate).toFloat()
+    // )
     streamingAnalytics.notifyChangePlaybackRate(rate)
   }
 
