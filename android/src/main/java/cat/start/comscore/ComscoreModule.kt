@@ -35,7 +35,7 @@ public fun init(activity:Activity, publisherId: String, applicationName: String)
             Analytics.getConfiguration().setApplicationName(applicationName)
         }
 
-        //Analytics.getConfiguration().enableImplementationValidationMode();
+        Analytics.getConfiguration().enableImplementationValidationMode()
         Analytics.start(activity)
     }
 

@@ -38,7 +38,9 @@ class ComscoreConnector(
     startedTracking = true
 
     if (BuildConfig.DEBUG) {
-      Log.i(TAG, "initialize")
+      Log.i(TAG, "initialize: starting with context=$context")
+      Log.i(TAG, "initialize: configuration=[publisherId=${configuration.publisherId}, appName=${configuration.applicationName}, debug=${configuration.debug}]")
+      Log.i(TAG, "initialize: metadata=$metadata")
     }
 
     Analytics.getConfiguration().apply {
@@ -65,11 +67,17 @@ class ComscoreConnector(
   }
 
   fun update(metadata: ComscoreMetaData) {
+    if (BuildConfig.DEBUG) {
+      Log.i(TAG, "update with metadata: ${metadata}")
+    }
     // Utilizar la configuración para actualizar los metadatos
     streamingAnalytics.setMetadata(metadata.toComscoreContentMetadata())
   }
 
   fun setPersistentLabels(labels: Map<String, String>) {
+    if (BuildConfig.DEBUG) {
+      Log.i(TAG, "setPersistentLabels: ${labels}")
+    }
     // Configurar etiquetas persistentes una por una
     labels.forEach { (key, value) ->
       Analytics.getConfiguration().setPersistentLabel(key, value)
@@ -77,56 +85,95 @@ class ComscoreConnector(
   }
 
   fun setPersistentLabel(label: String, value: String) {
+    if (BuildConfig.DEBUG) {
+      Log.i(TAG, "setPersistentLabel: $label = $value")
+    }
     // Configurar una etiqueta persistente
     Analytics.getConfiguration().setPersistentLabel(label, value)
   }
 
   fun setMetadata(metadata: ComscoreMetaData) {
+    if (BuildConfig.DEBUG) {
+      Log.i(TAG, "setMetadata: ${metadata}")
+    }
     // Configurar los metadatos del contenido
     streamingAnalytics.setMetadata(metadata.toComscoreContentMetadata())
   }
 
   fun notifyEnd() {
+    if (BuildConfig.DEBUG) {
+      Log.i(TAG, "notifyEnd")
+    }
     streamingAnalytics.notifyEnd()
   }
 
   fun notifyPause() {
+    if (BuildConfig.DEBUG) {
+      Log.i(TAG, "notifyPause")
+    }
     streamingAnalytics.notifyPause()
   }
 
   fun notifyPlay() {
+    if (BuildConfig.DEBUG) {
+      Log.i(TAG, "notifyPlay")
+    }
     streamingAnalytics.notifyPlay()
   }
 
   fun createPlaybackSession() {
+    if (BuildConfig.DEBUG) {
+      Log.i(TAG, "createPlaybackSession")
+    }
     streamingAnalytics.createPlaybackSession()
   }
 
   fun setDvrWindowLength(length: Long) {
+    if (BuildConfig.DEBUG) {
+      Log.i(TAG, "setDvrWindowLength: $length")
+    }
     streamingAnalytics.setDvrWindowLength(length)
   }
 
   fun notifyBufferStop() {
+    if (BuildConfig.DEBUG) {
+      Log.i(TAG, "notifyBufferStop")
+    }
     streamingAnalytics.notifyBufferStop()
   }
 
   fun notifySeekStart() {
+    if (BuildConfig.DEBUG) {
+      Log.i(TAG, "notifySeekStart")
+    }
     streamingAnalytics.notifySeekStart()
   }
 
   fun startFromDvrWindowOffset(offset: Long) {
+    if (BuildConfig.DEBUG) {
+      Log.i(TAG, "startFromDvrWindowOffset: $offset")
+    }
     streamingAnalytics.startFromDvrWindowOffset(offset)
   }
 
   fun startFromPosition(position: Long) {
+    if (BuildConfig.DEBUG) {
+      Log.i(TAG, "startFromPosition: $position")
+    }
     streamingAnalytics.startFromPosition(position)
   }
 
   fun notifyBufferStart() {
+    if (BuildConfig.DEBUG) {
+      Log.i(TAG, "notifyBufferStart")
+    }
     streamingAnalytics.notifyBufferStart()
   }
 
   fun notifyChangePlaybackRate(rate: Float) {
+    if (BuildConfig.DEBUG) {
+      Log.i(TAG, "notifyChangePlaybackRate: $rate")
+    }
     // streamingAnalytics.notifyChangePlaybackRate(
     //   java.lang.Double.valueOf(rateChangeEvent.playbackRate).toFloat()
     // )
@@ -134,6 +181,9 @@ class ComscoreConnector(
   }
 
   fun destroy() {
+    if (BuildConfig.DEBUG) {
+      Log.i(TAG, "destroy")
+    }
     // TODO: Limpiar eventos si los hay
   }
 }
