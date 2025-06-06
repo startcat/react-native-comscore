@@ -1,14 +1,14 @@
-# ComScore Types Documentation
+# Documentación de Tipos ComScore
 
-This document provides a detailed explanation of all the types defined in the React Native ComScore integration.
+Este documento proporciona una explicación detallada de todos los tipos definidos en la integración de ComScore para React Native.
 
-## Table of Contents
+## Tabla de Contenidos
 
-- [Configuration Types](#configuration-types)
+- [Tipos de Configuración](#tipos-de-configuración)
   - [ComscoreConfiguration](#comscoreconfiguration)
   - [ComscoreUserConsent](#comscoreuserconsent)
   - [ComscoreUsagePropertiesAutoUpdateMode](#comscoreusagepropertiesautoupdatemode)
-- [Metadata Types](#metadata-types)
+- [Tipos de Metadatos](#tipos-de-metadatos)
   - [ComscoreMetadata](#comscoremetadata)
   - [CustomComscoreMetadata](#customcomscoremetadata)
   - [ComscoreMediaType](#comscoremediatype)
@@ -18,424 +18,216 @@ This document provides a detailed explanation of all the types defined in the Re
   - [ComscoreDeliveryComposition](#comscoredeliverycomposition)
   - [ComscoreDeliveryAdvertisementCapability](#comscoredeliveryadvertisementcapability)
   - [ComscoreMediaFormat](#comscoremediaformat)
-  - [ComscoreDistributionModel](#comscoredeliverymodel)
+  - [ComscoreDistributionModel](#comscoreDistributionModel)
   - [ComscoreDate](#comscoredate)
   - [ComscoreTime](#comscoretime)
   - [ComscoreDimension](#comscoredimension)
 
-## Configuration Types
+## Tipos de Configuración
 
 ### ComscoreConfiguration
 
-The main configuration interface for ComScore analytics.
+La interfaz principal de configuración para la analítica de ComScore.
 
-```typescript
-interface ComscoreConfiguration {
-  /**
-   * Also known as the c2 value
-   */
-  publisherId: string;
-  applicationName: string;
-  userConsent: ComscoreUserConsent;
-  /**
-   * Defaults to foregroundOnly if none is specified. If your app has some background experience, use foregroundAndBackground.
-   */
-  usagePropertiesAutoUpdateMode?: ComscoreUsagePropertiesAutoUpdateMode;
-  debug?: boolean;
-}
-```
+| Propiedad | Tipo | Descripción | Requerido |
+|-----------|------|-------------|----------|
+| publisherId | string | También conocido como el valor c2 | Sí |
+| applicationName | string | Nombre de la aplicación | Sí |
+| userConsent | ComscoreUserConsent | Consentimiento del usuario para la recolección de datos | Sí |
+| usagePropertiesAutoUpdateMode | ComscoreUsagePropertiesAutoUpdateMode | Modo de actualización automática de propiedades de uso. Por defecto es foregroundOnly | No |
+| debug | boolean | Habilita el modo de depuración | No |
 
 ### ComscoreUserConsent
 
-Enum that defines the user consent values for data collection.
+Enumeración que define los valores de consentimiento del usuario para la recolección de datos.
 
-```typescript
-enum ComscoreUserConsent {
-  denied = '0',
-  granted = '1',
-  unknown = '-1',
-}
-```
+| Valor | Descripción |
+|-------|-------------|
+| denied | '0' - El usuario ha denegado el consentimiento |
+| granted | '1' - El usuario ha otorgado consentimiento |
+| unknown | '-1' - El estado de consentimiento es desconocido |
 
 ### ComscoreUsagePropertiesAutoUpdateMode
 
-Enum that defines when usage properties should be automatically updated.
+Enumeración que define cuándo se deben actualizar automáticamente las propiedades de uso.
 
-```typescript
-enum ComscoreUsagePropertiesAutoUpdateMode {
-  foregroundOnly = 'foregroundOnly',
-  foregroundAndBackground = 'foregroundAndBackground',
-  disabled = 'disabled',
-}
-```
+| Valor | Descripción |
+|-------|-------------|
+| foregroundOnly | Actualiza las propiedades solo cuando la aplicación está en primer plano |
+| foregroundAndBackground | Actualiza las propiedades tanto en primer plano como en segundo plano |
+| disabled | Desactiva las actualizaciones automáticas de propiedades |
 
-## Metadata Types
-
-### CustomComscoreMetadata
-
-A type for custom metadata name/value pairs.
-
-```typescript
-type CustomComscoreMetadata = {
-  [id: string]: string;
-};
-```
-
-### ComscoreMediaType
-
-Enum that defines the classification types for media content.
-
-```typescript
-enum ComscoreMediaType {
-  longFormOnDemand = 'longFormOnDemand',
-  shortFormOnDemand = 'shortFormOnDemand',
-  live = 'live',
-  userGeneratedLongFormOnDemand = 'userGeneratedLongFormOnDemand',
-  userGeneratedShortFormOnDemand = 'userGeneratedShortFormOnDemand',
-  userGeneratedLive = 'userGeneratedLive',
-  bumper = 'bumper',
-  other = 'other',
-}
-```
-
-### ComscoreFeedType
-
-Enum that specifies the type of feed provided on a live stream.
-
-```typescript
-enum ComscoreFeedType {
-  eastHD = 'easthd',
-  westHD = 'westhd',
-  eastSD = 'eastsd',
-  westSD = 'westsd',
-}
-```
-
-### ComscoreDeliveryMode
-
-Enum that identifies whether the content delivery is on-demand or linear.
-
-```typescript
-enum ComscoreDeliveryMode {
-  linear = 'linear',
-  ondemand = 'ondemand',
-}
-```
-
-### ComscoreDeliverySubscriptionType
-
-Enum that identifies the type of subscription of the user.
-
-```typescript
-enum ComscoreDeliverySubscriptionType {
-  traditionalMvpd = 'traditionalMvpd', // LIVE
-  virtualMvpd = 'virtualMvpd',         // LIVE
-  subscription = 'subscription',
-  transactional = 'transactional',
-  advertising = 'advertising',
-  premium = 'premium',
-}
-```
-
-### ComscoreDeliveryComposition
-
-Enum that indicates whether or not ads are delivered as part of the content stream.
-
-```typescript
-enum ComscoreDeliveryComposition {
-  clean = 'clean',
-  embed = 'embed',
-}
-```
-
-### ComscoreDeliveryAdvertisementCapability
-
-Enum that indicates what capability is allowed for advertisement placements.
-
-```typescript
-enum ComscoreDeliveryAdvertisementCapability {
-  none = 'none',
-  dynamicLoad = 'dynamicLoad',
-  dynamicReplacement = 'dynamicReplacement',
-  linear1day = 'linear1day',
-  linear2day = 'linear2day',
-  linear3day = 'linear3day',
-  linear4day = 'linear4day',
-  linear5day = 'linear5day',
-  linear6day = 'linear6day',
-  linear7day = 'linear7day',
-}
-```
-
-### ComscoreMediaFormat
-
-Enum that specifies the type of content media in more detail.
-
-```typescript
-enum ComscoreMediaFormat {
-  fullContentEpisode = 'fullContentEpisode',
-  fullContentMovie = 'fullContentMovie',
-  fullContentPodcast = 'fullContentPodcast',
-  fullContentGeneric = 'fullContentGeneric',
-  partialContentEpisode = 'partialContentEpisode',
-  partialContentMovie = 'partialContentMovie',
-  partialContentPodcast = 'partialContentPodcast',
-  partialContentGeneric = 'partialContentGeneric',
-  previewEpisode = 'previewEpisode',
-  previewMovie = 'previewMovie',
-  previewGeneric = 'previewGeneric',
-  extraEpisode = 'extraEpisode',
-  extraMovie = 'extraMovie',
-  extraGeneric = 'extraGeneric',
-}
-```
-
-### ComscoreDistributionModel
-
-Enum that specifies where the content was distributed.
-
-```typescript
-enum ComscoreDistributionModel {
-  tvAndOnline = 'tvAndOnline',
-  exclusivelyOnline = 'exclusivelyOnline',
-}
-```
-
-### ComscoreDate
-
-Type representing a date structure.
-
-```typescript
-type ComscoreDate = {
-  day: number;
-  month: number;
-  year: number;
-};
-```
-
-### ComscoreTime
-
-Type representing a time structure.
-
-```typescript
-type ComscoreTime = {
-  hours: number;
-  minutes: number;
-};
-```
-
-### ComscoreDimension
-
-Type representing dimensions (width and height).
-
-```typescript
-type ComscoreDimension = {
-  width: number;
-  height: number;
-};
-```
+## Tipos de Metadatos
 
 ### ComscoreMetadata
 
-The main metadata interface for ComScore content tracking. Below are the properties with their descriptions:
+La interfaz principal para los metadatos que se envían a ComScore.
 
-```typescript
-type ComscoreMetadata = {
-  /**
-   * Classification type, mandatory, setMediaType( value ) - (ns_st_li)
-   */
-  mediaType: ComscoreMediaType;
-  
-  /**
-   * Program ID for VMX, unique identifier for the content, LIVE: Mandatory, VOD: Mandatory, Adv: Inherited from Content, Comscore API: setUniqueId( string id ) - (ns_st_ct)
-   */
-  uniqueId: string;
-  
-  /**
-   * Clip Length in milliseconds, Comscore API: setLength( int length ) - (ns_st_cl)
-   */
-  length: number;
-  
-  /**
-   * VMX dictionary (level 1), mandatory, Comscore API: setDictionaryClassificationC3( string value ) - (c3)
-   */
-  c3?: string;
-  
-  /**
-   * VMX dictionary (level 2), mandatory, Comscore API: setDictionaryClassificationC4( string value ) - (c4)
-   */
-  c4?: string;
-  
-  /**
-   * VMX dictionary (level 3), mandatory, Comscore API: setDictionaryClassificationC6( string value ) - (c6)
-   */
-  c6?: string;
-  
-  /**
-   * Channel Name, title of the station or channel for which content was recorded or where content is made available, LIVE: Mandatory,VOD: Mandatory,Adv: Inherited from Content, Comscore API: setStationTitle( string title ) - (ns_st_st)
-   */
-  stationTitle: string;
-  
-  /**
-   * Channel ID, Code of the station or channel for which content was recorded or where content is made available, LIVE: Mandatory,VOD: Mandatory,Adv: Inherited from Content, Comscore API: setStationCode( string code ) - (ns_st_stc)
-   */
-  stationCode?: string;
-  
-  /**
-   * Code to identify station affiliation in cases where the same local TV station call sign is affiliated with multiple national TV networks, Comscore API: setNetworkAffiliate( string code ) - (ns_st_sta)
-   */
-  networkAffiliate?: string;
-  
-  /**
-   * Publisher Brand Name, the consumer-facing brand name of the media publisher that owns the content, LIVE: Mandatory, VOD: Mandatory, Adv: Inherited from Content, Comscore API: setPublisherName( string name ) - (ns_st_pu)
-   */
-  publisherName?: string;
-  
-  /**
-   * Program name, Top level content title (i.e., the name of the overall program, show, or content series), LIVE: Optional,VOD: Optional,Adv: Inherited from Content, Comscore API: setProgramTitle( string title ) - (ns_st_pr)
-   */
-  programTitle: string;
-  
-  /**
-   * Program Id, Top level content ID to be used for matching and grouping purposes, LIVE: Optional,VOD: Optional,Adv: Inherited from Content, Comscore API: setProgramId( string id ) - (ns_st_tpr)
-   */
-  programId?: string;
-  
-  /**
-   * Episode title, Sub level content title (i.e., the title of the specific episode),LIVE: Optional,VOD: Optional,Adv: Inherited from Content, Comscore API: setEpisodeTitle( string title ) - (ns_st_ep)
-   */
-  episodeTitle: string;
-  
-  /**
-   * Episode ID Sub level content ID to be used for matching and grouping purposes,LIVE: Optional,VOD: Optional,Adv: Inherited from Content, Comscore API: setEpisodeId( string id ) - (ns_st_tep)
-   */
-  episodeId?: string;
-  
-  /**
-   * Season Number, Season number for episodic content, LIVE: Optional, VOD: Optional, Adv: Inherited from Content, Comscore API: setEpisodeSeasonNumber( string value ) - (ns_st_sn)
-   */
-  episodeSeasonNumber?: string;
-  
-  /**
-   * Episode number for episodic content. It is recommended to use values with 2 digits — or 3 digits for episodic content with more than 99 episodes in a season — left-padded with 0, Comscore API: setEpisodeNumber( string value ) - (ns_st_en)
-   */
-  episodeNumber?: string;
-  
-  /**
-   * Genre description. Multiple values can be provided as a comma-separated string, LIVE: Optional, VOD: Optional, Adv: Inherited from Content, Comscore API: setGenreName( string name ) - (ns_st_ge)
-   */
-  genreName: string;
-  
-  /**
-   * Genre ID to be used for matching and grouping purposes (for example when the genres are multilingual). Multiple values can be provided as a comma-separated string, Comscore API: setGenreId( string id ) - (ns_st_tge)
-   */
-  genreId?: string;
-  
-  /**
-   * This metadata helps Comscore differentiate if the stream is carrying the same ad load as TV, Comscore API: carryTvAdvertisementLoad( Boolean value ) - (ns_st_ia)
-   */
-  carryTvAdvertisementLoad?: boolean;
-  
-  /**
-   * Complete Episode Flag, 1 - if the content media is a full episode, LIVE: Optional, VOD: Optional, Adv: Inherited from Content, Comscore API: classifyAsCompleteEpisode( Boolean value ) - (ns_st_ce)
-   */
-  classifyAsCompleteEpisode?: boolean;
-  
-  /**
-   * The date on which the content was produced or created,  LIVE: Optional,VOD: Optional,Adv: Inherited from Content, Comscore API: setDateOfProduction( int year, int month, int day ) - (ns_st_dt)
-   */
-  dateOfProduction?: ComscoreDate;
-  
-  /**
-   * The time at which the content was produced or created,  LIVE: Optional,VOD: Optional,Adv: Inherited from Content, Comscore API: setTimeOfProduction( int hours, int minutes ) - (ns_st_tm)
-   */
-  timeOfProduction?: ComscoreTime;
-  
-  /**
-   * The date on which the content aired on TV. This metadata helps Comscore establish monetization windows (live, day +1, day +3, etc.) for any given episode or show.
-   * The monetization windows are used to calculate commercial and program ratings. LIVE: Optional,VOD: Optional,Adv: Inherited from Content
-   * Comscore API: setDateOfTvAiring( int year, int month, int day ) - (ns_st_tdt)
-   */
-  dateOfTvAiring?: ComscoreDate;
-  
-  /**
-   * The time at which the content aired on TV,  LIVE: Optional,VOD: Optional,Adv: Inherited from Content, Comscore API: setTimeOfTvAiring( int hours, int minutes ) - (ns_st_ttm)
-   */
-  timeOfTvAiring?: ComscoreTime;
-  
-  /**
-   * The date on which the content was made available for streaming consumption. This metadata helps Comscore establish monetization windows (live, day +1, day +3, etc.) for any given episode or show. The monetization windows are used to calculate commercial and program ratings,  LIVE: Optional,VOD: Optional,Adv: Inherited from Content, Comscore API: setDateOfDigitalAiring( int year, int month, int day ) - (ns_st_ddt)
-   */
-  dateOfDigitalAiring?: ComscoreDate;
-  
-  /**
-   * The time at which the content was made available for streaming consumption,  LIVE: Optional,VOD: Optional,Adv: Inherited from Content, Comscore API: setTimeOfDigitalAiring( int hours, int minutes ) - (ns_st_dtm)
-   */
-  timeOfDigitalAiring?: ComscoreTime;
-  
-  /**
-   * Specify the type of feed provided on the live stream, Comscore API: setFeedType( value ) - (ns_st_ft)
-   */
-  feedType?: ComscoreFeedType;
-  
-  /**
-   * Use value true if the content is audio-only, rather than video (with or without audio). Otherwise omit or use value false, Comscore API: classifyAsAudioStream( Boolean value ) - (ns_st_ty)
-   */
-  classifyAsAudioStream: boolean;
-  
-  /**
-   * Identifies the content delivery to be on-demand or linear, Comscore API:  setDeliveryMode( value ) - (ns_st_cde)
-   */
-  deliveryMode?: ComscoreDeliveryMode;
-  
-  /**
-   * Identifies the type of subscription of the user, Comscore API: setDeliverySubscriptionType( value ) - (ns_st_cds)
-   */
-  deliverySubscriptionType?: ComscoreDeliverySubscriptionType;
-  
-  /**
-   * Indicates whether or not ads are delivered as part of the content stream, Comscore API: setDeliveryComposition( value ) - (ns_st_cdc)
-   */
-  deliveryComposition?: ComscoreDeliveryComposition;
-  
-  /**
-   * Indicate what capability is allowed for advertisement placements, Comscore API: setDeliveryAdvertisementCapability( value ) - (ns_st_cda)
-   */
-  deliveryAdvertisementCapability?: ComscoreDeliveryAdvertisementCapability;
-  
-  /**
-   *  Specify the type of content media in more detail, VOD: Mandatory, Adv: Inherited from Content, Specify the type of content media in more detail, Comscore API: setMediaFormat( value ) - (ns_st_cmt)
-   */
-  mediaFormat?: ComscoreMediaFormat;
-  
-  /**
-   * Content Distribution Model, Specify where the content was distributed, LIVE: Optional, VOD: Optional, Adv: Inherited from Content, Comscore API: setDistributionModel( value ) - (ns_st_cdm)
-   */
-  distributionModel?: ComscoreDistributionModel;
-  
-  /**
-   * Can be used if the player offers the media as part of a playlist. Specify an identifier (title, etc.) for the playlist. For example, the TV Show title for a playlist which contains all episodes from a specific TV show, Comscore API: setPlaylistTitle( string title ) - (ns_st_pl)
-   */
-  playlistTitle?: string;
-  
-  /**
-   * Indicates the total number of segments of the content, which is one more than the number of mid-roll ad breaks. For example, content with no mid-roll ad breaks has 1 segment and content with 2 mid-roll ad breaks has 3 segments, Comscore API: setTotalSegments( int total ) - (ns_st_tp)
-   */
-  totalSegments?: number;
-  
-  /**
-   * The URL (or path/filename) of the content stream, Comscore API: setClipUrl( string url ) - (ns_st_cu)
-   */
-  clipUrl?: string;
-  
-  /**
-   * Content video dimensions in pixels, Comscore API: setVideoDimensions( int pixelsWide, int pixelsHigh ) - (ns_st_cs)
-   */
-  videoDimension?: ComscoreDimension;
-  
-  /**
-   * Can be used to specify a collection of custom metadata name/value pairs, Comscore API: addCustomLabels( Object labels )
-   */
-  customLabels?: CustomComscoreMetadata;
-};
-```
+| Propiedad | Tipo | Descripción | Requerido |
+|-----------|------|-------------|----------|
+| mediaType | ComscoreMediaType | Tipo de clasificación, obligatorio | Sí |
+| uniqueId | string | ID único para el contenido | Sí |
+| length | number | Duración del clip en milisegundos | Sí |
+| c3 | string | Diccionario VMX (nivel 1) | No |
+| c4 | string | Diccionario VMX (nivel 2) | No |
+| c6 | string | Diccionario VMX (nivel 3) | No |
+| stationTitle | string | Nombre del canal | Sí |
+| stationCode | string | Código del canal | No |
+| networkAffiliate | string | Código de afiliación de la estación | No |
+| publisherName | string | Nombre de la marca del editor | No |
+| programTitle | string | Nombre del programa | Sí |
+| programId | string | ID del programa | No |
+| episodeTitle | string | Título del episodio | Sí |
+| episodeId | string | ID del episodio | No |
+| episodeSeasonNumber | string | Número de temporada | No |
+| episodeNumber | string | Número de episodio | No |
+| genreName | string | Descripción del género | Sí |
+| genreId | string | ID del género | No |
+| carryTvAdvertisementLoad | boolean | Indica si la transmisión lleva la misma carga publicitaria que la TV | No |
+| classifyAsCompleteEpisode | boolean | Indica si el medio es un episodio completo | No |
+| dateOfProduction | ComscoreDate | Fecha de producción | No |
+| timeOfProduction | ComscoreTime | Hora de producción | No |
+| dateOfTvAiring | ComscoreDate | Fecha de emisión en TV | No |
+| timeOfTvAiring | ComscoreTime | Hora de emisión en TV | No |
+| dateOfDigitalAiring | ComscoreDate | Fecha de disponibilidad para streaming | No |
+| timeOfDigitalAiring | ComscoreTime | Hora de disponibilidad para streaming | No |
+
+### CustomComscoreMetadata
+
+Un tipo para pares de nombre/valor de metadatos personalizados.
+
+| Propiedad | Tipo | Descripción |
+|-----------|------|-------------|
+| [id: string] | string | Pares clave-valor para metadatos personalizados |
+
+### ComscoreMediaType
+
+Enumeración que define los tipos de clasificación para el contenido multimedia.
+
+| Valor | Descripción |
+|-------|-------------|
+| longFormOnDemand | Contenido largo bajo demanda |
+| shortFormOnDemand | Contenido corto bajo demanda |
+| live | Contenido en directo |
+| userGeneratedLongFormOnDemand | Contenido generado por el usuario de formato largo |
+| userGeneratedShortFormOnDemand | Contenido generado por el usuario de formato corto |
+| userGeneratedLive | Contenido en directo generado por el usuario |
+| bumper | Bumper |
+| other | Otro tipo de contenido |
+
+### ComscoreFeedType
+
+Enumeración que especifica el tipo de feed proporcionado en una transmisión en directo.
+
+| Valor | Descripción |
+|-------|-------------|
+| eastHD | Feed Este en Alta Definición |
+| westHD | Feed Oeste en Alta Definición |
+| eastSD | Feed Este en Definición Estándar |
+| westSD | Feed Oeste en Definición Estándar |
+
+### ComscoreDeliveryMode
+
+Enumeración que identifica si la entrega de contenido es bajo demanda o lineal.
+
+| Valor | Descripción |
+|-------|-------------|
+| linear | Entrega lineal (programación continua) |
+| ondemand | Contenido bajo demanda |
+
+### ComscoreDeliverySubscriptionType
+
+Enumeración que identifica el tipo de suscripción del usuario.
+
+| Valor | Descripción |
+|-------|-------------|
+| traditionalMvpd | Distribuidor de programación de video multicanal tradicional (EN VIVO) |
+| virtualMvpd | Distribuidor de programación de video multicanal virtual (EN VIVO) |
+| subscription | Suscripción |
+| transactional | Transaccional |
+| advertising | Publicidad |
+| premium | Premium |
+
+### ComscoreDeliveryComposition
+
+Enumeración que indica si los anuncios se entregan como parte del flujo de contenido.
+
+| Valor | Descripción |
+|-------|-------------|
+| clean | Sin anuncios integrados en el contenido |
+| embed | Con anuncios integrados en el contenido |
+
+### ComscoreDeliveryAdvertisementCapability
+
+Enumeración que indica qué capacidad está permitida para las ubicaciones de publicidad.
+
+| Valor | Descripción |
+|-------|-------------|
+| none | Sin capacidad publicitaria |
+| dynamicLoad | Carga dinámica de anuncios |
+| dynamicReplacement | Reemplazo dinámico de anuncios |
+| linear1day | Lineal 1 día |
+| linear2day | Lineal 2 días |
+| linear3day | Lineal 3 días |
+| linear4day | Lineal 4 días |
+| linear5day | Lineal 5 días |
+| linear6day | Lineal 6 días |
+| linear7day | Lineal 7 días |
+
+### ComscoreMediaFormat
+
+Enumeración que especifica el tipo de contenido multimedia con más detalle.
+
+| Valor | Descripción |
+|-------|-------------|
+| fullContentEpisode | Episodio completo |
+| fullContentMovie | Película completa |
+| fullContentPodcast | Podcast completo |
+| fullContentGeneric | Contenido completo genérico |
+| partialContentEpisode | Fragmento de episodio |
+| partialContentMovie | Fragmento de película |
+| partialContentPodcast | Fragmento de podcast |
+| partialContentGeneric | Fragmento de contenido genérico |
+| previewEpisode | Vista previa de episodio |
+| previewMovie | Vista previa de película |
+| previewGeneric | Vista previa genérica |
+| extraEpisode | Contenido extra de episodio |
+| extraMovie | Contenido extra de película |
+| extraGeneric | Contenido extra genérico |
+
+### ComscoreDistributionModel
+
+Enumeración que especifica dónde se distribuyó el contenido.
+
+| Valor | Descripción |
+|-------|-------------|
+| tvAndOnline | Distribución tanto en TV como en línea |
+| exclusivelyOnline | Distribución exclusivamente en línea |
+
+### ComscoreDate
+
+Tipo que representa una estructura de fecha.
+
+| Propiedad | Tipo | Descripción |
+|-----------|------|-------------|
+| day | number | Día del mes |
+| month | number | Mes del año |
+| year | number | Año |
+
+### ComscoreTime
+
+Tipo que representa una estructura de hora.
+
+| Propiedad | Tipo | Descripción |
+|-----------|------|-------------|
+| hours | number | Horas (formato 24h) |
+| minutes | number | Minutos |
+
+### ComscoreDimension
+
+Tipo que representa dimensiones (ancho y alto).
+
+| Propiedad | Tipo | Descripción |
+|-----------|------|-------------|
+| width | number | Ancho en píxeles |
+| height | number | Alto en píxeles |
