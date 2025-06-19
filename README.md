@@ -4,9 +4,94 @@ Módulo de ComScore Analytics para React Native
 
 ## Instalación
 
+Hasta migrarlo a un repositorio privado de Overon, puedes instalarlo de la siguiente manera:
+
 ```sh
-npm install react-native-comscore
+yarn add react-native-comscore@github:startcat/react-native-comscore
 ```
+
+## Configuración
+
+### Variables de entorno
+
+Añade las credenciales de ComScore en tu archivo `.env`:
+
+```env
+# COMSCORE
+COMSCORE_PUBLISHER_ID=11548294
+COMSCORE_APPLICATION=3Cat_DEMO
+```
+
+> **Nota**: Las variables del `.env` se acceden mediante [react-native-config](https://github.com/lugg/react-native-config), que las expone automáticamente en `BuildConfig` para Android y `RNCConfig` para iOS.
+
+### Configuración Android
+
+#### MainActivity.kt
+
+Modifica el archivo `android/app/src/main/java/.../MainActivity.kt` para inicializar ComScore en la función `onCreate`:
+
+```kotlin
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    
+    // Inicialización de ComScore
+    cat.start.comscore.init(this, BuildConfig.COMSCORE_PUBLISHER_ID, BuildConfig.COMSCORE_APPLICATION)
+}
+```
+
+### Configuración iOS
+
+#### AppDelegate.mm
+
+Modifica el archivo `ios/YourApp/AppDelegate.mm`:
+
+1. **Añade los imports necesarios** al inicio del archivo:
+
+```objc
+#import <ComScore/ComScore.h>
+#import "RNCConfig.h"
+```
+
+2. **Inicializa ComScore** en el método `didFinishLaunchingWithOptions`:
+
+```objc
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    // Configuración de ComScore
+    SCORPublisherConfiguration *publisherConfiguration = [SCORPublisherConfiguration publisherConfigurationWithBuilderBlock:^(SCORPublisherConfigurationBuilder *builder) {
+        builder.publisherId = [RNCConfig envFor:@"COMSCORE_PUBLISHER_ID"];
+        builder.persistentLabels = @{ @"cs_ucfr": @"1" };
+    }];
+  
+    [[SCORAnalytics configuration] addClientWithConfiguration:publisherConfiguration];
+    //[[SCORAnalytics configuration] enableChildDirectedApplicationMode];
+    [[SCORAnalytics configuration] enableImplementationValidationMode];
+    [SCORAnalytics configuration].applicationName = [RNCConfig envFor:@"COMSCORE_APPLICATION"];
+    [SCORAnalytics start];
+    
+    // ... resto de tu código existente
+}
+```
+
+#### Opciones de Configuración
+
+**Modos de configuración disponibles:**
+
+- **`enableChildDirectedApplicationMode`**: Activa el modo para aplicaciones dirigidas a niños menores de 13 años. Esto cumple con las regulaciones COPPA (Children's Online Privacy Protection Act). Debe activarse solo si tu aplicación está específicamente dirigida a menores.
+
+- **`enableImplementationValidationMode`**: Activa el modo de validación durante el desarrollo. Proporciona logs detallados y validaciones para ayudar a identificar problemas de implementación. Se recomienda usarlo solo en desarrollo y desactivarlo en producción.
+
+**Etiquetas persistentes:**
+
+```objc
+builder.persistentLabels = @{ @"cs_ucfr": @"1" };
+```
+
+- **`cs_ucfr`**: (User Consent For Remarketing) Indica si el usuario ha aceptado las políticas de privacidad y el uso de cookies/tracking de la aplicación.
+  - `"1"`: Usuario ha dado consentimiento
+  - `"0"`: Usuario no ha dado consentimiento o se desconoce
+
+> **Importante**: El valor de `cs_ucfr` debe establecerse dinámicamente basándose en la respuesta real del usuario a las políticas de privacidad de tu aplicación, no como un valor fijo.
 
 ## Tipos de Funcionamiento
 
@@ -23,12 +108,9 @@ Funcionalidad básica de tracking y medición de audiencia de ComScore para apli
 
 #### Uso Básico
 
-```js
-import { ComscoreConnector } from 'react-native-comscore';
+Para ver un ejemplo completo de uso mediante un hook personalizado, consulta:
 
-// Configuración e inicialización
-const comscore = new ComscoreConnector(appContext);
-```
+📋 **[Ejemplo de Hook de ComScore](docs/hook.sample.md)**
 
 ### 2. ComScore Streaming Tag - Player OTT
 
@@ -47,22 +129,13 @@ El Player OTT debe gestionar diversos eventos durante la reproducción de conten
 
 #### Configuración para Streaming
 
-```js
-import { ComscoreStreamingTag } from 'react-native-comscore';
+La implementación de ComScore Streaming Tag requiere la creación de plugins personalizados que mapeen los datos de tu contenido a los metadatos requeridos por ComScore.
 
-// Configuración para streaming
-const streamingTag = new ComscoreStreamingTag({
-  // Configuración específica para OTT
-});
-```
+Para ver ejemplos completos de implementación, consulta:
 
-## Contribución
+📋 **[Ejemplo de Plugin ComScore Streaming Tag](docs/plugin.sample.md)** - Muestra cómo crear un plugin personalizado que adapta los datos de tu proyecto a ComScore
 
-Consulta la [guía de contribución](CONTRIBUTING.md) para aprender cómo contribuir al repositorio y el flujo de desarrollo.
-
-## Licencia
-
-MIT
+📋 **[Ejemplo de Gestor de Plugins](docs/plugin.manager.sample.md)** - Hook para gestionar múltiples plugins de analíticas y vincularlos con eventos del Player OTT
 
 ---
 
