@@ -22,6 +22,12 @@ Este documento proporciona una explicación detallada de todos los tipos definid
   - [ComscoreDate](#comscoredate)
   - [ComscoreTime](#comscoretime)
   - [ComscoreDimension](#comscoredimension)
+- [Tipos de Módulo y Plugin](#tipos-de-módulo-y-plugin)
+  - [ComscoreModule](#comscoremodule)
+  - [ComscoreLabels](#comscorelabels)
+  - [PlayerPlugin](#playerplugin)
+  - [ComscorePluginInterface](#comscoreplugininterface)
+  - [ComscoreState](#comscorestate)
 
 ## Tipos de Configuración
 
@@ -231,3 +237,157 @@ Tipo que representa dimensiones (ancho y alto).
 | --------- | ------ | ---------------- |
 | width     | number | Ancho en píxeles |
 | height    | number | Alto en píxeles  |
+
+## Tipos de Módulo y Plugin
+
+### ComscoreModule
+
+Interfaz que define todos los métodos disponibles del módulo nativo de ComScore. Esta interfaz representa la API completa del bridge entre React Native y el SDK nativo.
+
+#### Métodos de Analítica Básica (Global)
+
+| Método                  | Parámetros                                    | Descripción                                  |
+| ----------------------- | --------------------------------------------- | -------------------------------------------- |
+| trackView               | view: string                                  | Rastrea una vista específica                 |
+| trackEvent              | action: string, category: string             | Rastrea un evento con acción y categoría     |
+| updatePersistentLabels  | publisherId, fpid, fpit, fpdm, fpdt: string  | Actualiza etiquetas persistentes globales    |
+| setPersistentLabel      | publisherId: string, labelName, labelValue: string | Establece una etiqueta persistente global    |
+| notifyUxActive          | ninguno                                       | Notifica que la UX está activa               |
+| notifyUxInactive        | ninguno                                       | Notifica que la UX está inactiva             |
+
+#### Métodos de Analítica de Streaming (Por instancia)
+
+| Método                        | Parámetros                                           | Descripción                                      |
+| ----------------------------- | ---------------------------------------------------- | ------------------------------------------------ |
+| initializeStreaming           | tag: number, metadata: ComscoreMetadata, config: ComscoreConfiguration | Inicializa una instancia de streaming            |
+| updateStreaming               | tag: number, metadata: ComscoreMetadata             | Actualiza metadatos de una instancia             |
+| setPersistentLabelsStreaming  | tag: number, labels: ComscoreLabels                 | Establece múltiples etiquetas persistentes      |
+| setPersistentLabelStreaming   | tag: number, label: string, value: string           | Establece una etiqueta persistente individual    |
+| setMetadata                   | tag: number, metadata: ComscoreMetadata             | Establece metadatos de contenido                 |
+
+#### Métodos de Eventos de Reproducción
+
+| Método                        | Parámetros                      | Descripción                                      |
+| ----------------------------- | ------------------------------- | ------------------------------------------------ |
+| notifyEnd                     | tag: number                     | Notifica el final de la reproducción             |
+| notifyPause                   | tag: number                     | Notifica la pausa de la reproducción             |
+| notifyPlay                    | tag: number                     | Notifica el inicio/reanudación de reproducción   |
+| createPlaybackSession         | tag: number                     | Crea una nueva sesión de reproducción            |
+| setDvrWindowLength            | tag: number, length: number     | Establece la longitud de la ventana DVR          |
+| notifyBufferStop              | tag: number                     | Notifica el final del buffering                  |
+| notifySeekStart               | tag: number                     | Notifica el inicio de una operación de seek      |
+| startFromDvrWindowOffset      | tag: number, offset: number     | Inicia desde un offset en la ventana DVR         |
+| startFromPosition             | tag: number, position: number   | Inicia la reproducción desde una posición        |
+| notifyBufferStart             | tag: number                     | Notifica el inicio del buffering                 |
+| notifyChangePlaybackRate      | tag: number, rate: number       | Notifica un cambio en la velocidad de reprod.    |
+| destroyStreaming              | tag: number                     | Destruye una instancia de streaming              |
+
+### ComscoreLabels
+
+Tipo que representa un conjunto de etiquetas personalizadas para ComScore.
+
+```typescript
+interface ComscoreLabels {
+  [key: string]: string;
+}
+```
+
+**Descripción**: Un objeto que mapea nombres de etiquetas a valores de cadena. Se utiliza para establecer múltiples etiquetas persistentes de una sola vez.
+
+**Ejemplo de uso**:
+```typescript
+const labels: ComscoreLabels = {
+  'userId': '12345',
+  'contentType': 'premium',
+  'region': 'europe'
+};
+```
+
+### PlayerPlugin
+
+Interfaz base que define la estructura básica de un plugin de reproductor multimedia.
+
+#### Propiedades
+
+| Propiedad | Tipo   | Descripción                    | Requerido |
+| --------- | ------ | ------------------------------ | --------- |
+| name      | string | Nombre del plugin              | Sí        |
+| version   | string | Versión del plugin             | Sí        |
+
+#### Métodos de Eventos Requeridos
+
+| Método  | Parámetros | Descripción                        |
+| ------- | ---------- | ---------------------------------- |
+| onStart | ninguno    | Se ejecuta al iniciar el contenido |
+| onPlay  | ninguno    | Se ejecuta al reproducir           |
+| onPause | ninguno    | Se ejecuta al pausar               |
+| onEnd   | ninguno    | Se ejecuta al finalizar            |
+| destroy | ninguno    | Limpia recursos del plugin         |
+
+#### Métodos de Eventos Opcionales
+
+| Método                  | Parámetros                           | Descripción                              |
+| ----------------------- | ------------------------------------ | ---------------------------------------- |
+| onBuffering             | value: boolean                       | Se ejecuta al cambiar estado de buffering |
+| onSeek                  | value: number                        | Se ejecuta al hacer seek                 |
+| onProgress              | value: number, duration?: number     | Se ejecuta durante el progreso           |
+| onChangeAudioIndex      | index: number, label?: string        | Se ejecuta al cambiar pista de audio     |
+| onChangeSubtitleIndex   | index: number, label?: string        | Se ejecuta al cambiar subtítulos         |
+| onNext                  | ninguno                              | Se ejecuta al ir al siguiente            |
+| onPrevious              | ninguno                              | Se ejecuta al ir al anterior             |
+
+### ComscorePluginInterface
+
+Interfaz que extiende `PlayerPlugin` con funcionalidad específica de ComScore.
+
+#### Métodos Adicionales de ComScore
+
+| Método              | Parámetros                        | Descripción                                      |
+| ------------------- | --------------------------------- | ------------------------------------------------ |
+| update              | metadata: ComscoreMetadata        | Actualiza los metadatos de ComScore              |
+| setPersistentLabel  | label: string, value: string      | Establece una etiqueta persistente individual    |
+| setPersistentLabels | labels: { [key: string]: string } | Establece múltiples etiquetas persistentes       |
+| getInstanceId       | ninguno                           | Obtiene el ID de la instancia de ComScore       |
+
+**Descripción**: Esta interfaz combina la funcionalidad básica de un plugin de reproductor con las capacidades específicas de analítica de ComScore.
+
+### ComscoreState
+
+Enumeración que define los diferentes estados posibles del sistema de ComScore.
+
+| Valor         | Descripción                               |
+| ------------- | ----------------------------------------- |
+| INITIALIZED   | 'initialized' - Sistema inicializado     |
+| STOPPED       | 'stopped' - Reproducción detenida        |
+| PAUSED_AD     | 'paused_ad' - Anuncio pausado            |
+| PAUSED_VIDEO  | 'paused_video' - Video pausado            |
+| ADVERTISEMENT | 'advertisement' - Reproduciendo anuncio   |
+| VIDEO         | 'video' - Reproduciendo video             |
+
+**Uso**: Esta enumeración se utiliza para rastrear y gestionar el estado actual del sistema de ComScore, permitiendo un manejo más preciso de los eventos de analítica según el contexto de reproducción.
+
+**Ejemplo de uso**:
+```typescript
+if (currentState === ComscoreState.VIDEO) {
+  // Lógica específica para cuando se está reproduciendo video
+} else if (currentState === ComscoreState.ADVERTISEMENT) {
+  // Lógica específica para cuando se está reproduciendo un anuncio
+}
+```
+
+## Notas de Uso
+
+### Diferencias entre Tipos
+
+- **ComscoreModule**: Interfaz de bajo nivel que representa directamente el módulo nativo
+- **PlayerPlugin**: Interfaz base para cualquier plugin de reproductor
+- **ComscorePluginInterface**: Interfaz específica que combina plugin de reproductor con ComScore
+- **ComscoreLabels**: Tipo de utilidad para manejar múltiples etiquetas
+- **ComscoreState**: Enumeración para el manejo de estados del sistema
+
+### Recomendaciones
+
+1. **Para desarrollo de aplicaciones**: Usa `ComscoreConnector` o `ComscoreConnectorAdapter`
+2. **Para desarrollo de plugins**: Implementa `ComscorePluginInterface`
+3. **Para integración de bajo nivel**: Utiliza `ComscoreModule` directamente
+4. **Para gestión de estado**: Utiliza `ComscoreState` para tracking preciso

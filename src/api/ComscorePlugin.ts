@@ -42,7 +42,7 @@ const TAG = '[ComscorePlugin]';
 export class ComscorePlugin implements ComscorePluginInterface {
   // Propiedades requeridas por PlayerPlugin
   public name = 'ComscorePlugin';
-  public version = '0.1.5'; // Incrementado por la mejora
+  public version = '0.1.5';
 
   private connectorConnector: ComscoreConnector | null;
   private comscoreMetaData: ComscoreMetadata | null;
@@ -89,7 +89,7 @@ export class ComscorePlugin implements ComscorePluginInterface {
   }
 
   /*
-   * Common ComScore methods
+   *  Common ComScore methods
    *
    */
 
@@ -114,8 +114,8 @@ export class ComscorePlugin implements ComscorePluginInterface {
     this.connectorConnector?.setPersistentLabels(labels);
   }
 
-  /**
-   * Expone el instanceId generado automáticamente
+  /*
+   *  Expone el instanceId generado automáticamente
    *
    */
 
@@ -124,7 +124,7 @@ export class ComscorePlugin implements ComscorePluginInterface {
   }
 
   /*
-   * Metadata methods
+   *  Metadata methods
    *
    */
 
@@ -153,7 +153,7 @@ export class ComscorePlugin implements ComscorePluginInterface {
   }
 
   /*
-   * State methods
+   *  State methods
    *
    */
 
@@ -222,7 +222,7 @@ export class ComscorePlugin implements ComscorePluginInterface {
   }
 
   /*
-   * Metadata & Source events
+   *  Metadata & Source events
    *
    */
 
@@ -283,7 +283,7 @@ export class ComscorePlugin implements ComscorePluginInterface {
   }
 
   /*
-   * Playback events
+   *  Playback events
    *
    */
 
@@ -380,7 +380,7 @@ export class ComscorePlugin implements ComscorePluginInterface {
   }
 
   /*
-   * Ad events
+   *  Ad events
    *
    */
 
@@ -418,7 +418,7 @@ export class ComscorePlugin implements ComscorePluginInterface {
   }
 
   /*
-   * Errors
+   *  Errors
    *
    */
 
@@ -437,7 +437,7 @@ export class ComscorePlugin implements ComscorePluginInterface {
   }
 
   /*
-   * Implementación de PlayerPlugin interface
+   *  Implementación de PlayerPlugin interface
    *
    */
 

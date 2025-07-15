@@ -11,15 +11,9 @@ export enum ComscoreUsagePropertiesAutoUpdateMode {
 }
 
 export interface ComscoreConfiguration {
-  /**
-   * Also known as the c2 value
-   */
-  publisherId: string;
+  publisherId: string; // Also known as the c2 value
   applicationName: string;
   userConsent: ComscoreUserConsent;
-  /**
-   * Defaults to foregroundOnly if none is specified. If your app has some background experience, use foregroundAndBackground.
-   */
-  usagePropertiesAutoUpdateMode?: ComscoreUsagePropertiesAutoUpdateMode;
+  usagePropertiesAutoUpdateMode?: ComscoreUsagePropertiesAutoUpdateMode; // Defaults to foregroundOnly if none is specified. If your app has some background experience, use foregroundAndBackground.
   debug?: boolean;
 }

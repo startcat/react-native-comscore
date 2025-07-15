@@ -26,9 +26,11 @@ export class ComscoreConnector {
     this.initializeStreaming(configuration, metadata);
   }
 
-  /**
-   * Obtiene el ID de esta instancia del conector
+  /*
+   *  Obtiene el ID de esta instancia del conector
+   *
    */
+
   getInstanceId(): number {
     return this.instanceId;
   }
@@ -57,9 +59,11 @@ export class ComscoreConnector {
     );
   }
 
-  /**
-   * Actualiza los metadatos del contenido
+  /*
+   *  Actualiza los metadatos del contenido
+   *
    */
+
   update(metadata: ComscoreMetadata): void {
     if (!NativeModules.Comscore) return;
 
@@ -70,9 +74,11 @@ export class ComscoreConnector {
     NativeModules.Comscore.updateStreaming(this.instanceId, metadata);
   }
 
-  /**
-   * Establece múltiples etiquetas persistentes
+  /*
+   *  Establece múltiples etiquetas persistentes
+   *
    */
+
   setPersistentLabels(labels: ComscoreLabels): void {
     if (!NativeModules.Comscore) return;
 
@@ -86,9 +92,11 @@ export class ComscoreConnector {
     );
   }
 
-  /**
-   * Establece una etiqueta persistente individual
+  /*
+   *  Establece una etiqueta persistente individual
+   *
    */
+
   setPersistentLabel(label: string, value: string): void {
     if (!NativeModules.Comscore) return;
 
@@ -103,9 +111,11 @@ export class ComscoreConnector {
     );
   }
 
-  /**
-   * Actualiza los metadatos de contenido
+  /*
+   *  Actualiza los metadatos de contenido
+   *
    */
+
   setMetadata(metadata: ComscoreMetadata): void {
     if (!NativeModules.Comscore) return;
 
@@ -118,9 +128,11 @@ export class ComscoreConnector {
 
   // MARK: - Playback Events
 
-  /**
-   * Notifica el final de la reproducción
+  /*
+   *  Notifica el final de la reproducción
+   *
    */
+
   notifyEnd(): void {
     if (!NativeModules.Comscore) return;
 
@@ -131,9 +143,11 @@ export class ComscoreConnector {
     NativeModules.Comscore.notifyEnd(this.instanceId);
   }
 
-  /**
-   * Notifica la pausa de la reproducción
+  /*
+   *  Notifica la pausa de la reproducción
+   *
    */
+
   notifyPause(): void {
     if (!NativeModules.Comscore) return;
 
@@ -144,9 +158,11 @@ export class ComscoreConnector {
     NativeModules.Comscore.notifyPause(this.instanceId);
   }
 
-  /**
-   * Notifica el inicio/reanudación de la reproducción
+  /*
+   *  Notifica el inicio/reanudación de la reproducción
+   *
    */
+
   notifyPlay(): void {
     if (!NativeModules.Comscore) return;
 
@@ -157,9 +173,11 @@ export class ComscoreConnector {
     NativeModules.Comscore.notifyPlay(this.instanceId);
   }
 
-  /**
-   * Crea una nueva sesión de reproducción
+  /*
+   *  Crea una nueva sesión de reproducción
+   *
    */
+
   createPlaybackSession(): void {
     if (!NativeModules.Comscore) return;
 
@@ -170,9 +188,11 @@ export class ComscoreConnector {
     NativeModules.Comscore.createPlaybackSession(this.instanceId);
   }
 
-  /**
-   * Establece la longitud de la ventana DVR (para contenido en vivo)
+  /*
+   *  Establece la longitud de la ventana DVR (para contenido en vivo)
+   *
    */
+
   setDvrWindowLength(length: number): void {
     if (!NativeModules.Comscore) return;
 
@@ -183,9 +203,11 @@ export class ComscoreConnector {
     NativeModules.Comscore.setDvrWindowLength(this.instanceId, length);
   }
 
-  /**
-   * Notifica el final del buffering
+  /*
+   *  Notifica el final del buffering
+   *
    */
+
   notifyBufferStop(): void {
     if (!NativeModules.Comscore) return;
 
@@ -196,9 +218,11 @@ export class ComscoreConnector {
     NativeModules.Comscore.notifyBufferStop(this.instanceId);
   }
 
-  /**
-   * Notifica el inicio de una operación de seek
+  /*
+   *  Notifica el inicio de una operación de seek
+   *
    */
+
   notifySeekStart(): void {
     if (!NativeModules.Comscore) return;
 
@@ -209,9 +233,11 @@ export class ComscoreConnector {
     NativeModules.Comscore.notifySeekStart(this.instanceId);
   }
 
-  /**
-   * Inicia la reproducción desde un offset específico en la ventana DVR
+  /*
+   *  Inicia la reproducción desde un offset específico en la ventana DVR
+   *
    */
+
   startFromDvrWindowOffset(offset: number): void {
     if (!NativeModules.Comscore) return;
 
@@ -222,9 +248,11 @@ export class ComscoreConnector {
     NativeModules.Comscore.startFromDvrWindowOffset(this.instanceId, offset);
   }
 
-  /**
-   * Inicia la reproducción desde una posición específica
+  /*
+   *  Inicia la reproducción desde una posición específica
+   *
    */
+
   startFromPosition(position: number): void {
     if (!NativeModules.Comscore) return;
 
@@ -235,9 +263,11 @@ export class ComscoreConnector {
     NativeModules.Comscore.startFromPosition(this.instanceId, position);
   }
 
-  /**
-   * Notifica el inicio del buffering
+  /*
+   *  Notifica el inicio del buffering
+   *
    */
+
   notifyBufferStart(): void {
     if (!NativeModules.Comscore) return;
 
@@ -248,9 +278,11 @@ export class ComscoreConnector {
     NativeModules.Comscore.notifyBufferStart(this.instanceId);
   }
 
-  /**
-   * Notifica un cambio en la velocidad de reproducción
+  /*
+   *  Notifica un cambio en la velocidad de reproducción
+   *
    */
+
   notifyChangePlaybackRate(rate: number): void {
     if (!NativeModules.Comscore) return;
 
@@ -263,9 +295,11 @@ export class ComscoreConnector {
 
   // MARK: - Lifecycle
 
-  /**
-   * Destruye esta instancia del conector y libera recursos
+  /*
+   *  Destruye esta instancia del conector y libera recursos
+   *
    */
+
   destroy(): void {
     if (!NativeModules.Comscore) return;
 
@@ -277,5 +311,4 @@ export class ComscoreConnector {
   }
 }
 
-// Ejemplo de uso del ComscoreConnector
 export default ComscoreConnector;
