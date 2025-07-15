@@ -239,12 +239,29 @@ export class ComscorePlugin implements ComscorePluginInterface {
     if (__DEV__) {
       console.log(`${TAG} 🔄 handleMetadataLoaded`);
     }
-    // TODO: Implementar detección de Live Stream y configuración de DVR window
-    // if (comscoreMetaData.length == 0L && !inAd) {
-    //   // Detectar stream type LIVE
-    //   // Configurar DVR window length si está disponible
-    //   this.connectorConnector?.setDvrWindowLength(dvrWindowLengthInSeconds);
-    // }
+
+    // Detectar contenido LIVE y configurar DVR window si aplica
+    if (this.comscoreMetaData?.length === 0 && !this.inAd) {
+      if (__DEV__) {
+        console.log(`${TAG} 🔄 handleMetadataLoaded - Detected LIVE stream`);
+      }
+
+      // Para contenido LIVE, establecer metadata si no se ha hecho aún
+      this.setContentMetadata();
+
+      // TODO: Implementar detección de DVR window desde el player
+      // Si el reproductor proporciona información de seekable ranges:
+      // const dvrWindowLengthInSeconds = player.seekable.end - player.seekable.start;
+      // if (dvrWindowLengthInSeconds > 0) {
+      //   this.connectorConnector?.setDvrWindowLength(dvrWindowLengthInSeconds * 1000);
+      // }
+    } else {
+      // Contenido VOD - establecer metadata
+      if (__DEV__) {
+        console.log(`${TAG} 🔄 handleMetadataLoaded - Detected VOD content`);
+      }
+      this.setContentMetadata();
+    }
   }
 
   handleDurationChange(duration?: number): void {
@@ -345,20 +362,30 @@ export class ComscorePlugin implements ComscorePluginInterface {
     }
 
     if (typeof currentTime === 'number') {
-      // ✅ Implementar lógica de seek mejorada
       if (typeof duration === 'number' && duration > 0) {
         // VOD content - usar startFromPosition
         const newPosition = currentTime * 1000; // Convertir a milisegundos
         if (__DEV__) {
-          console.log(`${TAG} startFromPosition: ${newPosition}ms`);
+          console.log(
+            `${TAG} 🔄 handleSeeked - VOD: startFromPosition ${newPosition}ms`
+          );
         }
         this.connectorConnector?.startFromPosition(newPosition);
-      } else {
+      } else if (duration === 0 || isNaN(duration || 0)) {
         // Live content - usar DVR window offset
         // TODO: Implementar lógica para calcular offset desde el final del stream
+        // Para contenido LIVE necesitamos calcular el offset desde el final del stream
+        // const dvrWindowOffset = (seekableEnd - currentTime) * 1000;
         if (__DEV__) {
-          console.log(`${TAG} Live content seek - implementar DVR offset`);
+          console.log(
+            `${TAG} 🔄 handleSeeked - LIVE: Need DVR offset calculation`
+          );
+          console.log(
+            `${TAG} 🔄 handleSeeked - Using position as fallback: ${currentTime * 1000}ms`
+          );
         }
+        // Fallback: usar startFromPosition hasta implementar DVR offset
+        this.connectorConnector?.startFromPosition(currentTime * 1000);
         // this.connectorConnector?.startFromDvrWindowOffset(dvrOffset);
       }
     }
@@ -474,12 +501,53 @@ export class ComscorePlugin implements ComscorePluginInterface {
     if (__DEV__) {
       console.log(`${TAG} 🎯 onSeek ${value}`);
     }
+    // Primero notificar el inicio del seek
     this.handleSeeking();
-    this.handleSeeked(value);
+
+    // Luego manejar la nueva posición
+    // Necesitamos obtener duration desde el reproductor o usar la metadata actual
+    const duration = this.comscoreMetaData?.length
+      ? this.comscoreMetaData.length / 1000
+      : undefined;
+    this.handleSeeked(value, duration);
   }
 
-  onProgress(_value: number, _duration?: number): void {
-    // Implementación opcional para tracking de progreso
+  onProgress(currentTime: number, duration?: number): void {
+    // Tracking opcional de progreso - ComScore no requiere notificaciones constantes de progreso
+    // pero puede ser útil para validación y debugging
+    if (__DEV__ && currentTime % 10 === 0) {
+      // Log cada 10 segundos para evitar spam
+      console.log(
+        `${TAG} 🎯 onProgress - Time: ${currentTime}s, Duration: ${duration}s`
+      );
+    }
+
+    // Verificar si hemos pasado de pre-roll a contenido principal
+    if (
+      this.inAd &&
+      this.currentAdOffset >= 0 &&
+      currentTime > this.currentAdOffset
+    ) {
+      if (__DEV__) {
+        console.log(
+          `${TAG} 🎯 onProgress - Potentially transitioning from pre-roll to content`
+        );
+      }
+    }
+
+    // Actualizar metadata de duración si es necesario y ha cambiado
+    if (
+      duration &&
+      duration > 0 &&
+      this.comscoreMetaData?.length !== duration * 1000
+    ) {
+      if (__DEV__) {
+        console.log(
+          `${TAG} 🎯 onProgress - Duration changed, updating metadata`
+        );
+      }
+      this.handleDurationChange(duration);
+    }
   }
 
   onEnd(): void {
