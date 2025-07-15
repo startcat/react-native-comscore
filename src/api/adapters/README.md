@@ -60,46 +60,46 @@ El adaptador proporciona los siguientes métodos:
 
 ### Eventos de Reproducción
 
-| Método                    | Parámetros | Descripción                                    |
-| ------------------------- | ---------- | ---------------------------------------------- |
-| notifyPlay                | ninguno    | Notifica el inicio/reanudación de reproducción |
-| notifyPause               | ninguno    | Notifica la pausa de la reproducción           |
-| notifyEnd                 | ninguno    | Notifica el final de la reproducción           |
-| createPlaybackSession     | ninguno    | Crea una nueva sesión de reproducción          |
+| Método                | Parámetros | Descripción                                    |
+| --------------------- | ---------- | ---------------------------------------------- |
+| notifyPlay            | ninguno    | Notifica el inicio/reanudación de reproducción |
+| notifyPause           | ninguno    | Notifica la pausa de la reproducción           |
+| notifyEnd             | ninguno    | Notifica el final de la reproducción           |
+| createPlaybackSession | ninguno    | Crea una nueva sesión de reproducción          |
 
 ### Eventos de Buffering
 
-| Método            | Parámetros | Descripción                        |
-| ----------------- | ---------- | ---------------------------------- |
-| notifyBufferStart | ninguno    | Notifica el inicio del buffering   |
-| notifyBufferStop  | ninguno    | Notifica el final del buffering    |
+| Método            | Parámetros | Descripción                      |
+| ----------------- | ---------- | -------------------------------- |
+| notifyBufferStart | ninguno    | Notifica el inicio del buffering |
+| notifyBufferStop  | ninguno    | Notifica el final del buffering  |
 
 ### Eventos de Seeking
 
-| Método                     | Parámetros        | Descripción                                               |
-| -------------------------- | ----------------- | --------------------------------------------------------- |
-| notifySeekStart            | ninguno           | Notifica el inicio de una operación de seek              |
-| startFromPosition          | position: number  | Inicia la reproducción desde una posición específica     |
-| startFromDvrWindowOffset   | offset: number    | Inicia desde un offset específico en la ventana DVR      |
+| Método                   | Parámetros       | Descripción                                          |
+| ------------------------ | ---------------- | ---------------------------------------------------- |
+| notifySeekStart          | ninguno          | Notifica el inicio de una operación de seek          |
+| startFromPosition        | position: number | Inicia la reproducción desde una posición específica |
+| startFromDvrWindowOffset | offset: number   | Inicia desde un offset específico en la ventana DVR  |
 
 ### Contenido en Vivo
 
-| Método              | Parámetros      | Descripción                                       |
-| ------------------- | --------------- | ------------------------------------------------- |
-| setDvrWindowLength  | length: number  | Establece la longitud de la ventana DVR           |
+| Método             | Parámetros     | Descripción                             |
+| ------------------ | -------------- | --------------------------------------- |
+| setDvrWindowLength | length: number | Establece la longitud de la ventana DVR |
 
 ### Velocidad de Reproducción
 
-| Método                     | Parámetros   | Descripción                                    |
-| -------------------------- | ------------ | ---------------------------------------------- |
-| notifyChangePlaybackRate   | rate: number | Notifica un cambio en la velocidad de reprod.  |
+| Método                   | Parámetros   | Descripción                                   |
+| ------------------------ | ------------ | --------------------------------------------- |
+| notifyChangePlaybackRate | rate: number | Notifica un cambio en la velocidad de reprod. |
 
 ### Utilidades
 
-| Método        | Parámetros | Descripción                              |
-| ------------- | ---------- | ---------------------------------------- |
-| getInstanceId | ninguno    | Obtiene el ID de la instancia            |
-| destroy       | ninguno    | Destruye la instancia del conector       |
+| Método        | Parámetros | Descripción                        |
+| ------------- | ---------- | ---------------------------------- |
+| getInstanceId | ninguno    | Obtiene el ID de la instancia      |
+| destroy       | ninguno    | Destruye la instancia del conector |
 
 ## Ejemplo de uso
 
@@ -146,7 +146,7 @@ comscoreAdapter.update({
 
 // Gestionar buffering
 comscoreAdapter.notifyBufferStart(); // Inicio del buffering
-comscoreAdapter.notifyBufferStop();  // Fin del buffering
+comscoreAdapter.notifyBufferStop(); // Fin del buffering
 
 // Gestionar seeking
 comscoreAdapter.notifySeekStart();
@@ -162,8 +162,8 @@ comscoreAdapter.notifyChangePlaybackRate(1.5); // 1.5x velocidad
 // Establecer etiquetas persistentes
 comscoreAdapter.setPersistentLabel('customKey', 'customValue');
 comscoreAdapter.setPersistentLabels({
-  'userId': '12345',
-  'contentType': 'premium'
+  userId: '12345',
+  contentType: 'premium',
 });
 
 // Finalizar reproducción

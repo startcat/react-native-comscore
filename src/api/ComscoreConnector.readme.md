@@ -29,54 +29,54 @@ Para una documentación detallada de estos tipos y sus propiedades, consulta la 
 
 ### Configuración y Metadatos
 
-| Método              | Parámetros                    | Descripción                                      |
-| ------------------- | ----------------------------- | ------------------------------------------------ |
-| getInstanceId       | ninguno                       | Obtiene el ID único de esta instancia           |
-| update              | metadata: ComscoreMetadata    | Actualiza los metadatos del contenido            |
-| setMetadata         | metadata: ComscoreMetadata    | Establece los metadatos de contenido             |
-| setPersistentLabel  | label: string, value: string  | Establece una etiqueta persistente individual    |
-| setPersistentLabels | labels: ComscoreLabels        | Establece múltiples etiquetas persistentes       |
+| Método              | Parámetros                   | Descripción                                   |
+| ------------------- | ---------------------------- | --------------------------------------------- |
+| getInstanceId       | ninguno                      | Obtiene el ID único de esta instancia         |
+| update              | metadata: ComscoreMetadata   | Actualiza los metadatos del contenido         |
+| setMetadata         | metadata: ComscoreMetadata   | Establece los metadatos de contenido          |
+| setPersistentLabel  | label: string, value: string | Establece una etiqueta persistente individual |
+| setPersistentLabels | labels: ComscoreLabels       | Establece múltiples etiquetas persistentes    |
 
 ### Eventos de Reproducción
 
-| Método                 | Parámetros | Descripción                                    |
-| ---------------------- | ---------- | ---------------------------------------------- |
-| notifyPlay             | ninguno    | Notifica el inicio/reanudación de reproducción |
-| notifyPause            | ninguno    | Notifica la pausa de la reproducción           |
-| notifyEnd              | ninguno    | Notifica el final de la reproducción           |
-| createPlaybackSession  | ninguno    | Crea una nueva sesión de reproducción          |
+| Método                | Parámetros | Descripción                                    |
+| --------------------- | ---------- | ---------------------------------------------- |
+| notifyPlay            | ninguno    | Notifica el inicio/reanudación de reproducción |
+| notifyPause           | ninguno    | Notifica la pausa de la reproducción           |
+| notifyEnd             | ninguno    | Notifica el final de la reproducción           |
+| createPlaybackSession | ninguno    | Crea una nueva sesión de reproducción          |
 
 ### Eventos de Buffering
 
-| Método           | Parámetros | Descripción                     |
-| ---------------- | ---------- | ------------------------------- |
-| notifyBufferStart| ninguno    | Notifica el inicio del buffering|
-| notifyBufferStop | ninguno    | Notifica el final del buffering |
+| Método            | Parámetros | Descripción                      |
+| ----------------- | ---------- | -------------------------------- |
+| notifyBufferStart | ninguno    | Notifica el inicio del buffering |
+| notifyBufferStop  | ninguno    | Notifica el final del buffering  |
 
 ### Eventos de Seeking
 
-| Método                    | Parámetros        | Descripción                                             |
-| ------------------------- | ----------------- | ------------------------------------------------------- |
-| notifySeekStart           | ninguno           | Notifica el inicio de una operación de seek            |
-| startFromPosition         | position: number  | Inicia la reproducción desde una posición específica   |
-| startFromDvrWindowOffset  | offset: number    | Inicia desde un offset específico en la ventana DVR    |
+| Método                   | Parámetros       | Descripción                                          |
+| ------------------------ | ---------------- | ---------------------------------------------------- |
+| notifySeekStart          | ninguno          | Notifica el inicio de una operación de seek          |
+| startFromPosition        | position: number | Inicia la reproducción desde una posición específica |
+| startFromDvrWindowOffset | offset: number   | Inicia desde un offset específico en la ventana DVR  |
 
 ### Contenido en Vivo
 
-| Método              | Parámetros      | Descripción                                      |
-| ------------------- | --------------- | ------------------------------------------------ |
-| setDvrWindowLength  | length: number  | Establece la longitud de la ventana DVR          |
+| Método             | Parámetros     | Descripción                             |
+| ------------------ | -------------- | --------------------------------------- |
+| setDvrWindowLength | length: number | Establece la longitud de la ventana DVR |
 
 ### Control de Velocidad
 
-| Método                    | Parámetros   | Descripción                                    |
-| ------------------------- | ------------ | ---------------------------------------------- |
-| notifyChangePlaybackRate  | rate: number | Notifica un cambio en la velocidad de reproducción |
+| Método                   | Parámetros   | Descripción                                        |
+| ------------------------ | ------------ | -------------------------------------------------- |
+| notifyChangePlaybackRate | rate: number | Notifica un cambio en la velocidad de reproducción |
 
 ### Ciclo de Vida
 
-| Método  | Parámetros | Descripción                                        |
-| ------- | ---------- | -------------------------------------------------- |
+| Método  | Parámetros | Descripción                                          |
+| ------- | ---------- | ---------------------------------------------------- |
 | destroy | ninguno    | Destruye la instancia del conector y libera recursos |
 
 ## Ejemplo de uso
@@ -122,14 +122,14 @@ connector.notifyEnd(); // Finalizar
 // Actualizar metadatos durante la reproducción
 connector.update({
   ...comscoreMetadata,
-  episodeTitle: 'Episodio 2'
+  episodeTitle: 'Episodio 2',
 });
 
 // Establecer etiquetas persistentes
 connector.setPersistentLabel('customLabel', 'customValue');
 connector.setPersistentLabels({
-  'label1': 'value1',
-  'label2': 'value2'
+  label1: 'value1',
+  label2: 'value2',
 });
 
 // Eventos de buffering
@@ -162,12 +162,12 @@ connector.destroy();
 
 ## Diferencias con ComscoreConnectorAdapter
 
-| Característica | ComscoreConnector | ComscoreConnectorAdapter |
-| -------------- | ----------------- | ------------------------ |
-| Gestión de ID  | Automática        | Manual                   |
-| Facilidad de uso | Alta            | Media                    |
-| Casos de uso   | Mayoría de casos | Casos avanzados          |
-| Recomendación  | ✅ Recomendado   | Solo para casos específicos |
+| Característica   | ComscoreConnector | ComscoreConnectorAdapter    |
+| ---------------- | ----------------- | --------------------------- |
+| Gestión de ID    | Automática        | Manual                      |
+| Facilidad de uso | Alta              | Media                       |
+| Casos de uso     | Mayoría de casos  | Casos avanzados             |
+| Recomendación    | ✅ Recomendado    | Solo para casos específicos |
 
 ## Recomendaciones
 
