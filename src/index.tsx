@@ -1,10 +1,9 @@
 import { NativeModules, Platform } from 'react-native';
-import { type ComscoreMetadata } from './api/types/ComscoreMetadata';
+import { type ComscoreModule } from './api/types';
 
 export { ComscoreConnector } from './api/ComscoreConnector';
 export { ComscorePlugin } from './api/ComscorePlugin';
-export * from './api/types/ComscoreConfiguration';
-export * from './api/types/ComscoreMetadata';
+export * from './api/types';
 
 const LINKING_ERROR =
   `The package 'react-native-comscore' doesn't seem to be linked. Make sure: \n\n` +
@@ -57,6 +56,4 @@ export function notifyUxInactive(): void {
   Comscore.notifyUxInactive();
 }
 
-export function update(metadata: ComscoreMetadata): void {
-  Comscore.update(metadata);
-}
+export default Comscore as ComscoreModule;

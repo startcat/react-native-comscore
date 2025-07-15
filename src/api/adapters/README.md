@@ -17,11 +17,11 @@ El adaptador permite:
 
 El adaptador `ComscoreConnectorAdapter` utiliza los siguientes parámetros en su constructor:
 
-| Parámetro | Tipo | Descripción | Requerido |
-|-----------|------|-------------|-----------|
-| instanceId | number | Identificador único de la instancia de ComScore | Sí |
-| comscoreMetadata | ComscoreMetadata | Objeto con metadatos del contenido multimedia | Sí |
-| comscoreConfig | ComscoreConfiguration | Configuración del SDK de ComScore | Sí |
+| Parámetro        | Tipo                  | Descripción                                     | Requerido |
+| ---------------- | --------------------- | ----------------------------------------------- | --------- |
+| instanceId       | number                | Identificador único de la instancia de ComScore | Sí        |
+| comscoreMetadata | ComscoreMetadata      | Objeto con metadatos del contenido multimedia   | Sí        |
+| comscoreConfig   | ComscoreConfiguration | Configuración del SDK de ComScore               | Sí        |
 
 ## Configuración y Metadatos
 
@@ -39,12 +39,12 @@ Las enumeraciones como `ComscoreUserConsent` y `ComscoreUsagePropertiesAutoUpdat
 
 El adaptador proporciona los siguientes métodos:
 
-| Método | Parámetros | Descripción |
-|--------|------------|-------------|
-| update | metadata: ComscoreMetadata | Actualiza los metadatos del contenido multimedia |
-| setPersistentLabel | label: string, value: string | Establece una etiqueta persistente individual |
-| setPersistentLabels | labels: { [key: string]: string } | Establece múltiples etiquetas persistentes |
-| destroy | ninguno | Destruye la instancia del conector |
+| Método              | Parámetros                        | Descripción                                      |
+| ------------------- | --------------------------------- | ------------------------------------------------ |
+| update              | metadata: ComscoreMetadata        | Actualiza los metadatos del contenido multimedia |
+| setPersistentLabel  | label: string, value: string      | Establece una etiqueta persistente individual    |
+| setPersistentLabels | labels: { [key: string]: string } | Establece múltiples etiquetas persistentes       |
+| destroy             | ninguno                           | Destruye la instancia del conector               |
 
 ## Ejemplo de uso
 

@@ -10,11 +10,11 @@ Este documento describe cómo funciona el conector principal de ComScore para Re
 
 El `ComscoreConnector` no es un componente React con props, sino una clase de TypeScript que se inicializa mediante un constructor.
 
-| Parámetro | Tipo | Descripción | Requerido |
-|-----------|------|-------------|-----------|
-| instanceId | number | Identificador único de la instancia de ComScore | Sí |
-| comscoreMetadata | ComscoreMetadata | Objeto con los metadatos del contenido multimedia | Sí |
-| comscoreConfig | ComscoreConfiguration | Objeto con la configuración del SDK de ComScore | Sí |
+| Parámetro        | Tipo                  | Descripción                                       | Requerido |
+| ---------------- | --------------------- | ------------------------------------------------- | --------- |
+| instanceId       | number                | Identificador único de la instancia de ComScore   | Sí        |
+| comscoreMetadata | ComscoreMetadata      | Objeto con los metadatos del contenido multimedia | Sí        |
+| comscoreConfig   | ComscoreConfiguration | Objeto con la configuración del SDK de ComScore   | Sí        |
 
 ## Tipos utilizados
 
@@ -29,12 +29,12 @@ Para una documentación detallada de estos tipos y sus propiedades, consulta la 
 
 El conector proporciona los siguientes métodos:
 
-| Método | Parámetros | Descripción |
-|--------|------------|-------------|
-| update | metadata: ComscoreMetadata | Actualiza los metadatos del contenido |
-| setPersistentLabel | label: string, value: string | Establece una etiqueta persistente individual |
-| setPersistentLabels | labels: { [key: string]: string } | Establece múltiples etiquetas persistentes |
-| destroy | ninguno | Destruye la instancia del conector |
+| Método              | Parámetros                        | Descripción                                   |
+| ------------------- | --------------------------------- | --------------------------------------------- |
+| update              | metadata: ComscoreMetadata        | Actualiza los metadatos del contenido         |
+| setPersistentLabel  | label: string, value: string      | Establece una etiqueta persistente individual |
+| setPersistentLabels | labels: { [key: string]: string } | Establece múltiples etiquetas persistentes    |
+| destroy             | ninguno                           | Destruye la instancia del conector            |
 
 ## Ejemplo de uso
 
@@ -48,7 +48,7 @@ const comscoreConfig = {
   publisherId: 'tu-publisher-id',
   applicationName: 'MiAplicación',
   userConsent: ComscoreUserConsent.granted,
-  debug: __DEV__
+  debug: __DEV__,
 };
 
 // Crear metadatos
@@ -60,17 +60,21 @@ const comscoreMetadata = {
   programTitle: 'Mi Programa',
   episodeTitle: 'Episodio 1',
   genreName: 'Entretenimiento',
-  classifyAsAudioStream: false
+  classifyAsAudioStream: false,
 };
 
 // Inicializar el conector
-const comscoreConnector = new ComscoreConnector(1, comscoreMetadata, comscoreConfig);
+const comscoreConnector = new ComscoreConnector(
+  1,
+  comscoreMetadata,
+  comscoreConfig
+);
 
 // Actualizar metadatos (por ejemplo, cuando cambia el contenido)
 comscoreConnector.update({
   ...comscoreMetadata,
   uniqueId: 'video-456',
-  episodeTitle: 'Episodio 2'
+  episodeTitle: 'Episodio 2',
 });
 
 // Establecer etiquetas persistentes
@@ -78,8 +82,8 @@ comscoreConnector.setPersistentLabel('usuario_id', 'user-123');
 
 // Establecer múltiples etiquetas persistentes
 comscoreConnector.setPersistentLabels({
-  'plan': 'premium',
-  'dispositivo': 'móvil'
+  plan: 'premium',
+  dispositivo: 'móvil',
 });
 
 // Destruir el conector cuando ya no se necesita

@@ -4,44 +4,16 @@
  *
  */
 
-import type { ComscoreConfiguration } from './types/ComscoreConfiguration';
-import type { ComscoreMetadata } from './types/ComscoreMetadata';
+import {
+  type ComscoreConfiguration,
+  type ComscoreMetadata,
+  type ComscorePluginInterface,
+  ComscoreState,
+} from './types';
 
 import { ComscoreConnector } from './ComscoreConnector';
 
 const TAG = '[ComscorePlugin]';
-
-interface PlayerPlugin {
-  name: string;
-  version: string;
-  onStart: () => void;
-  onPlay: () => void;
-  onPause: () => void;
-  onBuffering?: (value: boolean) => void;
-  onSeek?: (value: number) => void;
-  onProgress?: (value: number, duration?: number) => void;
-  onChangeAudioIndex?: (index: number, label?: string) => void;
-  onChangeSubtitleIndex?: (index: number, label?: string) => void;
-  onNext?: () => void;
-  onPrevious?: () => void;
-  onEnd: () => void;
-  destroy(): void;
-}
-
-export interface ComscorePluginInterface extends PlayerPlugin {
-  update(metadata: ComscoreMetadata): void;
-  setPersistentLabel(label: string, value: string): void;
-  setPersistentLabels(labels: { [key: string]: string }): void;
-}
-
-export enum ComscoreState {
-  INITIALIZED = 'initialized',
-  STOPPED = 'stopped',
-  PAUSED_AD = 'paused_ad',
-  PAUSED_VIDEO = 'paused_video',
-  ADVERTISEMENT = 'advertisement',
-  VIDEO = 'video',
-}
 
 /*
  *  Events List
@@ -70,7 +42,7 @@ export enum ComscoreState {
 export class ComscorePlugin implements ComscorePluginInterface {
   // Propiedades requeridas por PlayerPlugin
   public name = 'ComscorePlugin';
-  public version = '0.1.4';
+  public version = '0.1.5'; // Incrementado por la mejora
 
   private connectorConnector: ComscoreConnector | null;
   private comscoreMetaData: ComscoreMetadata | null;
@@ -90,13 +62,20 @@ export class ComscorePlugin implements ComscorePluginInterface {
     ComscoreMetadata: ComscoreMetadata,
     ComscoreConfig: ComscoreConfiguration
   ) {
-    const instanceId = Math.floor(Math.random() * 10000);
-    console.log(`${TAG} constructor`, instanceId);
+    if (__DEV__) {
+      console.log(`${TAG} constructor - Creating new ComScore connector`);
+    }
+
     this.connectorConnector = new ComscoreConnector(
-      instanceId,
-      ComscoreMetadata,
-      ComscoreConfig
+      ComscoreConfig,
+      ComscoreMetadata
     );
+
+    if (__DEV__) {
+      console.log(
+        `${TAG} constructor - Instance ID: ${this.connectorConnector.getInstanceId()}`
+      );
+    }
 
     this.comscoreMetaData = ComscoreMetadata;
     this.currentContentMetadata = ComscoreMetadata;
@@ -115,15 +94,33 @@ export class ComscorePlugin implements ComscorePluginInterface {
    */
 
   update(metadata: ComscoreMetadata): void {
+    if (__DEV__) {
+      console.log(`${TAG} update`, metadata);
+    }
     this.connectorConnector?.update(metadata);
   }
 
   setPersistentLabel(label: string, value: string): void {
+    if (__DEV__) {
+      console.log(`${TAG} setPersistentLabel`, label, value);
+    }
     this.connectorConnector?.setPersistentLabel(label, value);
   }
 
   setPersistentLabels(labels: { [key: string]: string }): void {
+    if (__DEV__) {
+      console.log(`${TAG} setPersistentLabels`, labels);
+    }
     this.connectorConnector?.setPersistentLabels(labels);
+  }
+
+  /**
+   * Expone el instanceId generado automáticamente
+   *
+   */
+
+  getInstanceId(): number {
+    return this.connectorConnector?.getInstanceId() ?? -1;
   }
 
   /*
@@ -146,11 +143,13 @@ export class ComscorePlugin implements ComscorePluginInterface {
   setContentMetadata(): void {
     if (__DEV__) {
       console.log(
-        `${TAG} setMedatata (duration ${this.comscoreMetaData?.length})`
+        `${TAG} setContentMetadata (duration ${this.comscoreMetaData?.length})`
       );
     }
 
-    this.connectorConnector?.setMetadata(this.currentContentMetadata!);
+    if (this.currentContentMetadata) {
+      this.connectorConnector?.setMetadata(this.currentContentMetadata);
+    }
   }
 
   /*
@@ -171,15 +170,17 @@ export class ComscorePlugin implements ComscorePluginInterface {
   transitionToPaused(): void {
     if (this.comScoreState === ComscoreState.VIDEO) {
       if (__DEV__) {
-        console.log(`
-          ${TAG} transition to Paused Video from ${this.comScoreState}`);
+        console.log(
+          `${TAG} transition to Paused Video from ${this.comScoreState}`
+        );
       }
       this.comScoreState = ComscoreState.PAUSED_VIDEO;
       this.connectorConnector?.notifyPause();
     } else if (this.comScoreState === ComscoreState.ADVERTISEMENT) {
       if (__DEV__) {
-        console.log(`
-          ${TAG} transition to Paused Ad from ${this.comScoreState}`);
+        console.log(
+          `${TAG} transition to Paused Ad from ${this.comScoreState}`
+        );
       }
       this.comScoreState = ComscoreState.PAUSED_AD;
       this.connectorConnector?.notifyPause();
@@ -195,9 +196,9 @@ export class ComscorePlugin implements ComscorePluginInterface {
       this.comScoreState === ComscoreState.STOPPED
     ) {
       if (__DEV__) {
-        console.log(`
-        ${TAG} transition to Advertisement from ${this.comScoreState}
-      `);
+        console.log(
+          `${TAG} transition to Advertisement from ${this.comScoreState}`
+        );
       }
       this.comScoreState = ComscoreState.ADVERTISEMENT;
       this.connectorConnector?.notifyPlay();
@@ -238,42 +239,27 @@ export class ComscorePlugin implements ComscorePluginInterface {
     if (__DEV__) {
       console.log(`${TAG} 🔄 handleMetadataLoaded`);
     }
+    // TODO: Implementar detección de Live Stream y configuración de DVR window
     // if (comscoreMetaData.length == 0L && !inAd) {
-    //   if (BuildConfig.DEBUG) {
-    //     Log.i(TAG, "DEBUG: detected stream type LIVE")
-    //   }
-    //   try {
-    //     val seekableRanges = player.seekable
-    //     if (seekableRanges.length() > 0) {
-    //       val dvrWindowEnd = seekableRanges.getEnd(seekableRanges.length() - 1)
-    //       val dvrWindowLengthInSeconds = dvrWindowEnd - seekableRanges.getStart(0)
-    //       if (dvrWindowLengthInSeconds > 0) {
-    //         if (BuildConfig.DEBUG) {
-    //           Log.i(
-    //             TAG,
-    //             "DEBUG: set DVR window length of $dvrWindowLengthInSeconds"
-    //           )
-    //         }
-    //         streamingAnalytics.setDvrWindowLength(
-    //           java.lang.Double.valueOf(
-    //             dvrWindowLengthInSeconds * 1000
-    //           ).toLong()
-    //         )
-    //       }
-    //     }
-    //   } catch (e: Exception) {
-    //     if (BuildConfig.DEBUG) {
-    //       Log.e(TAG, "No seekable ranges available")
-    //     }
-    //   }
+    //   // Detectar stream type LIVE
+    //   // Configurar DVR window length si está disponible
+    //   this.connectorConnector?.setDvrWindowLength(dvrWindowLengthInSeconds);
     // }
   }
 
-  handleDurationChange(): void {
+  handleDurationChange(duration?: number): void {
     if (__DEV__) {
-      console.log(`${TAG} 🔄 handleDurationChange`);
+      console.log(`${TAG} 🔄 handleDurationChange`, duration);
     }
-    // TODO check if durationchange gives content duration when there's a preroll
+    // TODO: Verificar si durationchange da la duración del contenido cuando hay preroll
+    if (duration && this.comscoreMetaData) {
+      // Actualizar metadatos con nueva duración
+      const updatedMetadata = {
+        ...this.comscoreMetaData,
+        length: duration * 1000, // Convertir a milisegundos
+      };
+      this.update(updatedMetadata);
+    }
   }
 
   handleBuffering(isBuffering: boolean): void {
@@ -311,8 +297,9 @@ export class ComscorePlugin implements ComscorePluginInterface {
       this.ended = false;
 
       if (__DEV__) {
-        console.log(`
-          ${TAG} 🔄 handlePlay - PLAY event to start after an end event, create new session`);
+        console.log(
+          `${TAG} 🔄 handlePlay - PLAY event to start after an end event, create new session`
+        );
       }
 
       this.connectorConnector?.createPlaybackSession();
@@ -328,8 +315,9 @@ export class ComscorePlugin implements ComscorePluginInterface {
       this.transitionToAdvertisement();
     } else if (this.currentAdOffset < 0.0) {
       if (__DEV__) {
-        console.log(`
-          ${TAG} 🔄 handlePlay - IGNORING PLAYING event after post-roll`);
+        console.log(
+          `${TAG} 🔄 handlePlay - IGNORING PLAYING event after post-roll`
+        );
       }
       return; // last played ad was a post-roll so there's no real content coming, return and report nothing
     } else {
@@ -351,36 +339,34 @@ export class ComscorePlugin implements ComscorePluginInterface {
     this.connectorConnector?.notifySeekStart();
   }
 
-  handleSeeked(): void {
+  handleSeeked(currentTime?: number, duration?: number): void {
     if (__DEV__) {
-      console.log(`${TAG} 🔄 handleSeeked`);
+      console.log(`${TAG} 🔄 handleSeeked`, { currentTime, duration });
     }
-    // if (BuildConfig.DEBUG) {
-    //   Log.i(TAG, "DEBUG: SEEKED to: " + seekedEvent.currentTime)
-    // }
-    // val currentTime = seekedEvent.currentTime
-    // val seekableRanges = player.seekable
-    // if (isNaN(player.duration) && seekableRanges.length() > 0) {
-    //   val dvrWindowEnd = seekableRanges.getEnd(seekableRanges.length() - 1)
-    //   val newDvrWindowOffset =
-    //     java.lang.Double.valueOf(dvrWindowEnd - currentTime).toLong() * 1000
-    //   if (BuildConfig.DEBUG) {
-    //     Log.i(TAG, "DEBUG: new dvrWindowOffset: $newDvrWindowOffset")
-    //   }
-    //   streamingAnalytics.startFromDvrWindowOffset(newDvrWindowOffset)
-    // } else {
-    //   val newPosition = java.lang.Double.valueOf(currentTime).toLong() * 1000
-    //   if (BuildConfig.DEBUG) {
-    //     Log.i(TAG, "DEBUG: new position: $newPosition")
-    //     Log.i(TAG, "DEBUG: startFromPosition")
-    //   }
-    //   streamingAnalytics.startFromPosition(newPosition)
-    // }
+
+    if (typeof currentTime === 'number') {
+      // ✅ Implementar lógica de seek mejorada
+      if (typeof duration === 'number' && duration > 0) {
+        // VOD content - usar startFromPosition
+        const newPosition = currentTime * 1000; // Convertir a milisegundos
+        if (__DEV__) {
+          console.log(`${TAG} startFromPosition: ${newPosition}ms`);
+        }
+        this.connectorConnector?.startFromPosition(newPosition);
+      } else {
+        // Live content - usar DVR window offset
+        // TODO: Implementar lógica para calcular offset desde el final del stream
+        if (__DEV__) {
+          console.log(`${TAG} Live content seek - implementar DVR offset`);
+        }
+        // this.connectorConnector?.startFromDvrWindowOffset(dvrOffset);
+      }
+    }
   }
 
   handleRateChange(rate: number): void {
     if (__DEV__) {
-      console.log(`${TAG} 🔄 handleRateChange`);
+      console.log(`${TAG} 🔄 handleRateChange`, rate);
     }
     this.connectorConnector?.notifyChangePlaybackRate(rate);
   }
@@ -402,26 +388,23 @@ export class ComscorePlugin implements ComscorePluginInterface {
     if (__DEV__) {
       console.log(`${TAG} 🔄 handleAdBegin`);
     }
+    // TODO: Implementar metadata de anuncios
     // if (currentAdBreak == null && ad?.imaAd != null) {
     //   handleAdBreakBegin(ad.adBreak)
-    // }
-    // if (BuildConfig.DEBUG) {
-    //   Log.i(TAG, "DEBUG: AD_BEGIN event")
     // }
     // currentAdDuration = (ad?.imaAd?.duration ?: 0.0) * 1000
     // setAdMetadata(currentAdDuration, currentAdOffset, ad?.id ?: "");
   }
 
-  handleAdBreakBegin(): void {
+  handleAdBreakBegin(adOffset?: number): void {
     if (__DEV__) {
-      console.log(`${TAG} 🔄 handleAdBreakBegin`);
+      console.log(`${TAG} 🔄 handleAdBreakBegin`, { adOffset });
     }
-    // this.currentAdBreak = adBreak
 
-    // if (BuildConfig.DEBUG) {
-    //   Log.i(TAG, "DEBUG: AD_BREAK_BEGIN event")
-    // }
-    // currentAdOffset = adBreak?.timeOffset?.toDouble() ?: 0.0
+    if (typeof adOffset === 'number') {
+      this.currentAdOffset = adOffset;
+    }
+
     this.inAd = true;
     this.transitionToAdvertisement();
   }
@@ -439,16 +422,16 @@ export class ComscorePlugin implements ComscorePluginInterface {
    *
    */
 
-  handleError(): void {
+  handleError(error?: any): void {
     if (__DEV__) {
-      console.log(`${TAG} 🔄 handleError`);
+      console.log(`${TAG} 🔄 handleError`, error);
     }
     this.transitionToStopped();
   }
 
-  handleContentProtectionError(): void {
+  handleContentProtectionError(error?: any): void {
     if (__DEV__) {
-      console.log(`${TAG} 🔄 handleContentProtectionError`);
+      console.log(`${TAG} 🔄 handleContentProtectionError`, error);
     }
     this.transitionToStopped();
   }
@@ -491,10 +474,13 @@ export class ComscorePlugin implements ComscorePluginInterface {
     if (__DEV__) {
       console.log(`${TAG} 🎯 onSeek ${value}`);
     }
-    this.handleSeeked();
+    this.handleSeeking();
+    this.handleSeeked(value);
   }
 
-  onProgress(_value: number, _duration?: number): void {}
+  onProgress(_value: number, _duration?: number): void {
+    // Implementación opcional para tracking de progreso
+  }
 
   onEnd(): void {
     if (__DEV__) {
@@ -505,8 +491,9 @@ export class ComscorePlugin implements ComscorePluginInterface {
 
   destroy(): void {
     if (__DEV__) {
-      console.log(`${TAG} destroy`);
+      console.log(`${TAG} destroy - Instance ID: ${this.getInstanceId()}`);
     }
     this.connectorConnector?.destroy();
+    this.connectorConnector = null;
   }
 }

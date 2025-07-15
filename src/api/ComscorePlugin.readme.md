@@ -16,45 +16,45 @@ Este documento describe cómo funciona el plugin de ComScore para integración c
 
 Esta es la interfaz principal que define los métodos disponibles en el plugin:
 
-| Método | Parámetros | Descripción |
-|--------|------------|-------------|
-| update | metadata: ComscoreMetadata | Actualiza los metadatos del contenido |
-| setPersistentLabel | label: string, value: string | Establece una etiqueta persistente individual |
-| setPersistentLabels | labels: { [key: string]: string } | Establece múltiples etiquetas persistentes |
+| Método              | Parámetros                        | Descripción                                   |
+| ------------------- | --------------------------------- | --------------------------------------------- |
+| update              | metadata: ComscoreMetadata        | Actualiza los metadatos del contenido         |
+| setPersistentLabel  | label: string, value: string      | Establece una etiqueta persistente individual |
+| setPersistentLabels | labels: { [key: string]: string } | Establece múltiples etiquetas persistentes    |
 
 Adicionalmente, hereda todos los métodos de la interfaz `PlayerPlugin`:
 
 ### PlayerPlugin
 
-| Método | Parámetros | Descripción |
-|--------|------------|-------------|
-| name | string | Nombre del plugin |
-| version | string | Versión del plugin |
-| onStart | () => void | Evento de inicio del reproductor |
-| onPlay | () => void | Evento de reproducción |
-| onPause | () => void | Evento de pausa |
-| onBuffering | (value: boolean) => void | Opcional. Evento de buffering |
-| onSeek | (value: number) => void | Opcional. Evento de búsqueda |
-| onProgress | (value: number, duration?: number) => void | Opcional. Evento de progreso |
-| onChangeAudioIndex | (index: number, label?: string) => void | Opcional. Evento de cambio de pista de audio |
-| onChangeSubtitleIndex | (index: number, label?: string) => void | Opcional. Evento de cambio de subtítulos |
-| onNext | () => void | Opcional. Evento para pasar al siguiente contenido |
-| onPrevious | () => void | Opcional. Evento para volver al contenido anterior |
-| onEnd | () => void | Evento de finalización |
-| destroy | () => void | Método para liberar recursos |
+| Método                | Parámetros                                 | Descripción                                        |
+| --------------------- | ------------------------------------------ | -------------------------------------------------- |
+| name                  | string                                     | Nombre del plugin                                  |
+| version               | string                                     | Versión del plugin                                 |
+| onStart               | () => void                                 | Evento de inicio del reproductor                   |
+| onPlay                | () => void                                 | Evento de reproducción                             |
+| onPause               | () => void                                 | Evento de pausa                                    |
+| onBuffering           | (value: boolean) => void                   | Opcional. Evento de buffering                      |
+| onSeek                | (value: number) => void                    | Opcional. Evento de búsqueda                       |
+| onProgress            | (value: number, duration?: number) => void | Opcional. Evento de progreso                       |
+| onChangeAudioIndex    | (index: number, label?: string) => void    | Opcional. Evento de cambio de pista de audio       |
+| onChangeSubtitleIndex | (index: number, label?: string) => void    | Opcional. Evento de cambio de subtítulos           |
+| onNext                | () => void                                 | Opcional. Evento para pasar al siguiente contenido |
+| onPrevious            | () => void                                 | Opcional. Evento para volver al contenido anterior |
+| onEnd                 | () => void                                 | Evento de finalización                             |
+| destroy               | () => void                                 | Método para liberar recursos                       |
 
 ### ComscoreState
 
 Enumeración que define los posibles estados del plugin durante la reproducción:
 
-| Estado | Descripción |
-|--------|-------------|
-| INITIALIZED | Plugin inicializado, pero no reproduciendo |
-| STOPPED | Reproducción detenida |
-| PAUSED_AD | Publicidad en pausa |
-| PAUSED_VIDEO | Contenido en pausa |
-| ADVERTISEMENT | Reproduciendo publicidad |
-| VIDEO | Reproduciendo contenido |
+| Estado        | Descripción                                |
+| ------------- | ------------------------------------------ |
+| INITIALIZED   | Plugin inicializado, pero no reproduciendo |
+| STOPPED       | Reproducción detenida                      |
+| PAUSED_AD     | Publicidad en pausa                        |
+| PAUSED_VIDEO  | Contenido en pausa                         |
+| ADVERTISEMENT | Reproduciendo publicidad                   |
+| VIDEO         | Reproduciendo contenido                    |
 
 ## Tipos utilizados
 
@@ -95,7 +95,7 @@ const comscoreConfig = {
   publisherId: 'tu-publisher-id',
   applicationName: 'MiAplicación',
   userConsent: ComscoreUserConsent.granted,
-  debug: __DEV__
+  debug: __DEV__,
 };
 
 // Crear metadatos
@@ -107,7 +107,7 @@ const comscoreMetadata = {
   programTitle: 'Mi Programa',
   episodeTitle: 'Episodio 1',
   genreName: 'Entretenimiento',
-  classifyAsAudioStream: false
+  classifyAsAudioStream: false,
 };
 
 // Inicializar el plugin
@@ -125,7 +125,7 @@ myPlayer.addPlugin(comscorePlugin);
 // También puedes actualizar los metadatos manualmente
 comscorePlugin.update({
   ...comscoreMetadata,
-  episodeTitle: 'Episodio 2'
+  episodeTitle: 'Episodio 2',
 });
 
 // Destruir el plugin cuando ya no se necesita

@@ -1,14 +1,12 @@
 import React, { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
-import type { ComscoreConfiguration } from '../api/types/ComscoreConfiguration';
-import type { ComscoreMetadata } from '../api/types/ComscoreMetadata';
+import type { ComscoreConfiguration, ComscoreMetadata } from '../api/types';
 import { ComscoreConnector } from '../api/ComscoreConnector';
 
 type ComscoreContextType = {
   createConnector: (
-    instanceId: number,
-    metadata: ComscoreMetadata,
-    config: ComscoreConfiguration
+    config: ComscoreConfiguration,
+    metadata: ComscoreMetadata
   ) => ComscoreConnector;
 };
 
@@ -22,11 +20,10 @@ export const ComscoreProvider: React.FC<ComscoreProviderProps> = ({
   children,
 }) => {
   const createConnector = (
-    instanceId: number,
-    metadata: ComscoreMetadata,
-    config: ComscoreConfiguration
+    config: ComscoreConfiguration,
+    metadata: ComscoreMetadata
   ): ComscoreConnector => {
-    return new ComscoreConnector(instanceId, metadata, config);
+    return new ComscoreConnector(config, metadata);
   };
 
   return (

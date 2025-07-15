@@ -4,13 +4,13 @@ Este documento muestra un ejemplo completo de implementación de un plugin de Co
 
 ## Propósito del Plugin
 
-La función `createComscorePlugin` actúa como un **adaptador/mapper** que convierte los datos de contenido de tu proyecto (que pueden venir en cualquier formato) a los metadatos requeridos por ComScore. 
+La función `createComscorePlugin` actúa como un **adaptador/mapper** que convierte los datos de contenido de tu proyecto (que pueden venir en cualquier formato) a los metadatos requeridos por ComScore.
 
 **Importante**: Los tipos de datos de entrada (`MediaContentType` en este ejemplo) **deben ser adaptados por cada desarrollador** según la estructura específica de datos de su proyecto. El objetivo es mapear los datos de tu API/sistema al formato que espera ComScore.
 
 ## Implementación del Plugin
 
-```typescript
+````typescript
 import {
     ComscoreMediaType,
     ComscorePlugin,
@@ -72,66 +72,66 @@ export const createComscorePlugin = (mediaData: MediaContentType | null): Comsco
     const metadata: ComscoreMetadata = {
         // Tipo de media: live para directo, longFormOnDemand para VOD
         mediaType: mediaData.isLive ? ComscoreMediaType.live : ComscoreMediaType.longFormOnDemand,
-        
+
         // ID único del contenido
         uniqueId: mediaData.id,
-        
+
         // Duración en milisegundos (5 minutos por defecto para live)
         length: mediaData.isLive ? 300 * 1000 : mediaData.duration * 1000,
-        
+
         // Metadatos básicos requeridos
         c3: "YOUR_ORGANIZATION", // Nombre de tu organización
         c4: mediaData.title,     // Título del contenido
         c6: "*null",             // Clasificación adicional (opcional)
-        
+
         // Información de la estación/canal
         stationTitle: "YOUR_STATION_NAME",
         stationCode: getStationCode(mediaData.channel),
-        
+
         // Título del programa (obligatorio)
         programTitle: mediaData.title,
-        
+
         // Título del episodio (opcional)
         episodeTitle: mediaData.episodeTitle || "",
-        
+
         // Número de temporada (opcional)
         episodeSeasonNumber: mediaData.seasonNumber?.toString(),
-        
+
         // Número de episodio (opcional, recomendado con 2-3 dígitos)
         episodeNumber: mediaData.episodeNumber?.toString().padStart(2, '0'),
-        
+
         // Género del contenido (opcional, múltiples valores separados por comas)
         genreName: mediaData.genres?.join(', ') || "*null",
-        
+
         // Indica si lleva la misma carga publicitaria que TV
         carryTvAdvertisementLoad: mediaData.hasAds || false,
-        
+
         // Indica si es un episodio completo
         classifyAsCompleteEpisode: mediaData.isCompleteEpisode || true,
-        
+
         // Hora de producción (opcional)
         timeOfProduction: mediaData.productionTime ? {
             hours: mediaData.productionTime.getHours(),
             minutes: mediaData.productionTime.getMinutes()
         } : undefined,
-        
+
         // Fecha de emisión en TV (opcional pero recomendado para VOD)
         dateOfTvAiring: mediaData.tvAiringDate ? {
             year: mediaData.tvAiringDate.getFullYear(),
             month: mediaData.tvAiringDate.getMonth() + 1,
             day: mediaData.tvAiringDate.getDate()
         } : undefined,
-        
+
         // Fecha de disponibilidad digital (opcional)
         dateOfDigitalAiring: mediaData.digitalAiringDate ? {
             year: mediaData.digitalAiringDate.getFullYear(),
             month: mediaData.digitalAiringDate.getMonth() + 1,
             day: mediaData.digitalAiringDate.getDate()
         } : undefined,
-        
+
         // Indica si es solo audio (false para video)
         classifyAsAudioStream: mediaData.isAudioOnly || false,
-        
+
         // Etiquetas personalizadas
         customLabels: {
             cs_ufcr: "1", // User consent (ajustar según consentimiento real)
@@ -176,7 +176,7 @@ if (!Config.COMSCORE_PUBLISHER_ID || !Config.COMSCORE_APPLICATION) {
     console.warn('[ComScore] Faltan claves de configuración');
     return null;
 }
-```
+````
 
 - Verifica que las variables de entorno necesarias estén configuradas
 - Devuelve `null` si falta alguna configuración crítica
@@ -185,15 +185,17 @@ if (!Config.COMSCORE_PUBLISHER_ID || !Config.COMSCORE_APPLICATION) {
 
 ```typescript
 const configuration: ComscoreConfiguration = {
-    publisherId: Config.COMSCORE_PUBLISHER_ID!,
-    applicationName: Config.COMSCORE_APPLICATION!,
-    userConsent: ComscoreUserConsent.granted,
-    usagePropertiesAutoUpdateMode: ComscoreUsagePropertiesAutoUpdateMode.foregroundAndBackground,
-    debug: __DEV__,
+  publisherId: Config.COMSCORE_PUBLISHER_ID!,
+  applicationName: Config.COMSCORE_APPLICATION!,
+  userConsent: ComscoreUserConsent.granted,
+  usagePropertiesAutoUpdateMode:
+    ComscoreUsagePropertiesAutoUpdateMode.foregroundAndBackground,
+  debug: __DEV__,
 };
 ```
 
 **Parámetros principales:**
+
 - **`publisherId`**: Tu ID de publisher de ComScore
 - **`applicationName`**: Nombre de tu aplicación
 - **`userConsent`**: Estado del consentimiento del usuario
@@ -203,6 +205,7 @@ const configuration: ComscoreConfiguration = {
 ### 3. **Metadatos del Contenido**
 
 #### Metadatos Obligatorios:
+
 - **`mediaType`**: Tipo de contenido (live/VOD)
 - **`uniqueId`**: Identificador único del contenido
 - **`length`**: Duración en milisegundos
@@ -211,6 +214,7 @@ const configuration: ComscoreConfiguration = {
 - **`programTitle`**: Título del programa
 
 #### Metadatos Opcionales pero Recomendados:
+
 - **`episodeTitle`**: Título del episodio específico
 - **`genreName`**: Género(s) del contenido
 - **`dateOfTvAiring`**: Fecha de emisión en TV
@@ -239,14 +243,23 @@ La función `createComscorePlugin` es **un ejemplo de adaptador** que debes pers
 
 ```typescript
 // Ejemplo original del proyecto de referencia:
-export const createComscorePlugin = (mediaData: MediaDto | StreamDto | null): ComscorePlugin | null => {}
+export const createComscorePlugin = (
+  mediaData: MediaDto | StreamDto | null
+): ComscorePlugin | null => {};
 
 // Tu implementación será diferente, por ejemplo:
-export const createComscorePlugin = (contentInfo: YourContentType | null): ComscorePlugin | null => {}
+export const createComscorePlugin = (
+  contentInfo: YourContentType | null
+): ComscorePlugin | null => {};
 // o
-export const createComscorePlugin = (video: VideoModel, channel: ChannelInfo): ComscorePlugin | null => {}
+export const createComscorePlugin = (
+  video: VideoModel,
+  channel: ChannelInfo
+): ComscorePlugin | null => {};
 // o
-export const createComscorePlugin = (playbackData: PlaybackData): ComscorePlugin | null => {}
+export const createComscorePlugin = (
+  playbackData: PlaybackData
+): ComscorePlugin | null => {};
 ```
 
 ### Proceso de Adaptación
@@ -263,16 +276,16 @@ export const createComscorePlugin = (playbackData: PlaybackData): ComscorePlugin
 ```typescript
 // Adapta según tus canales/estaciones
 const STATION_CODE = {
-    YOUR_MAIN_CHANNEL: "1",
-    YOUR_SPORTS_CHANNEL: "2",
-    // ...
+  YOUR_MAIN_CHANNEL: '1',
+  YOUR_SPORTS_CHANNEL: '2',
+  // ...
 };
 
 // Adapta según tus tipos de contenido
 const CONTENT_FORMAT = {
-    "Full Episode": "0001",
-    "Clip": "0002",
-    // ...
+  'Full Episode': '0001',
+  'Clip': '0002',
+  // ...
 };
 ```
 
@@ -285,11 +298,11 @@ Modifica la interfaz `MediaContentType` según la estructura de datos de tu API 
 ```typescript
 // Personaliza la lógica según tus necesidades
 const getStationCode = (channel: string): string => {
-    // Tu lógica específica para mapear canales
+  // Tu lógica específica para mapear canales
 };
 
 const getContentFormat = (type: string): string => {
-    // Tu lógica específica para tipos de contenido
+  // Tu lógica específica para tipos de contenido
 };
 ```
 
@@ -297,8 +310,8 @@ const getContentFormat = (type: string): string => {
 
 ```typescript
 // Ajusta según el estado real del consentimiento
-userConsent: userHasConsented ? 
-    ComscoreUserConsent.granted : 
+userConsent: userHasConsented ?
+    ComscoreUserConsent.granted :
     ComscoreUserConsent.denied,
 ```
 
@@ -311,18 +324,22 @@ Para ver un ejemplo completo de la gestión de plugins con eventos del Player OT
 ## Consideraciones Importantes
 
 ### **Privacidad y Consentimiento**
+
 - Asegúrate de tener el consentimiento del usuario antes de habilitar el tracking
 - Actualiza `cs_ufcr` dinámicamente según el estado del consentimiento
 
 ### **Rendimiento**
+
 - El modo `foregroundAndBackground` puede afectar la batería
 - Considera usar `foregroundOnly` si es apropiado para tu caso
 
 ### **Validación de Datos**
+
 - Siempre valida que los datos del contenido estén disponibles
 - Maneja casos donde falten metadatos opcionales
 
 ### **Testing**
+
 - Usa `debug: true` durante el desarrollo para ver logs detallados
 - Desactiva el debug en producción para mejor rendimiento
 

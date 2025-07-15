@@ -33,7 +33,7 @@ Modifica el archivo `android/app/src/main/java/.../MainActivity.kt` para inicial
 ```kotlin
 override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    
+
     // Inicialización de ComScore
     cat.start.comscore.init(this, BuildConfig.COMSCORE_PUBLISHER_ID, BuildConfig.COMSCORE_APPLICATION)
 }
@@ -62,13 +62,13 @@ Modifica el archivo `ios/YourApp/AppDelegate.mm`:
         builder.publisherId = [RNCConfig envFor:@"COMSCORE_PUBLISHER_ID"];
         builder.persistentLabels = @{ @"cs_ucfr": @"1" };
     }];
-  
+
     [[SCORAnalytics configuration] addClientWithConfiguration:publisherConfiguration];
     //[[SCORAnalytics configuration] enableChildDirectedApplicationMode];
     [[SCORAnalytics configuration] enableImplementationValidationMode];
     [SCORAnalytics configuration].applicationName = [RNCConfig envFor:@"COMSCORE_APPLICATION"];
     [SCORAnalytics start];
-    
+
     // ... resto de tu código existente
 }
 ```
@@ -125,7 +125,7 @@ Funcionalidad especializada para el tracking de contenido de video streaming y r
 
 El Player OTT debe gestionar diversos eventos durante la reproducción de contenido. Para obtener información detallada sobre todos los eventos disponibles y su implementación, consulta:
 
- **[Documentación de Eventos del Player OTT](docs/events.md)**
+**[Documentación de Eventos del Player OTT](docs/events.md)**
 
 #### Configuración para Streaming
 
