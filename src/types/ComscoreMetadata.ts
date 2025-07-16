@@ -116,7 +116,7 @@ export type ComscoreMetadata = {
    */
   c6?: string;
   /**
-   * Channel Name, title of the station or channel for which content was recorded or where content is made available, LIVE: Mandatory,VOD: Mandatory,Adv: Inherited from Content, Comscore API: setStationTitle( string title ) - (ns_st_st)
+   * Channel Name, mandatory, title of the station or channel for which content was recorded or where content is made available, LIVE: Mandatory,VOD: Mandatory,Adv: Inherited from Content, Comscore API: setStationTitle( string title ) - (ns_st_st)
    */
   stationTitle: string;
   /**
@@ -132,7 +132,7 @@ export type ComscoreMetadata = {
    */
   publisherName?: string;
   /**
-   * Program name, Top level content title (i.e., the name of the overall program, show, or content series), LIVE: Optional,VOD: Optional,Adv: Inherited from Content, Comscore API: setProgramTitle( string title ) - (ns_st_pr)
+   * Program name, mandatory, Top level content title (i.e., the name of the overall program, show, or content series), LIVE: Optional,VOD: Optional,Adv: Inherited from Content, Comscore API: setProgramTitle( string title ) - (ns_st_pr)
    */
   programTitle: string;
   /**

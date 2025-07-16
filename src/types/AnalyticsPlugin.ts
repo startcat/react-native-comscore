@@ -4,8 +4,8 @@
  */
 
 export interface PositionParams {
-  position: number; // Posición en milisegundos
-  duration?: number; // Duración total en milisegundos (opcional)
+  position: number; // Posición en milisegundos (>= 0 en milisegundos)
+  duration?: number; // Duración total en milisegundos (>= 0 en milisegundos) (opcional)
 }
 
 export interface MetadataParams {
