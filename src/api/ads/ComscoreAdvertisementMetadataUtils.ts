@@ -2,7 +2,7 @@ import {
   type ComscoreMetadata,
   type ComscoreAdvertisementMetadata,
   ComscoreAdvertisementType,
-} from '../types';
+} from '../../types';
 
 import { ComscoreAdvertisementMetadataBuilder } from './ComscoreAdvertisementMetadataBuilder';
 

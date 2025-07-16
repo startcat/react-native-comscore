@@ -3,11 +3,12 @@ import type {
   ComscoreConfiguration,
   ComscoreMetadata,
   ComscoreLabels,
-} from './types';
+} from '../types';
+import type { IComscoreConnector } from '../types/ComscoreConnector';
 
 const TAG = '[ComscoreConnector]';
 
-export class ComscoreConnector {
+export class ComscoreConnector implements IComscoreConnector {
   private instanceId: number;
   private static instanceCounter = 0;
 

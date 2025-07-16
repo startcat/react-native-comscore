@@ -5,7 +5,7 @@ import {
   ComscoreAdvertisementType,
   ComscoreAdvertisementDeliveryType,
   ComscoreAdvertisementOwner,
-} from '../types';
+} from '../../types';
 
 /*
  *  Builder pattern para crear metadatos de anuncios

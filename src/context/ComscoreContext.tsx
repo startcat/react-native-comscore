@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
-import type { ComscoreConfiguration, ComscoreMetadata } from '../api/types';
+import type { ComscoreConfiguration, ComscoreMetadata } from '../types';
 import { ComscoreConnector } from '../api/ComscoreConnector';
 
 type ComscoreContextType = {

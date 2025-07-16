@@ -1,9 +1,9 @@
 import { NativeModules, Platform } from 'react-native';
-import { type ComscoreModule } from './api/types';
+import { type ComscoreModule } from './types';
 
 export { ComscoreConnector } from './api/ComscoreConnector';
-export { ComscorePlugin } from './api/ComscorePlugin';
-export * from './api/types';
+export { ComscorePlugin } from './plugin/ComscorePlugin';
+export * from './types';
 
 const LINKING_ERROR =
   `The package 'react-native-comscore' doesn't seem to be linked. Make sure: \n\n` +

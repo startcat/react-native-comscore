@@ -24,8 +24,8 @@ El `ComscoreProvider` es un componente Provider que debe envolver los componente
 
 #### Props del ComscoreProvider
 
-| Parámetro | Tipo      | Descripción                           | Requerido |
-| --------- | --------- | ------------------------------------- | --------- |
+| Parámetro | Tipo      | Descripción                                      | Requerido |
+| --------- | --------- | ------------------------------------------------ | --------- |
 | children  | ReactNode | Componentes hijos que tendrán acceso al contexto | Sí        |
 
 ### useComscore Hook
@@ -36,8 +36,8 @@ El hook `useComscore` proporciona acceso al contexto de ComScore y debe usarse d
 
 El hook retorna un objeto `ComscoreContextType` con los siguientes métodos:
 
-| Método          | Parámetros                                              | Descripción                           |
-| --------------- | ------------------------------------------------------- | ------------------------------------- |
+| Método          | Parámetros                                                | Descripción                                   |
+| --------------- | --------------------------------------------------------- | --------------------------------------------- |
 | createConnector | config: ComscoreConfiguration, metadata: ComscoreMetadata | Crea una nueva instancia de ComscoreConnector |
 
 ## Configuración y Uso
@@ -181,17 +181,17 @@ export const VideoScreen: React.FC = () => {
 
   return (
     <View>
-      <Button 
-        title="Iniciar Reproducción" 
-        onPress={() => connector?.notifyPlay()} 
+      <Button
+        title="Iniciar Reproducción"
+        onPress={() => connector?.notifyPlay()}
       />
-      <Button 
-        title="Pausar" 
-        onPress={() => connector?.notifyPause()} 
+      <Button
+        title="Pausar"
+        onPress={() => connector?.notifyPause()}
       />
-      <Button 
-        title="Finalizar" 
-        onPress={() => connector?.notifyEnd()} 
+      <Button
+        title="Finalizar"
+        onPress={() => connector?.notifyEnd()}
       />
     </View>
   );
@@ -201,34 +201,39 @@ export const VideoScreen: React.FC = () => {
 ## Ventajas del Contexto
 
 ### 1. **Gestión Centralizada**
+
 - Una sola fuente de verdad para la configuración de ComScore
 - Fácil acceso desde cualquier componente de la aplicación
 
 ### 2. **Gestión Automática de Instancias**
+
 - El `ComscoreConnector` gestiona automáticamente los IDs de instancia
 - No necesitas preocuparte por la gestión manual de identificadores
 
 ### 3. **Integración con React**
+
 - Utiliza patrones nativos de React (Context API + Hooks)
 - Excelente integración con el ciclo de vida de los componentes
 
 ### 4. **Detección de Errores**
+
 - El hook `useComscore` detecta automáticamente si se usa fuera del provider
 - Mensajes de error claros para facilitar el debugging
 
 ### 5. **Limpieza Automática**
+
 - Fácil limpieza de recursos usando `useEffect` cleanup
 - Previene memory leaks al destruir instancias correctamente
 
 ## Diferencias con ComscoreConnectorAdapter
 
-| Característica | ComscoreContext + useComscore | ComscoreConnectorAdapter |
-| -------------- | ----------------------------- | ------------------------ |
-| Gestión de IDs | Automática | Manual |
-| Integración React | Nativa (Context + Hooks) | Clase independiente |
-| Uso recomendado | Aplicaciones React Native | Casos de bajo nivel |
-| Complejidad | Baja | Media |
-| Flexibilidad | Alta para apps React | Alta para control directo |
+| Característica    | ComscoreContext + useComscore | ComscoreConnectorAdapter  |
+| ----------------- | ----------------------------- | ------------------------- |
+| Gestión de IDs    | Automática                    | Manual                    |
+| Integración React | Nativa (Context + Hooks)      | Clase independiente       |
+| Uso recomendado   | Aplicaciones React Native     | Casos de bajo nivel       |
+| Complejidad       | Baja                          | Media                     |
+| Flexibilidad      | Alta para apps React          | Alta para control directo |
 
 ## Mejores Prácticas
 

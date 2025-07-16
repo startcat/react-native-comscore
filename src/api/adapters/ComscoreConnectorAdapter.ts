@@ -1,9 +1,10 @@
-import type { ComscoreConfiguration, ComscoreMetadata } from '../types';
+import type { ComscoreConfiguration, ComscoreMetadata } from '../../types';
+import type { IComscoreConnectorAdapter } from './types';
 import { NativeModules } from 'react-native';
 
 const TAG = '[ComscoreConnectorAdapter]';
 
-export class ComscoreConnectorAdapter {
+export class ComscoreConnectorAdapter implements IComscoreConnectorAdapter {
   constructor(
     private instanceId: number,
     comscoreMetadata: ComscoreMetadata,
