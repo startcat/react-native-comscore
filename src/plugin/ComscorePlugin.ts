@@ -40,7 +40,7 @@ import { ComscoreConnector } from '../api';
 import { type ComscorePluginConfig } from './types';
 
 import {
-  type HandlerContext,
+  type MutableHandlerContext,
   ComscoreApplicationHandler,
   ComscorePlaybackHandler,
   DefaultMutableHandlerContext,
@@ -54,7 +54,7 @@ export class ComscorePlugin implements ComscorePluginInterface {
   public version = '0.1.5';
 
   // Dependencias principales
-  private context: HandlerContext;
+  private context: MutableHandlerContext;
   private logger: ComscoreLogger;
   private stateManager: ComscoreStateManager;
   private config: Required<ComscorePluginConfig>;
@@ -120,7 +120,7 @@ export class ComscorePlugin implements ComscorePluginInterface {
 
   update(metadata: ComscoreMetadata): void {
     this.logger.debug('ComscorePlugin', 'Updating metadata', metadata);
-    // this.context.updateMetadata(metadata);
+    this.context.updateMetadata(metadata);
     this.context.connector.update(metadata);
   }
 
