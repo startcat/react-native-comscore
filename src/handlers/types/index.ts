@@ -8,8 +8,56 @@ import { type IComscoreConnector } from '../../types/ComscoreConnector';
 import { type ComscoreMetadata } from '../../types/ComscoreMetadata';
 import { type ComscoreConfiguration } from '../../types/ComscoreConfiguration';
 import { type IComscoreLogger } from '../../logger/types';
+import { type ComscoreState } from '../../types';
 
 export * from './StateManager';
+
+export interface QualityInfo {
+  quality: string;
+  width?: number;
+  height?: number;
+  bitrate?: number;
+  timestamp: number;
+}
+
+export interface AudioInfo {
+  trackIndex: number;
+  trackLabel?: string;
+  language?: string;
+  timestamp: number;
+}
+
+export interface VolumeInfo {
+  volume: number;
+  muted: boolean;
+  timestamp: number;
+}
+
+export interface SubtitleInfo {
+  trackIndex: number;
+  trackLabel?: string;
+  language?: string;
+  visible: boolean;
+  timestamp: number;
+}
+
+export interface ComscoreErrorInfo {
+  errorCode: string | number;
+  errorMessage: string;
+  errorType: string;
+  isFatal: boolean;
+  timestamp: number;
+  currentState: ComscoreState;
+  sessionContext?: any;
+}
+
+export interface MetadataChangeInfo {
+  previousMetadata: ComscoreMetadata | null;
+  newMetadata: ComscoreMetadata;
+  changeType: 'update' | 'load' | 'duration_change' | 'complete_change';
+  timestamp: number;
+  affectedFields: string[];
+}
 
 export interface BaseHandler {
   readonly name: string;

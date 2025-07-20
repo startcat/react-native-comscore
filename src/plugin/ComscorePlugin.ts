@@ -43,9 +43,13 @@ import {
   type MutableHandlerContext,
   ComscoreApplicationHandler,
   ComscorePlaybackHandler,
+  ComscoreQualityHandler,
   DefaultMutableHandlerContext,
   StateManagerFactory,
   ComscoreStateManager,
+  ComscoreErrorHandler,
+  ComscoreMetadataHandler,
+  ComscoreAdvertisementHandler,
 } from '../handlers';
 
 export class ComscorePlugin implements ComscorePluginInterface {
@@ -62,12 +66,10 @@ export class ComscorePlugin implements ComscorePluginInterface {
   // Handlers implementados
   private playbackHandler!: ComscorePlaybackHandler;
   private applicationHandler!: ComscoreApplicationHandler;
-
-  // Handlers por implementar (comentados)
-  // private advertisementHandler: ComscoreAdvertisementHandler;
-  // private errorHandler: ComscoreErrorHandler;
-  // private metadataHandler: ComscoreMetadataHandler;
-  // private qualityHandler: ComscoreQualityHandler;
+  private advertisementHandler!: ComscoreAdvertisementHandler;
+  private errorHandler!: ComscoreErrorHandler;
+  private metadataHandler!: ComscoreMetadataHandler;
+  private qualityHandler!: ComscoreQualityHandler;
 
   constructor(
     metadata: ComscoreMetadata,
@@ -163,18 +165,16 @@ export class ComscorePlugin implements ComscorePluginInterface {
     if (this.config.enabledHandlers.playback) {
       this.playbackHandler.handleMetadataLoaded();
     }
-    // TODO: Cuando implementemos MetadataHandler
-    // if (this.config.enabledHandlers.metadata) {
-    //   this.metadataHandler.handleMetadataLoaded(params);
-    // }
+    if (this.config.enabledHandlers.metadata) {
+      this.metadataHandler.handleMetadataLoaded(params);
+    }
   }
 
   onMetadataUpdate?(params: MetadataParams): void {
     this.logger.info('ComscorePlugin', '🎯 onMetadataUpdate', params);
-    // TODO: Implementar cuando tengamos MetadataHandler
-    // if (this.config.enabledHandlers.metadata && params.metadata) {
-    //   this.metadataHandler.handleMetadataUpdate(params);
-    // }
+    if (this.config.enabledHandlers.metadata && params.metadata) {
+      this.metadataHandler.handleMetadataUpdate(params);
+    }
   }
 
   onDurationChange?(params: DurationChangeParams): void {
@@ -290,42 +290,37 @@ export class ComscorePlugin implements ComscorePluginInterface {
 
   onAdBegin?(params: AdBeginParams): void {
     this.logger.info('ComscorePlugin', '🎯 onAdBegin', params);
-    // TODO: Implementar cuando tengamos AdvertisementHandler
-    // if (this.config.enabledHandlers.advertisement) {
-    //   this.advertisementHandler.handleAdBegin(params);
-    // }
+    if (this.config.enabledHandlers.advertisement) {
+      this.advertisementHandler.handleAdBegin(params);
+    }
   }
 
   onAdEnd?(params: AdEndParams): void {
     this.logger.info('ComscorePlugin', '🎯 onAdEnd', params);
-    // TODO: Implementar cuando tengamos AdvertisementHandler
-    // if (this.config.enabledHandlers.advertisement) {
-    //   this.advertisementHandler.handleAdEnd(params);
-    // }
+    if (this.config.enabledHandlers.advertisement) {
+      this.advertisementHandler.handleAdEnd(params);
+    }
   }
 
   onAdBreakBegin?(params: AdBreakBeginParams): void {
     this.logger.info('ComscorePlugin', '🎯 onAdBreakBegin', params);
-    // TODO: Implementar cuando tengamos AdvertisementHandler
-    // if (this.config.enabledHandlers.advertisement) {
-    //   this.advertisementHandler.handleAdBreakBegin(params);
-    // }
+    if (this.config.enabledHandlers.advertisement) {
+      this.advertisementHandler.handleAdBreakBegin(params);
+    }
   }
 
   onAdBreakEnd?(params: AdBreakEndParams): void {
     this.logger.info('ComscorePlugin', '🎯 onAdBreakEnd', params);
-    // TODO: Implementar cuando tengamos AdvertisementHandler
-    // if (this.config.enabledHandlers.advertisement) {
-    //   this.advertisementHandler.handleAdBreakEnd(params);
-    // }
+    if (this.config.enabledHandlers.advertisement) {
+      this.advertisementHandler.handleAdBreakEnd(params);
+    }
   }
 
   onContentResume?(): void {
     this.logger.info('ComscorePlugin', '🎯 onContentResume');
-    // TODO: Implementar cuando tengamos AdvertisementHandler
-    // if (this.config.enabledHandlers.advertisement) {
-    //   this.advertisementHandler.handleContentResume();
-    // }
+    if (this.config.enabledHandlers.advertisement) {
+      this.advertisementHandler.handleContentResume();
+    }
   }
 
   /*
@@ -335,34 +330,30 @@ export class ComscorePlugin implements ComscorePluginInterface {
 
   onError?(params: ErrorParams): void {
     this.logger.error('ComscorePlugin', '🎯 onError', params);
-    // TODO: Implementar cuando tengamos ErrorHandler
-    // if (this.config.enabledHandlers.errors) {
-    //   this.errorHandler.handleError(params);
-    // }
+    if (this.config.enabledHandlers.errors) {
+      this.errorHandler.handleError(params);
+    }
   }
 
   onContentProtectionError?(params: ContentProtectionErrorParams): void {
     this.logger.error('ComscorePlugin', '🎯 onContentProtectionError', params);
-    // TODO: Implementar cuando tengamos ErrorHandler
-    // if (this.config.enabledHandlers.errors) {
-    //   this.errorHandler.handleContentProtectionError(params);
-    // }
+    if (this.config.enabledHandlers.errors) {
+      this.errorHandler.handleContentProtectionError(params);
+    }
   }
 
   onNetworkError?(params: NetworkErrorParams): void {
     this.logger.error('ComscorePlugin', '🎯 onNetworkError', params);
-    // TODO: Implementar cuando tengamos ErrorHandler
-    // if (this.config.enabledHandlers.errors) {
-    //   this.errorHandler.handleNetworkError(params);
-    // }
+    if (this.config.enabledHandlers.errors) {
+      this.errorHandler.handleNetworkError(params);
+    }
   }
 
   onStreamError?(params: StreamErrorParams): void {
     this.logger.error('ComscorePlugin', '🎯 onStreamError', params);
-    // TODO: Implementar cuando tengamos ErrorHandler
-    // if (this.config.enabledHandlers.errors) {
-    //   this.errorHandler.handleStreamError(params);
-    // }
+    if (this.config.enabledHandlers.errors) {
+      this.errorHandler.handleStreamError(params);
+    }
   }
 
   /*
@@ -372,50 +363,44 @@ export class ComscorePlugin implements ComscorePluginInterface {
 
   onAudioTrackChange?(params: AudioTrackChangeParams): void {
     this.logger.info('ComscorePlugin', '🎯 onAudioTrackChange', params);
-    // TODO: Implementar cuando tengamos QualityHandler
-    // if (this.config.enabledHandlers.quality) {
-    //   this.qualityHandler.handleAudioTrackChange(params);
-    // }
+    if (this.config.enabledHandlers.quality) {
+      this.qualityHandler.handleAudioTrackChange(params);
+    }
   }
 
   onVolumeChange?(params: VolumeChangeParams): void {
     this.logger.debug('ComscorePlugin', '🎯 onVolumeChange', params);
-    // TODO: Implementar cuando tengamos QualityHandler
-    // if (this.config.enabledHandlers.quality) {
-    //   this.qualityHandler.handleVolumeChange(params);
-    // }
+    if (this.config.enabledHandlers.quality) {
+      this.qualityHandler.handleVolumeChange(params);
+    }
   }
 
   onMuteChange?(params: MuteChangeParams): void {
     this.logger.info('ComscorePlugin', '🎯 onMuteChange', params);
-    // TODO: Implementar cuando tengamos QualityHandler
-    // if (this.config.enabledHandlers.quality) {
-    //   this.qualityHandler.handleMuteChange(params);
-    // }
+    if (this.config.enabledHandlers.quality) {
+      this.qualityHandler.handleMuteChange(params);
+    }
   }
 
   onSubtitleTrackChange?(params: SubtitleTrackChangeParams): void {
     this.logger.info('ComscorePlugin', '🎯 onSubtitleTrackChange', params);
-    // TODO: Implementar cuando tengamos QualityHandler
-    // if (this.config.enabledHandlers.quality) {
-    //   this.qualityHandler.handleSubtitleTrackChange(params);
-    // }
+    if (this.config.enabledHandlers.quality) {
+      this.qualityHandler.handleSubtitleTrackChange(params);
+    }
   }
 
   onSubtitleShow?(params: SubtitleShowParams): void {
     this.logger.debug('ComscorePlugin', '🎯 onSubtitleShow', params);
-    // TODO: Implementar cuando tengamos QualityHandler
-    // if (this.config.enabledHandlers.quality) {
-    //   this.qualityHandler.handleSubtitleShow(params);
-    // }
+    if (this.config.enabledHandlers.quality) {
+      this.qualityHandler.handleSubtitleShow(params);
+    }
   }
 
   onSubtitleHide?(): void {
     this.logger.debug('ComscorePlugin', '🎯 onSubtitleHide');
-    // TODO: Implementar cuando tengamos QualityHandler
-    // if (this.config.enabledHandlers.quality) {
-    //   this.qualityHandler.handleSubtitleHide();
-    // }
+    if (this.config.enabledHandlers.quality) {
+      this.qualityHandler.handleSubtitleHide();
+    }
   }
 
   /*
@@ -425,26 +410,23 @@ export class ComscorePlugin implements ComscorePluginInterface {
 
   onQualityChange?(params: QualityChangeParams): void {
     this.logger.info('ComscorePlugin', '🎯 onQualityChange', params);
-    // TODO: Implementar cuando tengamos QualityHandler
-    // if (this.config.enabledHandlers.quality) {
-    //   this.qualityHandler.handleQualityChange(params);
-    // }
+    if (this.config.enabledHandlers.quality) {
+      this.qualityHandler.handleQualityChange(params);
+    }
   }
 
   onBitrateChange?(params: BitrateChangeParams): void {
     this.logger.info('ComscorePlugin', '🎯 onBitrateChange', params);
-    // TODO: Implementar cuando tengamos QualityHandler
-    // if (this.config.enabledHandlers.quality) {
-    //   this.qualityHandler.handleBitrateChange(params);
-    // }
+    if (this.config.enabledHandlers.quality) {
+      this.qualityHandler.handleBitrateChange(params);
+    }
   }
 
   onResolutionChange?(params: ResolutionChangeParams): void {
     this.logger.info('ComscorePlugin', '🎯 onResolutionChange', params);
-    // TODO: Implementar cuando tengamos QualityHandler
-    // if (this.config.enabledHandlers.quality) {
-    //   this.qualityHandler.handleResolutionChange(params);
-    // }
+    if (this.config.enabledHandlers.quality) {
+      this.qualityHandler.handleResolutionChange(params);
+    }
   }
 
   /*
@@ -557,19 +539,34 @@ export class ComscorePlugin implements ComscorePluginInterface {
       this.logger.debug('ComscorePlugin', 'ApplicationHandler initialized');
     }
 
-    // TODO: Inicializar handlers cuando estén implementados
-    // if (this.config.enabledHandlers.advertisement) {
-    //   this.advertisementHandler = new ComscoreAdvertisementHandler(this.context, this.stateManager);
-    // }
-    // if (this.config.enabledHandlers.errors) {
-    //   this.errorHandler = new ComscoreErrorHandler(this.context, this.stateManager);
-    // }
-    // if (this.config.enabledHandlers.metadata) {
-    //   this.metadataHandler = new ComscoreMetadataHandler(this.context, this.stateManager);
-    // }
-    // if (this.config.enabledHandlers.quality) {
-    //   this.qualityHandler = new ComscoreQualityHandler(this.context, this.stateManager);
-    // }
+    if (this.config.enabledHandlers.advertisement) {
+      this.advertisementHandler = new ComscoreAdvertisementHandler(
+        this.context,
+        this.stateManager
+      );
+      this.logger.debug('ComscorePlugin', 'AdvertisementHandler initialized');
+    }
+    if (this.config.enabledHandlers.errors) {
+      this.errorHandler = new ComscoreErrorHandler(
+        this.context,
+        this.stateManager
+      );
+      this.logger.debug('ComscorePlugin', 'ErrorHandler initialized');
+    }
+    if (this.config.enabledHandlers.metadata) {
+      this.metadataHandler = new ComscoreMetadataHandler(
+        this.context,
+        this.stateManager
+      );
+      this.logger.debug('ComscorePlugin', 'MetadataHandler initialized');
+    }
+    if (this.config.enabledHandlers.quality) {
+      this.qualityHandler = new ComscoreQualityHandler(
+        this.context,
+        this.stateManager
+      );
+      this.logger.debug('ComscorePlugin', 'QualityHandler initialized');
+    }
   }
 
   private mergeConfig(
@@ -579,10 +576,10 @@ export class ComscorePlugin implements ComscorePluginInterface {
       enabledHandlers: {
         playback: true,
         application: true,
-        advertisement: false, // Deshabilitado hasta implementar
-        metadata: false, // Deshabilitado hasta implementar
-        quality: false, // Deshabilitado hasta implementar
-        errors: false, // Deshabilitado hasta implementar
+        advertisement: true,
+        metadata: true,
+        quality: true,
+        errors: true,
         ...pluginConfig.enabledHandlers,
       },
       loggerConfig: {

@@ -7,3 +7,7 @@ export * from './base/DefaultMutableHandlerContext';
 export * from './StateUtils';
 export * from './StateManagerFactory';
 export * from './ComscoreStateManager';
+export * from './ComscoreQualityHandler';
+export * from './ComscoreErrorHandler';
+export * from './ComscoreMetadataHandler';
+export * from './ComscoreAdvertisementHandler';
