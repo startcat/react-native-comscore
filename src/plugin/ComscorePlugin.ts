@@ -121,7 +121,11 @@ export class ComscorePlugin implements ComscorePluginInterface {
    */
 
   update(metadata: ComscoreMetadata): void {
-    this.logger.debug('ComscorePlugin', 'Updating metadata', metadata);
+    this.logger.debug(
+      'ComscorePlugin',
+      'Updating metadata',
+      JSON.stringify(metadata)
+    );
     this.context.updateMetadata(metadata);
     this.context.connector.update(metadata);
   }
@@ -161,7 +165,11 @@ export class ComscorePlugin implements ComscorePluginInterface {
   }
 
   onMetadataLoaded?(params: MetadataParams): void {
-    this.logger.info('ComscorePlugin', '🎯 onMetadataLoaded', params);
+    this.logger.info(
+      'ComscorePlugin',
+      '🎯 onMetadataLoaded',
+      JSON.stringify(params)
+    );
     if (this.config.enabledHandlers.playback) {
       this.playbackHandler.handleMetadataLoaded();
     }
@@ -171,7 +179,11 @@ export class ComscorePlugin implements ComscorePluginInterface {
   }
 
   onMetadataUpdate?(params: MetadataParams): void {
-    this.logger.info('ComscorePlugin', '🎯 onMetadataUpdate', params);
+    this.logger.info(
+      'ComscorePlugin',
+      '🎯 onMetadataUpdate',
+      JSON.stringify(params)
+    );
     if (this.config.enabledHandlers.metadata && params.metadata) {
       this.metadataHandler.handleMetadataUpdate(params);
     }
@@ -468,12 +480,20 @@ export class ComscorePlugin implements ComscorePluginInterface {
    */
 
   onSetContentMetadata?(params: { metadata: ComscoreMetadata }): void {
-    this.logger.info('ComscorePlugin', '🎯 onSetContentMetadata', params);
+    this.logger.info(
+      'ComscorePlugin',
+      '🎯 onSetContentMetadata',
+      JSON.stringify(params)
+    );
     this.update(params.metadata);
   }
 
   onSetAdvertisementMetadata?(params: any): void {
-    this.logger.info('ComscorePlugin', '🎯 onSetAdvertisementMetadata', params);
+    this.logger.info(
+      'ComscorePlugin',
+      '🎯 onSetAdvertisementMetadata',
+      JSON.stringify(params)
+    );
     // TODO: Implementar cuando tengamos AdvertisementHandler
   }
 
@@ -583,13 +603,13 @@ export class ComscorePlugin implements ComscorePluginInterface {
         ...pluginConfig.enabledHandlers,
       },
       loggerConfig: {
-        enableVerboseLogging: false,
+        enableVerboseLogging: true,
         filterComponents: [],
         ...pluginConfig.loggerConfig,
       },
       stateManagerConfig: {
         validateTransitions: true,
-        enableVerboseLogging: false,
+        enableVerboseLogging: true,
         ...pluginConfig.stateManagerConfig,
       },
     };
