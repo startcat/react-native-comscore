@@ -35,10 +35,10 @@ class Comscore: NSObject {
         print("[\(TAG)] updatePersistentLabels")
         let publisherConfig = SCORAnalytics.configuration().publisherConfiguration(withPublisherId: publisherId)
         
-        publisherConfig?.setPersistentLabel(withName: "cs_fpid", value: fpid)
-        publisherConfig?.setPersistentLabel(withName: "cs_fpit", value: fpit)
-        publisherConfig?.setPersistentLabel(withName: "cs_fpdm", value: fpdm)
-        publisherConfig?.setPersistentLabel(withName: "cs_fpdt", value: fpdt)
+        publisherConfig?.setPersistentLabelWithName("cs_fpid", value: fpid)
+        publisherConfig?.setPersistentLabelWithName("cs_fpit", value: fpit)
+        publisherConfig?.setPersistentLabelWithName("cs_fpdm", value: fpdm)
+        publisherConfig?.setPersistentLabelWithName("cs_fpdt", value: fpdt)
 
         SCORAnalytics.notifyHiddenEvent()
     }
@@ -47,7 +47,7 @@ class Comscore: NSObject {
     func setPersistentLabel(publisherId: String, labelName: String, labelValue: String) {
         print("[\(TAG)] setPersistentLabel: \(labelName) = \(labelValue)")
         let publisherConfig = SCORAnalytics.configuration().publisherConfiguration(withPublisherId: publisherId)
-        publisherConfig?.setPersistentLabel(withName: labelName, value: labelValue)
+        publisherConfig?.setPersistentLabelWithName(labelName, value: labelValue)
         SCORAnalytics.notifyHiddenEvent()
     }
 
@@ -73,7 +73,6 @@ class Comscore: NSObject {
         // Configurar ComScore globalmente si no se ha hecho
         configureComScoreIfNeeded(comscoreConfig)
         
-        // ✅ CORRECCIÓN: Usar exactamente la sintaxis de la documentación oficial
         let streamingAnalytics = SCORStreamingAnalytics()
         streamingAnalyticsInstances[tagInt] = streamingAnalytics
         
@@ -166,16 +165,16 @@ class Comscore: NSObject {
     func startFromDvrWindowOffset(tag: NSNumber, offset: NSNumber) {
         let tagInt = tag.intValue
         print("[\(TAG)] startFromDvrWindowOffset tag: \(tagInt), offset: \(offset)")
-        // ✅ CORRECCIÓN: Según la documentación oficial, usar startFromDvrWindowOffset
-        streamingAnalyticsInstances[tagInt]?.startFromDvrWindowOffset(offset.int32Value)
+        // Según la documentación oficial, usar startFromDvrWindowOffset
+        streamingAnalyticsInstances[tagInt]?.start(fromDvrWindowOffset: Int(offset.int32Value))
     }
     
     @objc(startFromPosition:position:)
     func startFromPosition(tag: NSNumber, position: NSNumber) {
         let tagInt = tag.intValue
         print("[\(TAG)] startFromPosition tag: \(tagInt), position: \(position)")
-        // ✅ CORRECCIÓN: Según la documentación oficial, usar startFromPosition seguido de notifyPlay
-        streamingAnalyticsInstances[tagInt]?.startFromPosition(position.int32Value)
+        // Según la documentación oficial, usar startFromPosition seguido de notifyPlay
+        streamingAnalyticsInstances[tagInt]?.start(fromPosition: Int(position.int32Value))
         streamingAnalyticsInstances[tagInt]?.notifyPlay()
     }
     
@@ -211,7 +210,7 @@ class Comscore: NSObject {
             return
         }
         
-        // ✅ CORRECCIÓN: Usar exactamente la sintaxis de la documentación oficial
+        // Usar exactamente la sintaxis de la documentación oficial
         let publisherConfig = SCORPublisherConfiguration { builder in
             builder?.publisherId = publisherId
         }
@@ -225,9 +224,9 @@ class Comscore: NSObject {
             SCORAnalytics.configuration().applicationName = applicationName
         }
         
-        // ✅ CORRECCIÓN: Verificar si configuration() devuelve un opcional
+        // Verificar si configuration() devuelve un opcional
         if let debug = config["debug"] as? Bool, debug {
-            SCORAnalytics.configuration().enableImplementationValidationMode = true
+            SCORAnalytics.configuration().enableImplementationValidationMode()
         }
         
         Self.isConfigured = true
@@ -240,11 +239,10 @@ class Comscore: NSObject {
             return
         }
         
-        // ✅ CORRECCIÓN: Usar EXACTAMENTE la sintaxis de la documentación oficial Swift
         let cm = SCORStreamingContentMetadata(builderBlock: { (builder) in
             // Mapear mediaType
             if let mediaType = metadata["mediaType"] as? String {
-                let mappedType = mapMediaType(mediaType)
+                let mappedType = self.mapMediaType(mediaType)
                 builder?.setMediaType(mappedType)
             }
             
@@ -274,7 +272,7 @@ class Comscore: NSObject {
             }
             
             if let classifyAsAudioStream = metadata["classifyAsAudioStream"] as? Bool, classifyAsAudioStream {
-                builder?.classifyAsAudioStream(true)
+                builder?.classify(asAudioStream: true)
             }
             
             // Custom labels
@@ -283,33 +281,31 @@ class Comscore: NSObject {
             }
         })
         
-        // ✅ CORRECCIÓN: Usar exactamente la sintaxis de la documentación oficial
         streamingAnalytics.setMetadata(cm)
         
         print("[\(TAG)] Metadata set for tag: \(tag)")
     }
     
-    // ✅ CORRECCIÓN: Usar exactamente los tipos de la documentación oficial
     private func mapMediaType(_ mediaType: String) -> SCORStreamingContentType {
         switch mediaType.lowercased() {
         case "longformondemand":
-            return SCORStreamingContentTypeLongFormOnDemand
+            return SCORStreamingContentType.longFormOnDemand
         case "shortformondemand":
-            return SCORStreamingContentTypeShortFormOnDemand
+            return SCORStreamingContentType.shortFormOnDemand
         case "live":
-            return SCORStreamingContentTypeLive
+            return SCORStreamingContentType.live
         case "userGeneratedShortFormOnDemand".lowercased():
-            return SCORStreamingContentTypeUserGeneratedShortFormOnDemand
+            return SCORStreamingContentType.userGeneratedShortFormOnDemand
         case "userGeneratedLongFormOnDemand".lowercased():
-            return SCORStreamingContentTypeUserGeneratedLongFormOnDemand
+            return SCORStreamingContentType.userGeneratedLongFormOnDemand
         case "userGeneratedLive".lowercased():
-            return SCORStreamingContentTypeUserGeneratedLive
+            return SCORStreamingContentType.userGeneratedLive
         case "bumper":
-            return SCORStreamingContentTypeBumper
+            return SCORStreamingContentType.bumper
         case "other":
-            return SCORStreamingContentTypeOther
+            return SCORStreamingContentType.other
         default:
-            return SCORStreamingContentTypeLongFormOnDemand
+            return SCORStreamingContentType.longFormOnDemand
         }
     }
 }
