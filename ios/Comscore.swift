@@ -109,370 +109,233 @@ class Comscore: NSObject {
         print("[\(TAG)] setMetadata tag: \(tagInt)")
         comscoreConnectors[tagInt]?.setMetadata(mapMetadata(metadata))
     }
-    
-    // MARK: - Streaming Playback Events
-    
-    @objc(notifyEnd:)
-    func notifyEnd(tag: NSNumber) {
-        let tagInt = tag.intValue
-        print("[\(TAG)] notifyEnd tag: \(tagInt)")
-        comscoreConnectors[tagInt]?.notifyEnd()
-    }
-    
-    @objc(notifyPause:)
-    func notifyPause(tag: NSNumber) {
-        let tagInt = tag.intValue
-        print("[\(TAG)] notifyPause tag: \(tagInt)")
-        comscoreConnectors[tagInt]?.notifyPause()
-    }
-    
-    @objc(notifyPlay:)
-    func notifyPlay(tag: NSNumber) {
-        let tagInt = tag.intValue
-        print("[\(TAG)] notifyPlay tag: \(tagInt)")
-        comscoreConnectors[tagInt]?.notifyPlay()
-    }
-    
-    @objc(createPlaybackSession:)
-    func createPlaybackSession(tag: NSNumber) {
-        let tagInt = tag.intValue
-        print("[\(TAG)] createPlaybackSession tag: \(tagInt)")
-        comscoreConnectors[tagInt]?.createPlaybackSession()
-    }
-    
-    @objc(setDvrWindowLength:length:)
-    func setDvrWindowLength(tag: NSNumber, length: NSNumber) {
-        let tagInt = tag.intValue
-        print("[\(TAG)] setDvrWindowLength tag: \(tagInt)")
-        comscoreConnectors[tagInt]?.setDvrWindowLength(length.int64Value)
-    }
-    
-    @objc(notifyBufferStop:)
-    func notifyBufferStop(tag: NSNumber) {
-        let tagInt = tag.intValue
-        print("[\(TAG)] notifyBufferStop tag: \(tagInt)")
-        comscoreConnectors[tagInt]?.notifyBufferStop()
-    }
-    
-    @objc(notifySeekStart:)
-    func notifySeekStart(tag: NSNumber) {
-        let tagInt = tag.intValue
-        print("[\(TAG)] notifySeekStart tag: \(tagInt)")
-        comscoreConnectors[tagInt]?.notifySeekStart()
-    }
-    
-    @objc(startFromDvrWindowOffset:offset:)
-    func startFromDvrWindowOffset(tag: NSNumber, offset: NSNumber) {
-        let tagInt = tag.intValue
-        print("[\(TAG)] startFromDvrWindowOffset tag: \(tagInt)")
-        comscoreConnectors[tagInt]?.startFromDvrWindowOffset(offset.int64Value)
-    }
-    
-    @objc(startFromPosition:position:)
-    func startFromPosition(tag: NSNumber, position: NSNumber) {
-        let tagInt = tag.intValue
-        print("[\(TAG)] startFromPosition tag: \(tagInt)")
-        comscoreConnectors[tagInt]?.startFromPosition(position.int64Value)
-    }
-    
-    @objc(notifyBufferStart:)
-    func notifyBufferStart(tag: NSNumber) {
-        let tagInt = tag.intValue
-        print("[\(TAG)] notifyBufferStart tag: \(tagInt)")
-        comscoreConnectors[tagInt]?.notifyBufferStart()
-    }
-    
-    @objc(notifyChangePlaybackRate:rate:)
-    func notifyChangePlaybackRate(tag: NSNumber, rate: NSNumber) {
-        let tagInt = tag.intValue
-        print("[\(TAG)] notifyChangePlaybackRate tag: \(tagInt)")
-        comscoreConnectors[tagInt]?.notifyChangePlaybackRate(rate.floatValue)
-    }
-    
-    @objc(destroyStreaming:)
-    func destroyStreaming(tag: NSNumber) {
-        let tagInt = tag.intValue
-        print("[\(TAG)] destroyStreaming tag: \(tagInt)")
-        comscoreConnectors[tagInt]?.destroy()
-        comscoreConnectors.removeValue(forKey: tagInt)
-    }
-    
-    // MARK: - Utility Methods
-    
-    private func mapLabels(_ labels: NSDictionary) -> [String: String] {
-        var result: [String: String] = [:]
-        for (key, value) in labels {
-            if let keyString = key as? String {
-                result[keyString] = String(describing: value)
-            }
-        }
-        return result
-    }
-    
-    private func mapConfig(_ config: NSDictionary) -> ComscoreConfiguration {
-        let publisherId = config["publisherId"] as? String ?? ""
-        let applicationName = config["applicationName"] as? String ?? ""
-        let usagePropertiesAutoUpdateMode = mapUsagePropertiesAutoUpdateMode(
-            config["usagePropertiesAutoUpdateMode"] as? String ?? "foregroundOnly"
-        )
-        let userConsent = config["userConsent"] as? String ?? "1"
-        let secureTransmission = config["secureTransmission"] as? Bool ?? true
-        let debug = config["debug"] as? Bool ?? false
-        
-        return ComscoreConfiguration(
-            publisherId: publisherId,
-            applicationName: applicationName,
-            usagePropertiesAutoUpdateMode: usagePropertiesAutoUpdateMode,
-            userConsent: userConsent,
-            secureTransmission: secureTransmission,
-            debug: debug
-        )
-    }
-    
-    private func mapUsagePropertiesAutoUpdateMode(_ mode: String) -> SCORUsagePropertiesAutoUpdateMode {
-        switch mode.lowercased() {
-        case "foregroundonly":
-            return .foregroundOnly
-        case "foregroundandbackground":
-            return .foregroundAndBackground
-        case "disabled":
-            return .disabled
-        default:
-            return .foregroundOnly
-        }
-    }
-    
-    private func mapMetadata(_ metadata: NSDictionary) -> ComscoreMetaData {
-        return ComscoreMetaData(
-            mediaType: mapMediaType(metadata["mediaType"] as? String),
-            uniqueId: metadata["uniqueId"] as? String,
-            length: metadata["length"] as? NSNumber,
-            stationTitle: metadata["stationTitle"] as? String,
-            programTitle: metadata["programTitle"] as? String,
-            episodeTitle: metadata["episodeTitle"] as? String,
-            genreName: metadata["genreName"] as? String,
-            classifyAsAudioStream: metadata["classifyAsAudioStream"] as? Bool ?? false,
-            customLabels: mapLabels(metadata["customLabels"] as? NSDictionary ?? [:])
-        )
-    }
-    
-    private func mapMediaType(_ mediaType: String?) -> SCORStreamingContentType {
-        guard let mediaType = mediaType else { return .longFormOnDemand }
-        
-        switch mediaType.lowercased() {
-        case "longformondemand":
-            return .longFormOnDemand
-        case "shortformondemand":
-            return .shortFormOnDemand
-        case "live":
-            return .live
-        case "usergenerated":
-            return .userGenerated
-        case "buzzbeater":
-            return .buzzBeater
-        case "other":
-            return .other
-        default:
-            return .longFormOnDemand
-        }
-    }
 }
 
-// MARK: - Supporting Classes
-
-struct ComscoreConfiguration {
-    let publisherId: String
-    let applicationName: String
-    let usagePropertiesAutoUpdateMode: SCORUsagePropertiesAutoUpdateMode
-    let userConsent: String
-    let secureTransmission: Bool
-    let debug: Bool
-}
-
-struct ComscoreMetaData {
-    let mediaType: SCORStreamingContentType
-    let uniqueId: String?
-    let length: NSNumber?
-    let stationTitle: String?
-    let programTitle: String?
-    let episodeTitle: String?
-    let genreName: String?
-    let classifyAsAudioStream: Bool
-    let customLabels: [String: String]
-}
+// MARK: - ComscoreConnector Class
 
 class ComscoreConnector {
     private let streamingAnalytics: SCORStreamingAnalytics
     private let TAG = "ComscoreConnector"
-    private var startedTracking = false
     
-    init(configuration: ComscoreConfiguration, metadata: ComscoreMetaData) {
+    init(configuration: ComscoreConfig, metadata: ComscoreMetaData) {
+        // Crear la configuración de ComScore
+        let config = SCORConfiguration.configuration() as! SCORConfiguration
+        
+        if configuration.debug {
+            config.enableImplementationValidationMode(true)
+        }
+        
+        // Configurar publisher
+        let publisherConfigBuilder = SCORPublisherConfigurationBuilder(publisherId: configuration.publisherId)
+        
+        // secureTransmission no está disponible en iOS - omitir
+        // publisherConfigBuilder.secureTransmission(configuration.secureTransmission) // ❌ No disponible
+        
+        let publisherConfig = publisherConfigBuilder.build()
+        config.addClient(withConfiguration: publisherConfig)
+        SCORAnalytics.start(with: config)
+        
+        // Crear instancia de streaming analytics
         self.streamingAnalytics = SCORStreamingAnalytics()
-        initialize(configuration: configuration, metadata: metadata)
-    }
-    
-    private func initialize(configuration: ComscoreConfiguration, metadata: ComscoreMetaData) {
-        if startedTracking {
-            return
-        }
-        startedTracking = true
         
-        if configuration.debug {
-            print("[\(TAG)] initialize: starting")
-            print("[\(TAG)] initialize: configuration=[publisherId=\(configuration.publisherId), appName=\(configuration.applicationName), debug=\(configuration.debug)]")
-            print("[\(TAG)] initialize: metadata=\(metadata)")
-        }
-        
-        // Configure Analytics
-        let publisherConfig = SCORPublisherConfiguration { builder in
-            builder?.publisherId = configuration.publisherId
-            builder?.secureTransmission = configuration.secureTransmission
-            
-            if configuration.userConsent == "1" || configuration.userConsent == "0" {
-                builder?.persistentLabels = ["cs_ucfr": configuration.userConsent]
-            }
-        }
-        
-        if let config = publisherConfig {
-            SCORAnalytics.configuration().addClient(with: config)
-        }
-        
-        SCORAnalytics.configuration().usagePropertiesAutoUpdateMode = configuration.usagePropertiesAutoUpdateMode
-        SCORAnalytics.configuration().applicationName = configuration.applicationName
-        
-        if configuration.debug {
-            SCORAnalytics.configuration().enableImplementationValidationMode = true
-        }
-        
-        // Set initial metadata
+        // Establecer metadatos iniciales
         setMetadata(metadata)
     }
     
     func update(_ metadata: ComscoreMetaData) {
-        if #available(iOS 11.0, *) {
-            print("[\(TAG)] update")
-        }
+        print("[\(TAG)] update")
         setMetadata(metadata)
     }
     
     func setPersistentLabels(_ labels: [String: String]) {
-        if #available(iOS 11.0, *) {
-            print("[\(TAG)] setPersistentLabels")
-        }
+        print("[\(TAG)] setPersistentLabels")
         for (key, value) in labels {
             streamingAnalytics.setPersistentLabel(withName: key, value: value)
         }
     }
     
     func setPersistentLabel(_ label: String, value: String) {
-        if #available(iOS 11.0, *) {
-            print("[\(TAG)] setPersistentLabel: \(label) = \(value)")
-        }
+        print("[\(TAG)] setPersistentLabel: \(label) = \(value)")
         streamingAnalytics.setPersistentLabel(withName: label, value: value)
     }
     
     func setMetadata(_ metadata: ComscoreMetaData) {
-        if #available(iOS 11.0, *) {
-            print("[\(TAG)] setMetadata")
-        }
+        print("[\(TAG)] setMetadata")
         
-        let contentMetadata = SCORStreamingContentMetadata()
-        contentMetadata.mediaType = metadata.mediaType
-        contentMetadata.uniqueId = metadata.uniqueId
-        contentMetadata.length = metadata.length
-        contentMetadata.stationTitle = metadata.stationTitle
-        contentMetadata.programTitle = metadata.programTitle
-        contentMetadata.episodeTitle = metadata.episodeTitle
-        contentMetadata.genreName = metadata.genreName
-        contentMetadata.classifyAsAudioStream = metadata.classifyAsAudioStream
-        contentMetadata.customLabels = metadata.customLabels
+        // Usar el patrón de builder de iOS
+        let contentMetadata = SCORStreamingContentMetadata(builderBlock: { (builder) in
+            // Mapear tipos de contenido de Android a iOS
+            if let mediaType = mapContentType(metadata.mediaType) {
+                builder?.setMediaType(mediaType)
+            }
+            
+            // Propiedades básicas
+            if let uniqueId = metadata.uniqueId {
+                builder?.setUniqueId(uniqueId)
+            }
+            
+            if let length = metadata.length {
+                builder?.setLength(length)
+            }
+            
+            if let stationTitle = metadata.stationTitle {
+                builder?.setStationTitle(stationTitle)
+            }
+            
+            if let programTitle = metadata.programTitle {
+                builder?.setProgramTitle(programTitle)
+            }
+            
+            if let episodeTitle = metadata.episodeTitle {
+                builder?.setEpisodeTitle(episodeTitle)
+            }
+            
+            if let genreName = metadata.genreName {
+                builder?.setGenreName(genreName)
+            }
+            
+            // Clasificar como audio stream
+            if let classifyAsAudioStream = metadata.classifyAsAudioStream {
+                builder?.classifyAsAudioStream(classifyAsAudioStream)
+            }
+            
+            // Custom labels
+            if let customLabels = metadata.customLabels {
+                builder?.setCustomLabels(customLabels)
+            }
+        })
         
         streamingAnalytics.setMetadata(contentMetadata)
     }
     
     // MARK: - Playback Events
     
-    func notifyEnd() {
-        if #available(iOS 11.0, *) {
-            print("[\(TAG)] notifyEnd")
-        }
-        streamingAnalytics.notifyPause()
-    }
-    
-    func notifyPause() {
-        if #available(iOS 11.0, *) {
-            print("[\(TAG)] notifyPause")
-        }
-        streamingAnalytics.notifyPause()
-    }
-    
     func notifyPlay() {
-        if #available(iOS 11.0, *) {
-            print("[\(TAG)] notifyPlay")
-        }
+        print("[\(TAG)] notifyPlay")
         streamingAnalytics.notifyPlay()
     }
     
-    func createPlaybackSession() {
-        if #available(iOS 11.0, *) {
-            print("[\(TAG)] createPlaybackSession")
-        }
-        streamingAnalytics.createPlaybackSession()
+    func notifyPause() {
+        print("[\(TAG)] notifyPause")
+        streamingAnalytics.notifyPause()
     }
     
-    func setDvrWindowLength(_ length: Int64) {
-        if #available(iOS 11.0, *) {
-            print("[\(TAG)] setDvrWindowLength: \(length)")
-        }
-        streamingAnalytics.setDvrWindowLength(length)
+    func notifyEnd() {
+        print("[\(TAG)] notifyEnd")
+        streamingAnalytics.notifyEnd()
+    }
+    
+    func notifyBufferStart() {
+        print("[\(TAG)] notifyBufferStart")
+        streamingAnalytics.notifyBufferStart()
     }
     
     func notifyBufferStop() {
-        if #available(iOS 11.0, *) {
-            print("[\(TAG)] notifyBufferStop")
-        }
+        print("[\(TAG)] notifyBufferStop")
         streamingAnalytics.notifyBufferStop()
     }
     
     func notifySeekStart() {
-        if #available(iOS 11.0, *) {
-            print("[\(TAG)] notifySeekStart")
-        }
+        print("[\(TAG)] notifySeekStart")
         streamingAnalytics.notifySeekStart()
     }
     
-    func startFromDvrWindowOffset(_ offset: Int64) {
-        if #available(iOS 11.0, *) {
-            print("[\(TAG)] startFromDvrWindowOffset: \(offset)")
-        }
-        streamingAnalytics.startFromDvrWindowOffset(offset)
+    func notifySeekEnd() {
+        print("[\(TAG)] notifySeekEnd")
+        streamingAnalytics.notifySeekEnd()
     }
     
-    func startFromPosition(_ position: Int64) {
-        if #available(iOS 11.0, *) {
-            print("[\(TAG)] startFromPosition: \(position)")
-        }
+    func startFromPosition(_ position: Int32) {
+        print("[\(TAG)] startFromPosition: \(position)")
         streamingAnalytics.startFromPosition(position)
     }
     
-    func notifyBufferStart() {
-        if #available(iOS 11.0, *) {
-            print("[\(TAG)] notifyBufferStart")
-        }
-        streamingAnalytics.notifyBufferStart()
+    func startFromDvrWindowOffset(_ offset: Int32) {
+        print("[\(TAG)] startFromDvrWindowOffset: \(offset)")
+        streamingAnalytics.startFromDvrWindowOffset(offset)
+    }
+}
+
+// MARK: - Helper Functions
+
+extension Comscore {
+    
+    func mapConfig(_ config: NSDictionary) -> ComscoreConfig {
+        return ComscoreConfig(
+            publisherId: config["publisherId"] as? String ?? "",
+            debug: config["debug"] as? Bool ?? false,
+            secureTransmission: config["secureTransmission"] as? Bool ?? true // No se usa en iOS
+        )
     }
     
-    func notifyChangePlaybackRate(_ rate: Float) {
-        if #available(iOS 11.0, *) {
-            print("[\(TAG)] notifyChangePlaybackRate: \(rate)")
-        }
-        streamingAnalytics.notifyChangePlaybackRate(rate)
+    func mapMetadata(_ metadata: NSDictionary) -> ComscoreMetaData {
+        return ComscoreMetaData(
+            mediaType: metadata["mediaType"] as? String,
+            uniqueId: metadata["uniqueId"] as? String,
+            length: metadata["length"] as? Int32,
+            stationTitle: metadata["stationTitle"] as? String,
+            programTitle: metadata["programTitle"] as? String,
+            episodeTitle: metadata["episodeTitle"] as? String,
+            genreName: metadata["genreName"] as? String,
+            classifyAsAudioStream: metadata["classifyAsAudioStream"] as? Bool,
+            customLabels: metadata["customLabels"] as? [String: String]
+        )
     }
     
-    func destroy() {
-        if #available(iOS 11.0, *) {
-            print("[\(TAG)] destroy")
+    func mapLabels(_ labels: NSDictionary) -> [String: String] {
+        var result: [String: String] = [:]
+        for (key, value) in labels {
+            if let strKey = key as? String, let strValue = value as? String {
+                result[strKey] = strValue
+            }
         }
-        // Cleanup if needed
+        return result
     }
+    
+    // Mapear tipos de contenido de Android a iOS
+    func mapContentType(_ mediaType: String?) -> SCORStreamingContentType? {
+        guard let mediaType = mediaType else { return nil }
+        
+        switch mediaType {
+        case "shortFormOnDemand":
+            return SCORStreamingContentTypeShortFormOnDemand
+        case "longFormOnDemand":
+            return SCORStreamingContentTypeLongFormOnDemand
+        case "live":
+            return SCORStreamingContentTypeLive
+        case "userGeneratedShortFormOnDemand":
+            return SCORStreamingContentTypeUserGeneratedShortFormOnDemand
+        case "userGeneratedLongFormOnDemand":
+            return SCORStreamingContentTypeUserGeneratedLongFormOnDemand
+        case "userGeneratedLive":
+            return SCORStreamingContentTypeUserGeneratedLive
+        case "bumper":
+            return SCORStreamingContentTypeBumper
+        case "other":
+            return SCORStreamingContentTypeOther
+        default:
+            print("[\(TAG)] Unknown media type: \(mediaType), defaulting to Other")
+            return SCORStreamingContentTypeOther
+        }
+    }
+}
+
+// MARK: - Data Classes
+
+struct ComscoreConfig {
+    let publisherId: String
+    let debug: Bool
+    let secureTransmission: Bool // No se usa en iOS pero se mantiene para compatibilidad
+}
+
+struct ComscoreMetaData {
+    let mediaType: String?
+    let uniqueId: String?
+    let length: Int32?
+    let stationTitle: String?
+    let programTitle: String?
+    let episodeTitle: String?
+    let genreName: String?
+    let classifyAsAudioStream: Bool?
+    let customLabels: [String: String]?
 }
