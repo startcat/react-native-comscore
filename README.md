@@ -18,8 +18,8 @@ Añade las credenciales de ComScore en tu archivo `.env`:
 
 ```env
 # COMSCORE
-COMSCORE_PUBLISHER_ID=11548294
-COMSCORE_APPLICATION=3Cat_DEMO
+COMSCORE_PUBLISHER_ID=
+COMSCORE_APPLICATION=
 ```
 
 > **Nota**: Las variables del `.env` se acceden mediante [react-native-config](https://github.com/lugg/react-native-config), que las expone automáticamente en `BuildConfig` para Android y `RNCConfig` para iOS.
