@@ -8,7 +8,7 @@ Este documento proporciona una explicación detallada de todos los tipos definid
   - [ComscoreConfiguration](#comscoreconfiguration)
   - [ComscoreUserConsent](#comscoreuserconsent)
   - [ComscoreUsagePropertiesAutoUpdateMode](#comscoreusagepropertiesautoupdatemode)
-- [Tipos de Metadatos](#tipos-de-metadatos)
+- [Tipos de Metadatos de Contenido](#tipos-de-metadatos-de-contenido)
   - [ComscoreMetadata](#comscoremetadata)
   - [CustomComscoreMetadata](#customcomscoremetadata)
   - [ComscoreMediaType](#comscoremediatype)
@@ -18,16 +18,23 @@ Este documento proporciona una explicación detallada de todos los tipos definid
   - [ComscoreDeliveryComposition](#comscoredeliverycomposition)
   - [ComscoreDeliveryAdvertisementCapability](#comscoredeliveryadvertisementcapability)
   - [ComscoreMediaFormat](#comscoremediaformat)
-  - [ComscoreDistributionModel](#comscoreDistributionModel)
+  - [ComscoreDistributionModel](#comscoredistributionmodel)
   - [ComscoreDate](#comscoredate)
   - [ComscoreTime](#comscoretime)
   - [ComscoreDimension](#comscoredimension)
-- [Tipos de Módulo y Plugin](#tipos-de-módulo-y-plugin)
-  - [ComscoreModule](#comscoremodule)
-  - [ComscoreLabels](#comscorelabels)
+- [Tipos de Metadatos de Publicidad](#tipos-de-metadatos-de-publicidad)
+  - [ComscoreAdvertisementMetadata](#comscoreAdvertisementMetadata)
+  - [CustomComscoreAdvertisementMetadata](#customcomscoreAdvertisementMetadata)
+  - [ComscoreAdvertisementType](#comscoreAdvertisementType)
+  - [ComscoreAdvertisementDeliveryType](#comscoreAdvertisementDeliveryType)
+  - [ComscoreAdvertisementOwner](#comscoreAdvertisementOwner)
+- [Tipos de Plugin y Eventos](#tipos-de-plugin-y-eventos)
   - [PlayerPlugin](#playerplugin)
   - [ComscorePluginInterface](#comscoreplugininterface)
   - [ComscoreState](#comscorestate)
+  - [Parámetros de Eventos](#parámetros-de-eventos)
+- [Tipos de Conector](#tipos-de-conector)
+  - [ComscoreConnector](#comscoreconnector)
 
 ## Tipos de Configuración
 
@@ -63,48 +70,117 @@ Enumeración que define cuándo se deben actualizar automáticamente las propied
 | foregroundAndBackground | Actualiza las propiedades tanto en primer plano como en segundo plano    |
 | disabled                | Desactiva las actualizaciones automáticas de propiedades                 |
 
-## Tipos de Metadatos
+## Tipos de Metadatos de Contenido
 
 ### ComscoreMetadata
 
 La interfaz principal para los metadatos que se envían a ComScore.
 
-| Propiedad                 | Tipo              | Descripción                                                          | Requerido |
-| ------------------------- | ----------------- | -------------------------------------------------------------------- | --------- |
-| mediaType                 | ComscoreMediaType | Tipo de clasificación, obligatorio                                   | Sí        |
-| uniqueId                  | string            | ID único para el contenido                                           | Sí        |
-| length                    | number            | Duración del clip en milisegundos                                    | Sí        |
-| c3                        | string            | Diccionario VMX (nivel 1)                                            | No        |
-| c4                        | string            | Diccionario VMX (nivel 2)                                            | No        |
-| c6                        | string            | Diccionario VMX (nivel 3)                                            | No        |
-| stationTitle              | string            | Nombre del canal                                                     | Sí        |
-| stationCode               | string            | Código del canal                                                     | No        |
-| networkAffiliate          | string            | Código de afiliación de la estación                                  | No        |
-| publisherName             | string            | Nombre de la marca del editor                                        | No        |
-| programTitle              | string            | Nombre del programa                                                  | Sí        |
-| programId                 | string            | ID del programa                                                      | No        |
-| episodeTitle              | string            | Título del episodio                                                  | Sí        |
-| episodeId                 | string            | ID del episodio                                                      | No        |
-| episodeSeasonNumber       | string            | Número de temporada                                                  | No        |
-| episodeNumber             | string            | Número de episodio                                                   | No        |
-| genreName                 | string            | Descripción del género                                               | Sí        |
-| genreId                   | string            | ID del género                                                        | No        |
-| carryTvAdvertisementLoad  | boolean           | Indica si la transmisión lleva la misma carga publicitaria que la TV | No        |
-| classifyAsCompleteEpisode | boolean           | Indica si el medio es un episodio completo                           | No        |
-| dateOfProduction          | ComscoreDate      | Fecha de producción                                                  | No        |
-| timeOfProduction          | ComscoreTime      | Hora de producción                                                   | No        |
-| dateOfTvAiring            | ComscoreDate      | Fecha de emisión en TV                                               | No        |
-| timeOfTvAiring            | ComscoreTime      | Hora de emisión en TV                                                | No        |
-| dateOfDigitalAiring       | ComscoreDate      | Fecha de disponibilidad para streaming                               | No        |
-| timeOfDigitalAiring       | ComscoreTime      | Hora de disponibilidad para streaming                                | No        |
+#### Propiedades Obligatorias
+
+| Propiedad | Tipo | Descripción |
+|-----------|------|-------------|
+| `mediaType` | `ComscoreMediaType` | Tipo de clasificación del contenido |
+| `uniqueId` | `string` | Identificador único del contenido |
+| `length` | `number` | Duración del contenido en milisegundos |
+| `stationTitle` | `string` | Nombre del canal o estación |
+| `classifyAsAudioStream` | `boolean` | Indica si es contenido solo de audio |
+
+#### Propiedades de Clasificación VMX (Opcionales)
+
+| Propiedad | Tipo | Descripción |
+|-----------|------|-------------|
+| `c3` | `string` | Diccionario VMX (nivel 1) |
+| `c4` | `string` | Diccionario VMX (nivel 2) |
+| `c6` | `string` | Diccionario VMX (nivel 3) |
+
+#### Propiedades de Identificación (Opcionales)
+
+| Propiedad | Tipo | Descripción |
+|-----------|------|-------------|
+| `stationCode` | `string` | Código del canal o estación |
+| `networkAffiliate` | `string` | Código de afiliación de la estación |
+| `publisherName` | `string` | Nombre de la marca del editor |
+
+#### Propiedades de Contenido (Opcionales)
+
+| Propiedad | Tipo | Descripción |
+|-----------|------|-------------|
+| `programTitle` | `string` | Título del programa |
+| `episodeTitle` | `string` | Título del episodio |
+| `genreName` | `string` | Género del contenido |
+| `seriesTitle` | `string` | Título de la serie |
+| `seasonNumber` | `number` | Número de temporada |
+| `episodeNumber` | `number` | Número de episodio |
+| `contentProviderName` | `string` | Nombre del proveedor de contenido |
+| `contentProviderBrand` | `string` | Marca del proveedor de contenido |
+
+#### Propiedades de Entrega (Opcionales)
+
+| Propiedad | Tipo | Descripción |
+|-----------|------|-------------|
+| `deliveryMode` | `ComscoreDeliveryMode` | Modo de entrega (lineal o bajo demanda) |
+| `deliverySubscriptionType` | `ComscoreDeliverySubscriptionType` | Tipo de suscripción |
+| `deliveryComposition` | `ComscoreDeliveryComposition` | Composición de la entrega |
+| `deliveryAdvertisementCapability` | `ComscoreDeliveryAdvertisementCapability` | Capacidad publicitaria |
+
+#### Propiedades de Fechas y Tiempos (Opcionales)
+
+| Propiedad | Tipo | Descripción |
+|-----------|------|-------------|
+| `dateOfProduction` | `ComscoreDate` | Fecha de producción |
+| `timeOfProduction` | `ComscoreTime` | Hora de producción |
+| `dateOfTvAiring` | `ComscoreDate` | Fecha de emisión en TV |
+| `timeOfTvAiring` | `ComscoreTime` | Hora de emisión en TV |
+| `dateOfDigitalAiring` | `ComscoreDate` | Fecha de emisión digital |
+| `timeOfDigitalAiring` | `ComscoreTime` | Hora de emisión digital |
+
+#### Propiedades Técnicas (Opcionales)
+
+| Propiedad | Tipo | Descripción |
+|-----------|------|-------------|
+| `feedType` | `ComscoreFeedType` | Tipo de feed para streams en vivo |
+| `mediaFormat` | `ComscoreMediaFormat` | Formato del contenido multimedia |
+| `distributionModel` | `ComscoreDistributionModel` | Modelo de distribución del contenido |
+| `playlistTitle` | `string` | Título de la playlist |
+| `totalSegments` | `number` | Número total de segmentos |
+| `clipUrl` | `string` | URL del clip del contenido |
+| `videoDimension` | `ComscoreDimension` | Dimensiones del video en píxeles |
+
+#### Propiedades de Clasificación (Opcionales)
+
+| Propiedad | Tipo | Descripción |
+|-----------|------|-------------|
+| `carryTvAdvertisementLoad` | `boolean` | Indica si lleva la misma carga publicitaria que la TV |
+| `classifyAsCompleteEpisode` | `boolean` | Indica si es un episodio completo |
+| `isDrm` | `boolean` | Indica si el contenido tiene DRM |
+
+#### Metadatos Personalizados
+
+| Propiedad | Tipo | Descripción |
+|-----------|------|-------------|
+| `customLabels` | `CustomComscoreMetadata` | Colección de etiquetas personalizadas |
 
 ### CustomComscoreMetadata
 
-Un tipo para pares de nombre/valor de metadatos personalizados.
+Tipo para pares de nombre/valor de metadatos personalizados.
 
-| Propiedad    | Tipo   | Descripción                                     |
-| ------------ | ------ | ----------------------------------------------- |
-| [id: string] | string | Pares clave-valor para metadatos personalizados |
+```typescript
+type CustomComscoreMetadata = {
+  [id: string]: string;
+};
+```
+
+**Descripción**: Permite agregar metadatos personalizados como pares clave-valor donde tanto la clave como el valor deben ser strings.
+
+**Ejemplo**:
+```typescript
+const customMetadata: CustomComscoreMetadata = {
+  "categoria": "deportes",
+  "temporada": "2024",
+  "liga": "primera_division"
+};
+```
 
 ### ComscoreMediaType
 
@@ -238,32 +314,105 @@ Tipo que representa dimensiones (ancho y alto).
 | width     | number | Ancho en píxeles |
 | height    | number | Alto en píxeles  |
 
-## Tipos de Módulo y Plugin
+## Tipos de Metadatos de Publicidad
 
-### ComscoreModule
+### ComscoreAdvertisementMetadata
 
-Interfaz que define todos los métodos disponibles del módulo nativo de ComScore. Esta interfaz representa la API completa del bridge entre React Native y el SDK nativo.
+Interfaz principal para los metadatos de anuncios que se envían a ComScore.
 
-#### Métodos de Analítica Básica (Global)
+#### Propiedades Obligatorias
 
-| Método                 | Parámetros                                         | Descripción                               |
-| ---------------------- | -------------------------------------------------- | ----------------------------------------- |
-| trackView              | view: string                                       | Rastrea una vista específica              |
-| trackEvent             | action: string, category: string                   | Rastrea un evento con acción y categoría  |
-| updatePersistentLabels | publisherId, fpid, fpit, fpdm, fpdt: string        | Actualiza etiquetas persistentes globales |
-| setPersistentLabel     | publisherId: string, labelName, labelValue: string | Establece una etiqueta persistente global |
-| notifyUxActive         | ninguno                                            | Notifica que la UX está activa            |
-| notifyUxInactive       | ninguno                                            | Notifica que la UX está inactiva          |
+| Propiedad | Tipo | Descripción |
+|-----------|------|-------------|
+| `mediaType` | `ComscoreAdvertisementType` | Tipo de anuncio |
+| `length` | `number` | Duración del anuncio en milisegundos |
 
-#### Métodos de Analítica de Streaming (Por instancia)
+#### Propiedades Opcionales
 
-| Método                       | Parámetros                                                             | Descripción                                   |
-| ---------------------------- | ---------------------------------------------------------------------- | --------------------------------------------- |
-| initializeStreaming          | tag: number, metadata: ComscoreMetadata, config: ComscoreConfiguration | Inicializa una instancia de streaming         |
-| updateStreaming              | tag: number, metadata: ComscoreMetadata                                | Actualiza metadatos de una instancia          |
-| setPersistentLabelsStreaming | tag: number, labels: ComscoreLabels                                    | Establece múltiples etiquetas persistentes    |
-| setPersistentLabelStreaming  | tag: number, label: string, value: string                              | Establece una etiqueta persistente individual |
-| setMetadata                  | tag: number, metadata: ComscoreMetadata                                | Establece metadatos de contenido              |
+| Propiedad | Tipo | Descripción |
+|-----------|------|-------------|
+| `relatedContentMetadata` | `ComscoreMetadata` | Metadatos del contenido relacionado |
+| `uniqueId` | `string` | Identificador único del anuncio |
+| `deliveryType` | `ComscoreAdvertisementDeliveryType` | Mecanismo de distribución |
+| `owner` | `ComscoreAdvertisementOwner` | Propietario del anuncio para monetización |
+| `classifyAsAudioStream` | `boolean` | Indica si es anuncio solo de audio |
+| `serverCampaignId` | `string` | ID de la campaña publicitaria |
+| `placementId` | `string` | ID del placement |
+| `siteId` | `string` | ID del sitio |
+| `server` | `string` | Servidor/proveedor de publicidad |
+| `title` | `string` | Título del anuncio |
+| `callToActionUrl` | `string` | URL de call-to-action |
+| `clipUrl` | `string` | URL del clip del anuncio |
+| `videoDimensions` | `ComscoreDimension` | Dimensiones del video del anuncio |
+| `customLabels` | `CustomComscoreAdvertisementMetadata` | Etiquetas personalizadas |
+
+### CustomComscoreAdvertisementMetadata
+
+Tipo para pares de nombre/valor de metadatos personalizados de anuncios.
+
+```typescript
+type CustomComscoreAdvertisementMetadata = {
+  [id: string]: string;
+};
+```
+
+### ComscoreAdvertisementType
+
+Enumeración que define los tipos de anuncios según ComScore.
+
+#### Anuncios de Video On Demand
+
+| Valor | Descripción |
+|-------|-------------|
+| `onDemandPreRoll` | Pre-roll en contenido bajo demanda |
+| `onDemandMidRoll` | Mid-roll en contenido bajo demanda |
+| `onDemandPostRoll` | Post-roll en contenido bajo demanda |
+
+#### Anuncios en Vivo
+
+| Valor | Descripción |
+|-------|-------------|
+| `live` | Anuncio durante transmisión en vivo |
+
+#### Branded Entertainment
+
+| Valor | Descripción |
+|-------|-------------|
+| `brandedOnDemandPreRoll` | Pre-roll con marca en VOD |
+| `brandedOnDemandMidRoll` | Mid-roll con marca en VOD |
+| `brandedOnDemandPostRoll` | Post-roll con marca en VOD |
+| `brandedAsContent` | Contenido de marca |
+| `brandedDuringLive` | Marca durante transmisión en vivo |
+
+#### Otros
+
+| Valor | Descripción |
+|-------|-------------|
+| `other` | Otro tipo de anuncio |
+
+### ComscoreAdvertisementDeliveryType
+
+Enumeración que define los mecanismos de distribución de anuncios.
+
+| Valor | Descripción |
+|-------|-------------|
+| `national` | Distribución nacional |
+| `local` | Distribución local |
+| `syndication` | Distribución para sindicación |
+
+### ComscoreAdvertisementOwner
+
+Enumeración que define los propietarios del anuncio para monetización.
+
+| Valor | Descripción |
+|-------|-------------|
+| `distributor` | Monetizado por distribuidor (publisherName) |
+| `originator` | Monetizado por originador (stationTitle/stationCode) |
+| `multiple` | Monetizado por múltiples propietarios |
+| `none` | No tiene propietario |
+
+## Tipos de Plugin y Eventos
+
 
 #### Métodos de Eventos de Reproducción
 

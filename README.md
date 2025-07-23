@@ -26,7 +26,7 @@ COMSCORE_APPLICATION=3Cat_DEMO
 
 ### Configuración Android
 
-#### MainActivity.kt
+#### **MainActivity.kt**
 
 Modifica el archivo `android/app/src/main/java/.../MainActivity.kt` para inicializar ComScore en la función `onCreate`:
 
@@ -41,7 +41,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
 ### Configuración iOS
 
-#### AppDelegate.mm
+#### **AppDelegate.mm**
 
 Modifica el archivo `ios/YourApp/AppDelegate.mm`:
 
@@ -73,7 +73,7 @@ Modifica el archivo `ios/YourApp/AppDelegate.mm`:
 }
 ```
 
-#### Opciones de Configuración
+#### **Opciones de Configuración**
 
 **Modos de configuración disponibles:**
 
@@ -106,7 +106,7 @@ Funcionalidad básica de tracking y medición de audiencia de ComScore para apli
 - Reportes de uso y engagement
 - Configuración personalizada de metadatos
 
-#### Uso Básico
+#### **Uso Básico**
 
 Para ver un ejemplo completo de uso mediante un hook personalizado, consulta:
 
@@ -114,28 +114,114 @@ Para ver un ejemplo completo de uso mediante un hook personalizado, consulta:
 
 ### 2. ComScore Streaming Tag - Player OTT
 
-Funcionalidad especializada para el tracking de contenido de video streaming y reproductores OTT (Over-The-Top). Esta implementación permite:
+Funcionalidad especializada para el tracking de contenido de video streaming y reproductores OTT (Over-The-Top). Esta implementación utiliza una **arquitectura de plugin modular** con handlers especializados que proporcionan:
 
-- Medición detallada de reproducción de video
-- Tracking de eventos de streaming (play, pause, buffer, etc.)
-- Métricas de calidad de reproducción
-- Análisis de audiencia para contenido OTT
+- 📺 **Medición detallada de reproducción** - Tracking completo de eventos de video
+- 🎯 **Gestión de anuncios** - Soporte para pre-roll, mid-roll y post-roll
+- 📊 **Métricas de calidad** - Monitoreo de bitrate, resolución y audio
+- 🔄 **Gestión de estados** - Control centralizado de transiciones
+- ❌ **Manejo de errores** - Recovery automático y reporting
+- 📱 **Estados de aplicación** - Tracking de foreground/background
 
-#### Gestión de Eventos
+#### **Arquitectura del Plugin**
 
-El Player OTT debe gestionar diversos eventos durante la reproducción de contenido. Para obtener información detallada sobre todos los eventos disponibles y su implementación, consulta:
+El sistema utiliza el **ComscorePlugin** como punto de entrada principal, que coordina múltiples handlers especializados:
 
-**[Documentación de Eventos del Player OTT](docs/events.md)**
+```typescript
+import { ComscorePlugin } from 'react-native-comscore';
 
-#### Configuración para Streaming
+// Inicialización del plugin
+const plugin = new ComscorePlugin({
+  publisherId: 'your-publisher-id',
+  applicationName: 'your-app-name',
+  metadata: initialMetadata,
+  debug: __DEV__
+});
 
-La implementación de ComScore Streaming Tag requiere la creación de plugins personalizados que mapeen los datos de tu contenido a los metadatos requeridos por ComScore.
+// Uso básico
+plugin.play();
+plugin.pause();
+plugin.stop();
+```
 
-Para ver ejemplos completos de implementación, consulta:
+📋 **[Documentación Completa del Plugin](src/plugin/README.md)** - Guía completa de configuración y uso del ComscorePlugin
 
-📋 **[Ejemplo de Plugin ComScore Streaming Tag](docs/plugin.sample.md)** - Muestra cómo crear un plugin personalizado que adapta los datos de tu proyecto a ComScore
+#### **Sistema de Handlers Especializados**
 
-📋 **[Ejemplo de Gestor de Plugins](docs/plugin.manager.sample.md)** - Hook para gestionar múltiples plugins de analíticas y vincularlos con eventos del Player OTT
+Cada aspecto del tracking es manejado por handlers especializados que trabajan de forma coordinada:
+
+| Handler | Responsabilidad | Documentación |
+|---------|----------------|--------------|
+| 📺 **Advertisement** | Gestión de anuncios y breaks publicitarios | [Ver documentación](src/handlers/README.advertisementHandler.md) |
+| 📱 **Application** | Estados de aplicación (foreground/background) | [Ver documentación](src/handlers/README.applicationHandler.md) |
+| ❌ **Error** | Manejo de errores y recovery | [Ver documentación](src/handlers/README.errorHandler.md) |
+| 📋 **Metadata** | Gestión y sincronización de metadatos | [Ver documentación](src/handlers/README.metadataHandler.md) |
+| ▶️ **Playback** | Control de reproducción (play, pause, seek) | [Ver documentación](src/handlers/README.playbackHandler.md) |
+| 🎛️ **Quality** | Calidad, bitrate, audio y subtítulos | [Ver documentación](src/handlers/README.qualityHandler.md) |
+
+🏗️ **[Documentación del Sistema de Handlers](src/handlers/README.md)** - Visión general de la arquitectura y coordinación entre handlers
+
+#### **Gestión Centralizada de Estados**
+
+El sistema incluye un gestor centralizado de estados que coordina todas las transiciones:
+
+```typescript
+// Los estados se gestionan automáticamente
+plugin.play();        // INITIALIZED → VIDEO
+plugin.handleAdBegin(); // VIDEO → ADVERTISEMENT
+plugin.pause();       // ADVERTISEMENT → PAUSED_AD
+plugin.handleAdEnd(); // PAUSED_AD → VIDEO
+```
+
+🔄 **[Documentación del State Manager](src/handlers/README.stateManager.md)** - Gestión centralizada de estados y transiciones
+
+🏭 **[Documentación del State Manager Factory](src/handlers/README.stateManagerFactory.md)** - Factory para crear gestores optimizados por entorno
+
+#### **Integración**
+
+El player dispone de un gestor de plugins de analíticas totalmente integrado con este plugin. Revisar la documentación del propio player.
+
+📚 **[Documentación del Player](https://github.com/startcat/react-native-video)** - Player con gestor de plugins de analíticas
+
+```typescript
+// Plugins de analíticas
+const analyticsPlugins = useRef<PlayerAnalyticsPlugin[]>();
+
+// Creamos los plugins de analyticas a partir de los datos del contenido
+analyticsPlugins.current = AnalyticsPluginFactory.createPlugins(responseJson, {
+    plugins: {
+        comscore: {
+            enabled: true,
+        },
+    },
+    debug: true,
+    environment: 'dev', // | 'staging' | 'prod';
+});
+
+// Componente Player
+<Player
+    // Player Features
+    features={{
+        analyticsConfig: analyticsPlugins.current,
+    }}
+/>
+```
+
+
+
+#### **Configuración Avanzada**
+
+##### Tipos y Configuración
+
+El sistema incluye definiciones TypeScript completas para todos los componentes:
+
+📚 **[Documentación de Tipos](src/types/README.md)** - Interfaces, tipos y configuraciones disponibles
+
+##### Sistema de Logging
+
+Logging integrado para debugging y monitoreo:
+
+📝 **[Documentación del Logger](src/logger/README.md)** - Sistema de logging y debugging
 
 ---
 

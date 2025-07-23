@@ -92,20 +92,6 @@ export class ComscoreLogger implements IComscoreLogger {
       ? this.applyColors(level, logMessage)
       : logMessage;
 
-    // Procesar argumentos para stringify objetos
-    // const processedArgs = args.map((arg) => {
-    //   // Solo stringify objetos, no primitivos
-    //   if (arg !== null && typeof arg === 'object') {
-    //     try {
-    //       return JSON.stringify(arg, null, 2);
-    //     } catch (error) {
-    //       // En caso de referencias circulares u otros errores
-    //       return '[Object - stringify error]';
-    //     }
-    //   }
-    //   return arg;
-    // });
-
     // Hacer el log
     if (args.length > 0) {
       logMethod(finalMessage, ...args);
