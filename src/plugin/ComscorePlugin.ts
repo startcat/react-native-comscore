@@ -39,6 +39,9 @@ import { ComscoreLogger, ComscoreLoggerFactory } from '../logger';
 import { ComscoreConnector } from '../api';
 import { type ComscorePluginConfig } from './types';
 
+// Import package.json to get version
+import packageJson from '../../package.json';
+
 import {
   type MutableHandlerContext,
   ComscoreApplicationHandler,
@@ -55,7 +58,7 @@ import {
 export class ComscorePlugin implements ComscorePluginInterface {
   // Propiedades requeridas por PlayerPlugin
   public name = 'ComscorePlugin';
-  public version = '0.1.5';
+  public version = packageJson.version;
 
   // Dependencias principales
   private context: MutableHandlerContext;
