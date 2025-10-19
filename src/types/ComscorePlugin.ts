@@ -62,6 +62,7 @@ export interface ComscorePluginInterface extends PlayerPlugin {
   setPersistentLabel(label: string, value: string): void;
   setPersistentLabels(labels: { [key: string]: string }): void;
   getInstanceId(): number;
+  reset(): void;
 
   // Eventos específicos de ComScore (sobrescribir tipos genéricos)
   onPluginInitialize?: (params: ComscorePluginInitializeParams) => void;

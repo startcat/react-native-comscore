@@ -151,6 +151,48 @@ export class ComscorePlugin implements ComscorePluginInterface {
   }
 
   /*
+   * Resetea completamente el estado interno del plugin para poder reutilizarlo.
+   * Debe llamarse antes de procesar un nuevo contenido.
+   *
+   */
+
+  reset(): void {
+    this.logger.info('ComscorePlugin', 'Resetting plugin state', {
+      instanceId: this.context.instanceId,
+    });
+
+    // 1. Notificar fin de sesión actual a ComScore
+    if (this.context.connector) {
+      this.context.connector.notifyEnd();
+    }
+
+    // 2. Resetear StateManager (descongelar estado)
+    if (this.stateManager) {
+      this.stateManager.reset();
+    }
+
+    // 3. Resetear todos los handlers que tienen métodos de reset
+    if (this.metadataHandler) {
+      this.metadataHandler.resetMetadataState();
+    }
+
+    if (this.qualityHandler) {
+      this.qualityHandler.resetStatistics();
+    }
+
+    if (this.errorHandler) {
+      this.errorHandler.resetErrorCounts();
+    }
+
+    // 4. Los handlers de playback, application y advertisement no necesitan reset
+    // ya que su estado se gestiona a través del StateManager
+
+    this.logger.info('ComscorePlugin', 'Plugin reset completed', {
+      instanceId: this.context.instanceId,
+    });
+  }
+
+  /*
    *  Eventos principales del reproductor (PlayerPlugin)
    *
    */

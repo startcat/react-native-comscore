@@ -73,6 +73,7 @@ El plugin permite configuración opcional para personalizar su comportamiento:
 | `setPersistentLabel()` | `label: string, value: string` | Establece una etiqueta persistente individual |
 | `setPersistentLabels()` | `labels: { [key: string]: string }` | Establece múltiples etiquetas persistentes |
 | `getInstanceId()` | - | Obtiene el ID único de la instancia |
+| `reset()` | - | Resetea completamente el estado interno del plugin para reutilizarlo |
 | `destroy()` | - | Libera recursos del plugin |
 
 ### Métodos de Debugging
@@ -271,6 +272,146 @@ comscorePlugin.setPersistentLabels({
 
 // Limpiar recursos
 comscorePlugin.destroy();
+```
+
+## Reutilización del Plugin con reset()
+
+El método `reset()` permite reutilizar una instancia del plugin para reproducir nuevo contenido sin necesidad de crear una nueva instancia. Esto es especialmente útil en escenarios de playlist o navegación entre contenidos.
+
+### ¿Cuándo usar reset()?
+
+- **Cambio de contenido**: Al cambiar de un video a otro en una playlist
+- **Navegación entre episodios**: Al pasar de un episodio a otro en una serie
+- **Reinicio de sesión**: Al reiniciar la reproducción desde cero
+- **Limpieza de estado**: Cuando necesitas limpiar el estado sin destruir el plugin
+
+### ¿Qué hace reset()?
+
+El método `reset()` realiza las siguientes acciones:
+
+1. **Notifica fin de sesión**: Llama a `notifyEnd()` en ComScore para cerrar la sesión actual
+2. **Resetea StateManager**: Vuelve el estado a `INITIALIZED` y limpia flags internos
+3. **Resetea handlers**:
+   - `MetadataHandler`: Limpia metadatos cargados y estadísticas
+   - `QualityHandler`: Resetea contadores de cambios de calidad
+   - `ErrorHandler`: Limpia contadores de errores
+4. **Mantiene configuración**: La configuración del plugin y las etiquetas persistentes se mantienen
+
+### Ejemplo de uso con Playlist
+
+```typescript
+import { ComscorePlugin } from './plugin/ComscorePlugin';
+
+// Inicializar el plugin una vez
+const comscorePlugin = new ComscorePlugin(
+  initialMetadata,
+  comscoreConfig
+);
+
+// Función para cambiar de contenido
+function playNextVideo(newMetadata: ComscoreMetadata) {
+  // 1. Resetear el plugin
+  comscorePlugin.reset();
+  
+  // 2. Actualizar con los nuevos metadatos
+  comscorePlugin.update(newMetadata);
+  
+  // 3. Crear nueva sesión de reproducción
+  comscorePlugin.onCreatePlaybackSession?.();
+  
+  // 4. Iniciar reproducción del nuevo contenido
+  comscorePlugin.onPlay?.();
+}
+
+// Uso en una playlist
+const playlist = [video1Metadata, video2Metadata, video3Metadata];
+let currentIndex = 0;
+
+function onVideoEnd() {
+  currentIndex++;
+  if (currentIndex < playlist.length) {
+    playNextVideo(playlist[currentIndex]);
+  }
+}
+```
+
+### Ejemplo de uso con Navegación entre Episodios
+
+```typescript
+// Hook personalizado para gestionar ComScore en una serie
+function useComscoreForSeries(seriesConfig: ComscoreConfiguration) {
+  const pluginRef = useRef<ComscorePlugin | null>(null);
+  
+  const playEpisode = useCallback((episodeMetadata: ComscoreMetadata) => {
+    if (!pluginRef.current) {
+      // Primera vez: crear plugin
+      pluginRef.current = new ComscorePlugin(
+        episodeMetadata,
+        seriesConfig
+      );
+    } else {
+      // Episodios siguientes: resetear y actualizar
+      pluginRef.current.reset();
+      pluginRef.current.update(episodeMetadata);
+    }
+    
+    // Iniciar nueva sesión
+    pluginRef.current.onCreatePlaybackSession?.();
+  }, [seriesConfig]);
+  
+  useEffect(() => {
+    return () => {
+      // Limpiar al desmontar
+      pluginRef.current?.destroy();
+    };
+  }, []);
+  
+  return { plugin: pluginRef.current, playEpisode };
+}
+
+// Uso del hook
+const { plugin, playEpisode } = useComscoreForSeries(comscoreConfig);
+
+// Cambiar de episodio
+playEpisode(episode1Metadata);
+// ... más tarde
+playEpisode(episode2Metadata);
+```
+
+### Diferencia entre reset() y destroy()
+
+| Aspecto | `reset()` | `destroy()` |
+|---------|-----------|-------------|
+| **Propósito** | Reutilizar el plugin con nuevo contenido | Liberar recursos completamente |
+| **Estado del plugin** | Vuelve a `INITIALIZED`, listo para usar | Plugin inutilizable después |
+| **Configuración** | Se mantiene | Se pierde |
+| **Etiquetas persistentes** | Se mantienen | Se pierden |
+| **Instancia de ComScore** | Se mantiene | Se destruye |
+| **Uso típico** | Cambio de contenido en playlist | Desmontaje del componente |
+
+### Consideraciones al usar reset()
+
+⚠️ **Importante**: 
+- Siempre llama a `reset()` **antes** de cargar nuevo contenido
+- Después de `reset()`, actualiza los metadatos con `update()` antes de iniciar reproducción
+- No uses `reset()` durante la reproducción activa, primero pausa o detén el contenido
+- Si necesitas cambiar la configuración del plugin, usa `destroy()` y crea una nueva instancia
+
+✅ **Buenas prácticas**:
+```typescript
+// ✅ CORRECTO: Reset antes de nuevo contenido
+plugin.reset();
+plugin.update(newMetadata);
+plugin.onCreatePlaybackSession?.();
+plugin.onPlay?.();
+
+// ❌ INCORRECTO: No resetear antes de cambiar contenido
+plugin.update(newMetadata); // Estado inconsistente
+plugin.onPlay?.();
+
+// ❌ INCORRECTO: Reset durante reproducción activa
+plugin.onPlay?.();
+plugin.reset(); // Puede causar problemas de tracking
 ```
 
 ## Consideraciones Importantes

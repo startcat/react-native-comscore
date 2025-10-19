@@ -142,6 +142,9 @@ const plugin = new ComscorePlugin({
 plugin.play();
 plugin.pause();
 plugin.stop();
+
+// Resetear el plugin para reutilizarlo con nuevo contenido
+plugin.reset();
 ```
 
 📋 **[Documentación Completa del Plugin](src/plugin/README.md)** - Guía completa de configuración y uso del ComscorePlugin
